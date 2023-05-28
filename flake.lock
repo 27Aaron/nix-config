@@ -40,6 +40,23 @@
         "type": "github"
       }
     },
+    "my-secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776245406,
+        "narHash": "sha256-xWuyxR/7HpcwrBTz+ZrBO+EL9E4LLiXu5BiZ2iZG4iQ=",
+        "ref": "refs/heads/main",
+        "rev": "4bce4eaf96cdeb571e96a14aec95f6f8a848540e",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/27Aaron/nix-secrets.git"
+      },
+      "original": {
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/27Aaron/nix-secrets.git"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1776169885,
@@ -75,6 +92,7 @@
       "inputs": {
         "disko": "disko",
         "home-manager": "home-manager",
+        "my-secrets": "my-secrets",
         "nixpkgs": "nixpkgs",
         "preservation": "preservation"
       }

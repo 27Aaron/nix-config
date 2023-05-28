@@ -15,6 +15,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    my-secrets = {
+      url = "git+ssh://git@github.com/27Aaron/nix-secrets.git?shallow=1";
+      flake = false;
+    };
   };
 
   outputs = inputs @ {
