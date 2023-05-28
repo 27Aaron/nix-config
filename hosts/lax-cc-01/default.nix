@@ -5,7 +5,16 @@
   ];
 
   # LAX CloudCone 1C-0.5G-40G
-  services'.vnstat.enable = true;
-  services'.openssh.enable = true;
+
+  # Infrastructure
   security'.firewall.enable = true;
+  services'.openssh.enable = true;
+  services'.fail2ban.enable = true;
+  services'.vnstat.enable = true;
+
+  # Application stack
+  services'.postgresql.enable = true;
+  services'.forgejo.enable = true;
+  services'.forgejo.domain = "code.niceboy.org";
+  services'.caddy.enable = true;
 }
