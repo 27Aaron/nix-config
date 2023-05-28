@@ -118,6 +118,7 @@ in {
       "${cfg.domain}" = {
         extraConfig = ''
           encode zstd gzip
+          rewrite /user/login /user/oauth2/PocketID
           reverse_proxy unix//run/forgejo/forgejo.sock
         '';
       };
