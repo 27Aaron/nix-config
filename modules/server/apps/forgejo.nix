@@ -144,6 +144,11 @@ in {
       '';
     };
 
+    systemd.tmpfiles.rules = [
+      "d /var/lib/forgejo 0700 git forgejo -"
+      "d /var/lib/forgejo/custom 0700 git forgejo -"
+    ];
+
     preservation'.os.directories = [
       "/var/lib/forgejo"
     ];
