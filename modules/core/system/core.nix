@@ -52,7 +52,7 @@ in {
       ${cfg.userName} = {
         isNormalUser = true;
         extraGroups = ["wheel"];
-        hashedPasswordFile = "$y$j9T$wKu2x.HrtXWLzO6Jot0y61$MHSAMfxnEacwmiQSzhhtBsm5iKcDfFDtBFA/gnWrGY3";
+        hashedPassword = "$y$j9T$wKu2x.HrtXWLzO6Jot0y61$MHSAMfxnEacwmiQSzhhtBsm5iKcDfFDtBFA/gnWrGY3";
         openssh.authorizedKeys.keys = cfg.sshKeys;
       };
     };
