@@ -1,13 +1,18 @@
 {
   lib,
   pkgs,
+  inputs,
   ...
-}: {
+}: let
+  secrets = import "${inputs.my-secrets}/network/lax-cc-02/network.nix";
+in {
   # Platform
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
   # Boot
   boot'.grub.enable = true;
+  boot'.clevis.enable = true;
+  boot'.initrd-ssh.enable = true;
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
@@ -17,12 +22,13 @@
     kernelParams = [
       "audit=0"
       "net.ifnames=0"
+      secrets.initrdIp
     ];
   };
 
   # Hardware
   hardware'.disable-balloon.enable = true;
-  hardware'.disko = {
+  hardware'.disko-luks = {
     enable = true;
     device = "/dev/vda";
   };
