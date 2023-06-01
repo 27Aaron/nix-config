@@ -4,7 +4,7 @@
     ./hardware.nix
   ];
 
-  # LAX CloudCone 4C-4G-80G
+  # LAX HostDZire 4C-6G-100G
 
   # Infrastructure
   security'.firewall.enable = true;
