@@ -85,8 +85,8 @@ in {
     };
 
     networking.firewall = {
-      allowedTCPPorts = [23333];
-      allowedUDPPorts = [23333];
+      allowedTCPPorts = [cfg.port];
+      allowedUDPPorts = [cfg.port];
     };
   };
 }
