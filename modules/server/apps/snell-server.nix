@@ -18,7 +18,6 @@ in {
 
     port = mkOption {
       type = types.int;
-      default = 23333;
       description = "The port Snell Server listens on.";
     };
 
