@@ -1,7 +1,8 @@
-{
+{inputs, ...}: {
   imports = [
     ./network.nix
     ./hardware.nix
+    "${inputs.my-secrets}/network/lax-cc-01/services.nix"
   ];
 
   # LAX CloudCone 1C-0.5G-40G
@@ -15,6 +16,5 @@
   # Application stack
   services'.postgresql.enable = true;
   services'.forgejo.enable = true;
-  services'.forgejo.domain = "code.niceboy.org";
   services'.caddy.enable = true;
 }
