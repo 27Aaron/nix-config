@@ -1,0 +1,23 @@
+{inputs, ...}: {
+  imports = [
+    ./network.nix
+    ./hardware.nix
+    "${inputs.my-secrets}/network/bjs-ali-01/caddy.nix"
+  ];
+
+  # Alibaba Beijing 2C-2G-40G
+
+  # Infrastructure
+  security'.firewall.enable = true;
+  services'.openssh.enable = true;
+  services'.vnstat.enable = true;
+
+  # Application stack
+  services'.caddy.enable = true;
+  services'.dae.enable = true;
+  services'.snell-server.enable = true;
+  services'.tang.enable = true;
+  services'.docker.enable = true;
+  services'.postgresql.enable = true;
+  services'.postgresql.openFirewall = true;
+}
