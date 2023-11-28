@@ -3,6 +3,7 @@
     ./network.nix
     ./hardware.nix
     "${inputs.my-secrets}/network/bjs-ali-01/caddy.nix"
+    "${inputs.my-secrets}/network/bjs-ali-01/proxy.nix"
   ];
 
   # Alibaba Beijing 2C-2G-40G
