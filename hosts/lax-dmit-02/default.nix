@@ -9,15 +9,18 @@
   # LAX DMIT MALIBU 1C-1G-20G
 
   # Infrastructure
-  services'.vnstat.enable = true;
-  services'.openssh.enable = true;
   security'.firewall.enable = true;
+  services'.openssh.enable = true;
+  services'.vnstat.enable = true;
 
-  # Application stack
+  # Application
   services'.caddy.enable = true;
+
+  # Container
   services'.podman.enable = true;
+  containers'.sub-store.enable = true;
+
+  # Proxy
   services'.snell-server.enable = true;
   services'.sing-box.enable = true;
-
-  containers'.sub-store.enable = true;
 }
