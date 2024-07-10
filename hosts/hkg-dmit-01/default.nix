@@ -12,7 +12,7 @@
   services'.openssh.enable = true;
   services'.vnstat.enable = true;
 
-  # Application stack
+  # Proxy
   services'.sing-box.enable = true;
   services'.snell-server.enable = true;
 }
