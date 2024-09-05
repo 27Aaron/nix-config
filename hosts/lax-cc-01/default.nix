@@ -13,8 +13,10 @@
   services'.fail2ban.enable = true;
   services'.vnstat.enable = true;
 
-  # Application stack
-  services'.postgresql.enable = true;
+  # Application
   services'.forgejo.enable = true;
   services'.caddy.enable = true;
+
+  # Database
+  services'.postgresql.enable = true;
 }
