@@ -12,6 +12,6 @@
   services'.openssh.enable = true;
   services'.vnstat.enable = true;
 
-  # Application stack
+  # Proxy
   services'.snell-server.enable = true;
 }
