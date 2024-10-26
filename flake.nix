@@ -13,16 +13,23 @@
 
   };
 
-  outputs = inputs@{ nixpkgs, disko, impermanence,... }: {
-    nixosConfigurations = {
-      beelink = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./configuration.nix
-          disko.nixosModules.disko
-          impermanence.nixosModules.impermanence
-        ];
+  outputs =
+    inputs@{
+      nixpkgs,
+      disko,
+      impermanence,
+      ...
+    }:
+    {
+      nixosConfigurations = {
+        beelink = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/beelink/
+            disko.nixosModules.disko
+            impermanence.nixosModules.impermanence
+          ];
+        };
       };
     };
-  };
 }

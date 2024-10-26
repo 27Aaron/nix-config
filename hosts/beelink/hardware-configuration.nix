@@ -4,14 +4,23 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
-    supportedFilesystems = ["ext4" "btrfs" "xfs" "fat" "vfat" "cifs" "nfs"];
+    supportedFilesystems = [
+      "ext4"
+      "btrfs"
+      "xfs"
+      "fat"
+      "vfat"
+      "cifs"
+      "nfs"
+    ];
 
     loader = {
       systemd-boot.enable = true;
@@ -19,12 +28,19 @@
     };
 
     initrd = {
-      availableKernelModules = ["nvme" "xhci_pci" "thunderbolt" "usbhid" "usb_storage" "sd_mod"];
-      kernelModules = [];
+      availableKernelModules = [
+        "nvme"
+        "xhci_pci"
+        "thunderbolt"
+        "usbhid"
+        "usb_storage"
+        "sd_mod"
+      ];
+      kernelModules = [ ];
     };
 
-    kernelModules = ["kvm-amd"];
-    extraModulePackages = [];
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [ ];
 
     tmp = {
       # Clear /tmp on boot to get a stateless /tmp directory.
