@@ -13,9 +13,13 @@
   services'.openssh.enable = true;
   services'.vnstat.enable = true;
 
-  # Application stack
+  # Application
   services'.caddy.enable = true;
-  services'.postgresql.enable = true;
-  services'.snell-server.enable = true;
   services'.pocket-id.enable = true;
+
+  # Database
+  services'.postgresql.enable = true;
+
+  # Proxy
+  services'.snell-server.enable = true;
 }
