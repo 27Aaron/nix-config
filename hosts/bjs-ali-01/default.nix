@@ -13,12 +13,18 @@
   services'.openssh.enable = true;
   services'.vnstat.enable = true;
 
-  # Application stack
+  # Application
   services'.caddy.enable = true;
-  services'.dae.enable = true;
-  services'.snell-server.enable = true;
   services'.tang.enable = true;
+
+  # Container
   services'.docker.enable = true;
+
+  # Database
   services'.postgresql.enable = true;
   services'.postgresql.openFirewall = true;
+
+  # Proxy
+  services'.dae.enable = true;
+  services'.snell-server.enable = true;
 }
