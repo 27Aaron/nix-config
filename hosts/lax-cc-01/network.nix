@@ -1,5 +1,5 @@
 {inputs, ...}: let
-  secrets = import "${inputs.my-secrets}/network/lax-cc-01/network.nix";
+  secrets = import "${inputs.my-secrets}/hosts/lax-cc-01/network.nix";
 in {
   systemd.network.enable = true;
   services.resolved.enable = false;

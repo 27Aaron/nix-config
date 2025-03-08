@@ -2,8 +2,8 @@
   imports = [
     ./network.nix
     ./hardware.nix
-    "${inputs.my-secrets}/network/hkg-vmiss-01/caddy.nix"
-    "${inputs.my-secrets}/network/hkg-vmiss-01/proxy.nix"
+    "${inputs.my-secrets}/hosts/hkg-vmiss-01/caddy.nix"
+    "${inputs.my-secrets}/hosts/hkg-vmiss-01/proxy.nix"
   ];
 
   # HKG VMISS 1C-1G-10G

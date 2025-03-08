@@ -2,7 +2,7 @@
   imports = [
     ./network.nix
     ./hardware.nix
-    "${inputs.my-secrets}/network/nrt-gc-01/proxy.nix"
+    "${inputs.my-secrets}/hosts/nrt-gc-01/proxy.nix"
   ];
 
   # GreenCloud SoftBank 6C-12G-112G

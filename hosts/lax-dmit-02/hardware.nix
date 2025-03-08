@@ -4,7 +4,7 @@
   inputs,
   ...
 }: let
-  secrets = import "${inputs.my-secrets}/network/lax-dmit-02/network.nix";
+  secrets = import "${inputs.my-secrets}/hosts/lax-dmit-02/network.nix";
 in {
   # Platform
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

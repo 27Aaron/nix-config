@@ -2,8 +2,8 @@
   imports = [
     ./network.nix
     ./hardware.nix
-    "${inputs.my-secrets}/network/lax-dmit-01/proxy.nix"
-    "${inputs.my-secrets}/network/lax-dmit-01/services.nix"
+    "${inputs.my-secrets}/hosts/lax-dmit-01/proxy.nix"
+    "${inputs.my-secrets}/hosts/lax-dmit-01/services.nix"
   ];
 
   # LAX DMIT WEE 1C-1G-20G

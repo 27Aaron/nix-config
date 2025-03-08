@@ -2,7 +2,7 @@
   imports = [
     ./network.nix
     ./hardware.nix
-    "${inputs.my-secrets}/network/hkg-dmit-01/proxy.nix"
+    "${inputs.my-secrets}/hosts/hkg-dmit-01/proxy.nix"
   ];
 
   # HKG DMIT 1C-2G-60G

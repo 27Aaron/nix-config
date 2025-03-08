@@ -2,7 +2,7 @@
   imports = [
     ./network.nix
     ./hardware.nix
-    "${inputs.my-secrets}/network/lax-cc-01/services.nix"
+    "${inputs.my-secrets}/hosts/lax-cc-01/services.nix"
   ];
 
   # LAX CloudCone 1C-0.5G-40G

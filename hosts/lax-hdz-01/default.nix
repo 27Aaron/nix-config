@@ -2,7 +2,7 @@
   imports = [
     ./network.nix
     ./hardware.nix
-    "${inputs.my-secrets}/network/lax-hdz-01/proxy.nix"
+    "${inputs.my-secrets}/hosts/lax-hdz-01/proxy.nix"
   ];
 
   # LAX HostDZire 4C-6G-100G

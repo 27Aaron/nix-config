@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: let
-  secrets = import "${inputs.my-secrets}/network/hkg-vmiss-01/network.nix";
+  secrets = import "${inputs.my-secrets}/hosts/hkg-vmiss-01/network.nix";
 in {
   # Platform
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
