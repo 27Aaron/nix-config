@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   secrets = import "${inputs.my-secrets}/hosts/hkg-vmiss-01/network.nix";
