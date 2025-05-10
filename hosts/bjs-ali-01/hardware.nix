@@ -17,8 +17,8 @@
 
     kernelParams = [
       "audit=0"
-      "ip=dhcp"
       "net.ifnames=0"
+      "ip=dhcp"
     ];
   };
 
@@ -33,9 +33,9 @@
   # Memory
   zramSwap = {
     enable = true;
-    algorithm = "zstd";
-    memoryMax = 2 * 1024 * 1024 * 1024 + 1024 * 1024;
-    memoryPercent = 500;
     priority = 5;
+    algorithm = "zstd";
+    memoryPercent = 500;
+    memoryMax = 2 * 1024 * 1024 * 1024 + (1024 * 1024);
   };
 }

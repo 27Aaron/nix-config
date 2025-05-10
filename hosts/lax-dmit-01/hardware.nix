@@ -17,9 +17,9 @@
     extraModulePackages = [];
 
     kernelParams = [
-      "ip=dhcp"
       "audit=0"
       "net.ifnames=0"
+      "ip=dhcp"
     ];
   };
 
