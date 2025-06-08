@@ -35,7 +35,7 @@ in {
       package = pkgs.valkey;
       servers.${cfg.name} = {
         enable = true;
-        bind = "0.0.0.0";
+        bind = if cfg.openFirewall then "0.0.0.0" else "127.0.0.1";
         port = cfg.port;
         logLevel = "notice";
         logfile = "\"\"";
