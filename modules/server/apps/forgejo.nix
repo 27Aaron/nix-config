@@ -16,6 +16,17 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = config.services'.postgresql.enable;
+        message = "services'.forgejo requires services'.postgresql to be enabled";
+      }
+      {
+        assertion = cfg.domain == null || config.services'.caddy.enable;
+        message = "services'.forgejo requires services'.caddy to be enabled when domain is set";
+      }
+    ];
+
     users.users.git = {
       description = "Forgejo Service";
       home = "/var/lib/forgejo";
