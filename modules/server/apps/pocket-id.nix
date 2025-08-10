@@ -19,6 +19,17 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = config.services'.postgresql.enable;
+        message = "services'.pocket-id requires services'.postgresql to be enabled";
+      }
+      {
+        assertion = cfg.domain == null || config.services'.caddy.enable;
+        message = "services'.pocket-id requires services'.caddy to be enabled when domain is set";
+      }
+    ];
+
     sops.secrets = {
       pocket-id_key = {
         sopsFile = "${inputs.my-secrets}/services/pocket-id.yaml";
