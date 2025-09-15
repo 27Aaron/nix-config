@@ -5,6 +5,21 @@
   ...
 }: let
   cfg = config.hardware'.disko;
+
+  btrfsSubvolumes = {
+    "@nix" = {
+      mountpoint = "/nix";
+      mountOptions = ["compress=zstd" "noatime"];
+    };
+    "@persistent" = {
+      mountpoint = "/persistent";
+      mountOptions = ["compress=zstd" "noatime"];
+    };
+    "@tmp" = {
+      mountpoint = "/tmp";
+      mountOptions = ["compress=zstd" "noatime"];
+    };
+  };
 in {
   imports = [inputs.disko.nixosModules.disko];
 
@@ -16,32 +31,26 @@ in {
       example = "/dev/vda";
       description = "Disk device path";
     };
+
+    luks.enable = lib.mkEnableOption "LUKS encryption";
   };
 
   config = lib.mkIf cfg.enable {
     fileSystems."/persistent".neededForBoot = true;
 
     disko.devices = {
-      nodev = {
-        "/" = {
-          fsType = "tmpfs";
-          mountOptions = [
-            "nodev"
-            "nosuid"
-            "relatime"
-            "mode=755"
-            "size=500M"
-          ];
-        };
+      nodev."/" = {
+        fsType = "tmpfs";
+        mountOptions = ["nodev" "nosuid" "relatime" "mode=755" "size=500M"];
       };
 
-      disk = {
-        main = {
-          type = "disk";
-          device = cfg.device;
-          content = {
-            type = "gpt";
-            partitions = {
+      disk.main = {
+        type = "disk";
+        device = cfg.device;
+        content = {
+          type = "gpt";
+          partitions =
+            {
               boot = {
                 size = "1M";
                 type = "EF02";
@@ -54,50 +63,59 @@ in {
                   type = "filesystem";
                   format = "vfat";
                   mountpoint = "/boot";
-                  extraArgs = [
-                    "-n"
-                    "BOOT"
-                  ];
+                  extraArgs = ["-n" "BOOT"];
                   mountOptions = ["umask=0077"];
                 };
               };
-              nix = {
-                size = "100%";
-                content = {
-                  type = "btrfs";
-                  extraArgs = [
-                    "-f"
-                    "--csum xxhash64"
-                    "--label NixOS"
-                  ];
-                  # Override existing partition
-                  subvolumes = {
-                    "@nix" = {
-                      mountpoint = "/nix";
-                      mountOptions = [
-                        "compress=zstd"
-                        "noatime"
+            }
+            // (
+              if cfg.luks.enable
+              then {
+                luks = {
+                  size = "100%";
+                  type = "8309";
+                  content = {
+                    type = "luks";
+                    name = "crypted";
+                    settings = {
+                      allowDiscards = true;
+                      bypassWorkqueues = true;
+                      crypttabExtraOpts = [
+                        "same-cpu-crypt"
+                        "submit-from-crypt-cpus"
+                        "token-timeout=10"
                       ];
                     };
-                    "@persistent" = {
-                      mountpoint = "/persistent";
-                      mountOptions = [
-                        "compress=zstd"
-                        "noatime"
+                    initrdUnlock = true;
+                    content = {
+                      type = "btrfs";
+                      extraArgs = [
+                        "-f"
+                        "--csum xxhash64"
+                        "--label NixOS"
+                        "--features"
+                        "block-group-tree"
                       ];
-                    };
-                    "@tmp" = {
-                      mountpoint = "/tmp";
-                      mountOptions = [
-                        "compress=zstd"
-                        "noatime"
-                      ];
+                      subvolumes = btrfsSubvolumes;
                     };
                   };
                 };
-              };
-            };
-          };
+              }
+              else {
+                nix = {
+                  size = "100%";
+                  content = {
+                    type = "btrfs";
+                    extraArgs = [
+                      "-f"
+                      "--csum xxhash64"
+                      "--label NixOS"
+                    ];
+                    subvolumes = btrfsSubvolumes;
+                  };
+                };
+              }
+            );
         };
       };
     };
