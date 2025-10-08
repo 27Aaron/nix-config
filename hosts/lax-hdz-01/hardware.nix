@@ -25,8 +25,9 @@
 
   # Hardware
   hardware'.disable-balloon.enable = true;
-  hardware'.disko-luks = {
+  hardware'.disko = {
     enable = true;
+    luks.enable = true;
     device = "/dev/sda";
   };
   hardware'.qemu.enable = true;

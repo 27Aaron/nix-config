@@ -28,8 +28,9 @@ in {
 
   # Hardware
   hardware'.disable-balloon.enable = true;
-  hardware'.disko-luks = {
+  hardware'.disko = {
     enable = true;
+    luks.enable = true;
     device = "/dev/vda";
   };
   hardware'.qemu.enable = true;
