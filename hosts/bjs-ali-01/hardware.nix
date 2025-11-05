@@ -15,11 +15,7 @@
     kernelModules = ["kvm-intel"];
     extraModulePackages = [];
 
-    kernelParams = [
-      "audit=0"
-      "net.ifnames=0"
-      "ip=dhcp"
-    ];
+    kernelParams = ["audit=0" "net.ifnames=0" "ip=dhcp"];
   };
 
   # Hardware
