@@ -19,11 +19,7 @@ in {
     kernelModules = ["kvm-intel"];
     extraModulePackages = [];
 
-    kernelParams = [
-      "audit=0"
-      "net.ifnames=0"
-      secrets.initrdIp
-    ];
+    kernelParams = ["audit=0" "net.ifnames=0" secrets.initrdIp];
   };
 
   # Hardware
