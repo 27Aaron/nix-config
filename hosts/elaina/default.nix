@@ -4,11 +4,14 @@
   ];
 
   desktop' = {
+    cursors.enable = true;
+    fonts.enable = true;
     greetd.enable = true;
     niri.enable = true;
   };
 
   programs' = {
+    fcitx5.enable = true;
     firefox.enable = true;
     steam.enable = true;
     zed.enable = true;
