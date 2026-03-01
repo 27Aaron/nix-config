@@ -5,7 +5,7 @@
   ...
 }:
 let
-  mkSymlink = config.lib.file.mkOutOfStoreSymlink;
+  mkSymlink = config.home-manager.users.${config.core'.userName}.lib.file.mkOutOfStoreSymlink;
   confPath = "/etc/nixos/nix-config/modules/desktop/niri/conf";
 in
 {
@@ -23,11 +23,15 @@ in
     ];
 
     hm'.xdg.configFile = {
+      "niri/animations.kdl".source = mkSymlink "${confPath}/animations.kdl";
+      "niri/binds.kdl".source = mkSymlink "${confPath}/binds.kdl";
       "niri/config.kdl".source = mkSymlink "${confPath}/config.kdl";
-      "niri/keybindings.kdl".source = mkSymlink "${confPath}/keybindings.kdl";
+      "niri/input.kdl".source = mkSymlink "${confPath}/input.kdl";
+      "niri/layout.kdl".source = mkSymlink "${confPath}/layout.kdl";
       "niri/noctalia-shell.kdl".source = mkSymlink "${confPath}/noctalia-shell.kdl";
+      "niri/output.kdl".source = mkSymlink "${confPath}/output.kdl";
       "niri/spawn-at-startup.kdl".source = mkSymlink "${confPath}/spawn-at-startup.kdl";
-      "niri/windowrules.kdl".source = mkSymlink "${confPath}/windowrules.kdl";
+      "niri/window-rule.kdl".source = mkSymlink "${confPath}/window-rule.kdl";
     };
 
     hm'.systemd.user.services.polkit-gnome-authentication-agent = {
