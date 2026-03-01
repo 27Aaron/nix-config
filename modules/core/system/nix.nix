@@ -59,13 +59,4 @@
     ".local/state/nix/profiles"
     ".local/state/home-manager"
   ];
-
-  hm'.programs.nh = {
-    enable = true;
-    flake = "/etc/nixos/nix-config";
-    clean = {
-      enable = true;
-      extraArgs = "--keep 5";
-    };
-  };
 }
