@@ -3,11 +3,10 @@
     ./hardware.nix
   ];
 
-  networking.networkmanager.enable = true;
-
   security'.firewall.enable = true;
 
   services' = {
+    networkmanager.enable = true;
     openssh.enable = true;
     vnstat.enable = true;
   };

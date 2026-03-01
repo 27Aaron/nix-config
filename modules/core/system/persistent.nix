@@ -30,8 +30,6 @@ in
 
       directories = [
         # Simple paths
-        "/etc/NetworkManager/system-connections"
-        "/var/lib/NetworkManager"
         "/var/lib/systemd"
         "/var/log"
 
@@ -58,7 +56,6 @@ in
 
       files = [
         # auto-generated machine ID
-
         {
           file = "/etc/machine-id";
           inInitrd = true;
@@ -68,6 +65,7 @@ in
       users.${user} = {
         directories = [
           # XDG Directories
+          "Desktop"
           "Documents"
           "Downloads"
           "Music"
