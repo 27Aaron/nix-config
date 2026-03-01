@@ -20,7 +20,7 @@ in
       packages = with pkgs; [
         material-design-icons
         font-awesome
-        noto-fonts-emoji
+        noto-fonts-color-emoji
         nerd-fonts.fira-code
         nerd-fonts.symbols-only
         nerd-fonts.jetbrains-mono
