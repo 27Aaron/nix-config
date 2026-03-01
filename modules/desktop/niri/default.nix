@@ -10,13 +10,14 @@ let
 in
 {
   options.desktop'.niri = {
-    enable = lib.mkEnableOption "niri Wayland compositor";
+    enable = lib.mkEnableOption "Niri Wayland compositor";
   };
 
   config = lib.mkIf config.desktop'.niri.enable {
     programs.niri.enable = true;
 
     hm'.home.packages = with pkgs; [
+      kitty
       fuzzel
       polkit_gnome
       xwayland-satellite

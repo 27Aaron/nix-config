@@ -62,6 +62,7 @@ in
     networking.hostName = cfg.hostName;
     time.timeZone = cfg.timeZone;
     system.stateVersion = cfg.stateVersion;
+    documentation.nixos.enable = false;
 
     home-manager = {
       useGlobalPkgs = true;
