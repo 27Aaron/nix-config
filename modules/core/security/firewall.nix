@@ -8,7 +8,7 @@ let
 in
 {
   options.security'.firewall = {
-    enable = lib.mkEnableOption "Enable the firewall";
+    enable = lib.mkEnableOption "Firewall with nftables";
   };
 
   config = lib.mkIf cfg.enable {

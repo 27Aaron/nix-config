@@ -11,7 +11,7 @@ in
   imports = [ inputs.disko.nixosModules.disko ];
 
   options.hardware'.disko-luks = {
-    enable = lib.mkEnableOption "Enable LUKS encrypted disk";
+    enable = lib.mkEnableOption "LUKS encrypted disk with disko";
 
     device = lib.mkOption {
       type = lib.types.str;

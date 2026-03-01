@@ -9,7 +9,7 @@ let
 in
 {
   options.services'.openssh = {
-    enable = lib.mkEnableOption "Enable the OpenSSH daemon";
+    enable = lib.mkEnableOption "OpenSSH daemon";
   };
 
   config = lib.mkIf cfg.enable {

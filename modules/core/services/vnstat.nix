@@ -8,7 +8,7 @@ let
 in
 {
   options.services'.vnstat = {
-    enable = lib.mkEnableOption "Enable vnstat network traffic monitor";
+    enable = lib.mkEnableOption "Vnstat network traffic monitor";
   };
 
   config = lib.mkIf cfg.enable {
