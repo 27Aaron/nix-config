@@ -13,7 +13,6 @@
   programs' = {
     fcitx5.enable = true;
     firefox.enable = true;
-    steam.enable = true;
     zed.enable = true;
   };
 

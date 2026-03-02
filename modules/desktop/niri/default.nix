@@ -16,6 +16,10 @@ in
   config = lib.mkIf config.desktop'.niri.enable {
     programs.niri.enable = true;
 
+    environment.systemPackages = with pkgs; [
+      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+    ];
+
     hm'.home.packages = with pkgs; [
       kitty
       fuzzel
