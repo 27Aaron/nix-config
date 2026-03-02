@@ -11,8 +11,13 @@
   };
 
   config = lib.mkIf config.desktop'.noctalia.enable {
+
+    hardware.bluetooth.enable = true;
+    services.power-profiles-daemon.enable = true;
+    services.upower.enable = true;
+
     environment.systemPackages = with pkgs; [
-      brightnessctl
+      # brightnessctl
       playerctl
       cliphist
       wl-clipboard
