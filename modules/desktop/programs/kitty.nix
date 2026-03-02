@@ -13,7 +13,7 @@
       enable = true;
       font = {
         name = "Maple Mono NF CN";
-        size = 10;
+        size = 12;
       };
 
       settings = {
@@ -23,7 +23,7 @@
         url_color = "#ffb4a8";
         url_style = "dotted";
         confirm_os_window_close = 0;
-        background_opacity = "0.9";
+        background_opacity = "0.8";
 
         tab_bar_edge = "top";
         tab_bar_style = "powerline";
