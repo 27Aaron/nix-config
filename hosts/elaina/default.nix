@@ -8,6 +8,7 @@
     fonts.enable = true;
     greetd.enable = true;
     niri.enable = true;
+    noctalia.enable = true;
   };
 
   programs' = {
