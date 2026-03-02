@@ -17,7 +17,6 @@ in
     programs.niri.enable = true;
 
     hm'.home.packages = with pkgs; [
-      kitty
       fuzzel
       polkit_gnome
       xwayland-satellite

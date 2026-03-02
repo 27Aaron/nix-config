@@ -650,25 +650,6 @@
           wallpaperChangeMode = "random";
         };
       };
-
-      colors = {
-        mPrimary = "#ffb4a8";
-        mOnPrimary = "#5f150d";
-        mSecondary = "#e7bdb6";
-        mOnSecondary = "#442925";
-        mTertiary = "#dec38c";
-        mOnTertiary = "#3e2e04";
-        mError = "#ffb4ab";
-        mOnError = "#690005";
-        mSurface = "#181211";
-        mOnSurface = "#ede0de";
-        mSurfaceVariant = "#251e1d";
-        mOnSurfaceVariant = "#d8c2be";
-        mOutline = "#534341";
-        mShadow = "#000000";
-        mHover = "#dec38c";
-        mOnHover = "#3e2e04";
-      };
     };
   };
 }

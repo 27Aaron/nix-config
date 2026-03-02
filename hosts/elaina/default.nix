@@ -14,6 +14,7 @@
   programs' = {
     fcitx5.enable = true;
     firefox.enable = true;
+    kitty.enable = true;
     zed.enable = true;
   };
 
