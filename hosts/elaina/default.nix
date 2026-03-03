@@ -21,6 +21,7 @@
     kitty.enable = true;
     zed.enable = true;
     telegram.enable = true;
+    lmstudio.enable = true;
   };
 
   services' = {

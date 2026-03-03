@@ -18,6 +18,7 @@ in {
       fuzzel
       polkit_gnome
       xwayland-satellite
+      resources
     ];
 
     hm'.xdg.configFile = {
