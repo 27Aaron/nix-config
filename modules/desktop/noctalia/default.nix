@@ -50,6 +50,7 @@
           overviewLayer = false;
           pinnedApps = [ ];
           position = "center";
+          screenshotAnnotationTool = "";
           showCategories = true;
           showIconBackground = false;
           sortByMostUsed = true;
@@ -64,6 +65,7 @@
           preferredPlayer = "";
           visualizerType = "linear";
           volumeFeedback = false;
+          volumeFeedbackSoundFile = "";
           volumeOverdrive = false;
           volumeStep = 5;
         };
@@ -72,13 +74,13 @@
           autoHideDelay = 500;
           autoShowDelay = 150;
           backgroundOpacity = 0.93;
-          barType = "floating";
+          barType = "framed";
           capsuleColorKey = "none";
           capsuleOpacity = 1;
           contentPadding = 2;
           density = "default";
           displayMode = "always_visible";
-          floating = true;
+          floating = false;
           fontScale = 1;
           frameRadius = 12;
           frameThickness = 8;
@@ -146,7 +148,7 @@
                 showLoadAverage = false;
                 showMemoryAsPercent = false;
                 showMemoryUsage = true;
-                showNetworkStats = false;
+                showNetworkStats = true;
                 showSwapUsage = false;
                 textColor = "none";
                 useMonospaceFont = true;
@@ -205,17 +207,17 @@
                 textColor = "none";
               }
               {
-                displayMode = "onhover";
-                iconColor = "none";
-                id = "Volume";
-                middleClickCommand = "pwvucontrol || pavucontrol";
-                textColor = "none";
-              }
-              {
                 applyToAllMonitors = false;
                 displayMode = "onhover";
                 iconColor = "none";
                 id = "Brightness";
+                textColor = "none";
+              }
+              {
+                displayMode = "onhover";
+                iconColor = "none";
+                id = "Volume";
+                middleClickCommand = "pwvucontrol || pavucontrol";
                 textColor = "none";
               }
               {
@@ -384,7 +386,7 @@
           animationDisabled = false;
           animationSpeed = 1;
           autoStartAuth = false;
-          avatarImage = "/home/${config.core'.userName}/Pictures/avatar.jpg";
+          avatarImage = "/home/aaron/Pictures/avatar.jpg";
           boxRadiusRatio = 1;
           clockFormat = "hh\\nmm";
           clockStyle = "custom";
@@ -413,6 +415,7 @@
           lockScreenBlur = 0;
           lockScreenCountdownDuration = 10000;
           lockScreenMonitors = [ ];
+          lockScreenTint = 0;
           passwordChars = false;
           radiusRatio = 1;
           reverseScroll = false;
@@ -609,6 +612,7 @@
           batteryWarningThreshold = 20;
           cpuCriticalThreshold = 90;
           cpuWarningThreshold = 80;
+          criticalColor = "";
           diskAvailCriticalThreshold = 10;
           diskAvailWarningThreshold = 20;
           diskCriticalThreshold = 90;
@@ -624,6 +628,7 @@
           tempCriticalThreshold = 90;
           tempWarningThreshold = 80;
           useCustomColors = false;
+          warningColor = "";
         };
 
         templates = {
@@ -651,7 +656,7 @@
 
         wallpaper = {
           automationEnabled = false;
-          directory = "/home/${config.core'.userName}/Pictures/Wallpapers";
+          directory = "/home/aaron/Pictures/Wallpapers";
           enableMultiMonitorDirectories = false;
           enabled = true;
           favorites = [ ];
