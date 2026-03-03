@@ -2,8 +2,7 @@
   lib,
   config,
   ...
-}:
-{
+}: {
   options.programs'.kitty = {
     enable = lib.mkEnableOption "Kitty terminal emulator";
   };

@@ -2,11 +2,9 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   cfg = config.desktop'.greetd;
-in
-{
+in {
   options.desktop'.greetd = {
     enable = lib.mkEnableOption "Greetd display manager";
   };

@@ -1,8 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-{
+{pkgs, ...}: {
   hm'.home.packages = with pkgs; [
     # Archive tools
     p7zip # 7z compression

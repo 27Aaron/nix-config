@@ -4,8 +4,7 @@
   config,
   modulesPath,
   ...
-}:
-{
+}: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -21,8 +20,8 @@
   };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot.kernelModules = ["kvm-amd"];
+  boot.extraModulePackages = [];
 
   boot.initrd = {
     systemd.enable = true;
@@ -32,7 +31,7 @@
       "usbhid"
       "xhci_pci"
     ];
-    kernelModules = [ ];
+    kernelModules = [];
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

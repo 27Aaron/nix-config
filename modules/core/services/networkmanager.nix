@@ -2,12 +2,10 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   cfg = config.services'.networkmanager;
   user = config.core'.userName;
-in
-{
+in {
   options.services'.networkmanager = {
     enable = lib.mkEnableOption "NetworkManager for network configuration";
   };
@@ -15,7 +13,7 @@ in
   config = lib.mkIf cfg.enable {
     networking.networkmanager.enable = true;
 
-    users.users.${user}.extraGroups = [ "networkmanager" ];
+    users.users.${user}.extraGroups = ["networkmanager"];
 
     preservation'.os.directories = [
       "/etc/NetworkManager/system-connections"

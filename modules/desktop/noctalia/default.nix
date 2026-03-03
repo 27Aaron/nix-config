@@ -4,14 +4,12 @@
   config,
   inputs,
   ...
-}:
-{
+}: {
   options.desktop'.noctalia = {
     enable = lib.mkEnableOption "Noctalia shell";
   };
 
   config = lib.mkIf config.desktop'.noctalia.enable {
-
     hardware.bluetooth.enable = true;
     services.power-profiles-daemon.enable = true;
     services.upower.enable = true;
@@ -48,7 +46,7 @@
           iconMode = "tabler";
           ignoreMouseInput = false;
           overviewLayer = false;
-          pinnedApps = [ ];
+          pinnedApps = [];
           position = "center";
           screenshotAnnotationTool = "";
           showCategories = true;
@@ -61,7 +59,7 @@
 
         audio = {
           cavaFrameRate = 30;
-          mprisBlacklist = [ ];
+          mprisBlacklist = [];
           preferredPlayer = "";
           visualizerType = "linear";
           volumeFeedback = false;
@@ -87,13 +85,13 @@
           hideOnOverview = false;
           marginHorizontal = 4;
           marginVertical = 4;
-          monitors = [ ];
+          monitors = [];
           mouseWheelAction = "none";
           mouseWheelWrap = true;
           outerCorners = true;
           position = "top";
           reverseScroll = false;
-          screenOverrides = [ ];
+          screenOverrides = [];
           showCapsule = true;
           showOnWorkspaceSwitch = true;
           showOutline = false;
@@ -184,13 +182,13 @@
 
             right = [
               {
-                blacklist = [ ];
+                blacklist = [];
                 chevronColor = "none";
                 colorizeIcons = false;
                 drawerEnabled = true;
                 hidePassive = false;
                 id = "Tray";
-                pinned = [ ];
+                pinned = [];
               }
               {
                 hideWhenZero = false;
@@ -247,7 +245,7 @@
         };
 
         brightness = {
-          backlightDeviceMappings = [ ];
+          backlightDeviceMappings = [];
           brightnessStep = 5;
           enableDdcSupport = false;
           enforceMinimum = true;
@@ -346,7 +344,7 @@
         desktopWidgets = {
           enabled = false;
           gridSnap = false;
-          monitorWidgets = [ ];
+          monitorWidgets = [];
           overviewEnabled = true;
         };
 
@@ -369,9 +367,9 @@
           indicatorThickness = 3;
           launcherIconColor = "none";
           launcherPosition = "end";
-          monitors = [ ];
+          monitors = [];
           onlySameOutput = true;
-          pinnedApps = [ ];
+          pinnedApps = [];
           pinnedStatic = false;
           position = "bottom";
           showDockIndicator = false;
@@ -398,23 +396,23 @@
           forceBlackScreenCorners = false;
           iRadiusRatio = 1;
           keybinds = {
-            keyDown = [ "Down" ];
+            keyDown = ["Down"];
             keyEnter = [
               "Return"
               "Enter"
             ];
-            keyEscape = [ "Esc" ];
-            keyLeft = [ "Left" ];
-            keyRemove = [ "Del" ];
-            keyRight = [ "Right" ];
-            keyUp = [ "Up" ];
+            keyEscape = ["Esc"];
+            keyLeft = ["Left"];
+            keyRemove = ["Del"];
+            keyRight = ["Right"];
+            keyUp = ["Up"];
           };
           language = "";
           lockOnSuspend = true;
           lockScreenAnimations = false;
           lockScreenBlur = 0;
           lockScreenCountdownDuration = 10000;
-          lockScreenMonitors = [ ];
+          lockScreenMonitors = [];
           lockScreenTint = 0;
           passwordChars = false;
           radiusRatio = 1;
@@ -507,7 +505,7 @@
           enabled = true;
           location = "top_right";
           lowUrgencyDuration = 3;
-          monitors = [ ];
+          monitors = [];
           normalUrgencyDuration = 8;
           overlayLayer = true;
           respectExpireTimeout = false;
@@ -538,7 +536,7 @@
             3
           ];
           location = "bottom";
-          monitors = [ ];
+          monitors = [];
           overlayLayer = true;
         };
 
@@ -659,11 +657,11 @@
           directory = "/home/aaron/Pictures/Wallpapers";
           enableMultiMonitorDirectories = false;
           enabled = true;
-          favorites = [ ];
+          favorites = [];
           fillColor = "#000000";
           fillMode = "crop";
           hideWallpaperFilenames = false;
-          monitorDirectories = [ ];
+          monitorDirectories = [];
           overviewBlur = 0.4;
           overviewEnabled = false;
           overviewTint = 0.6;

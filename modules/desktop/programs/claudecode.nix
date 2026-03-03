@@ -3,17 +3,15 @@
   pkgs,
   config,
   ...
-}:
-let
+}: let
   cfg = config.programs'.claudecode;
-in
-{
+in {
   options.programs'.claudecode = {
     enable = lib.mkEnableOption "Claude Code CLI tool";
   };
 
   config = lib.mkIf cfg.enable {
-    hm'.home.packages = with pkgs; [ claude-code ];
+    hm'.home.packages = with pkgs; [claude-code];
 
     preservation'.user.directories = [
       ".claude"

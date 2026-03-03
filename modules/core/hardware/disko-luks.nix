@@ -3,12 +3,10 @@
   config,
   inputs,
   ...
-}:
-let
+}: let
   cfg = config.hardware'.disko-luks;
-in
-{
-  imports = [ inputs.disko.nixosModules.disko ];
+in {
+  imports = [inputs.disko.nixosModules.disko];
 
   options.hardware'.disko-luks = {
     enable = lib.mkEnableOption "LUKS encrypted disk with disko";

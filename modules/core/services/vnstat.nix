@@ -2,11 +2,9 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   cfg = config.services'.vnstat;
-in
-{
+in {
   options.services'.vnstat = {
     enable = lib.mkEnableOption "Vnstat network traffic monitor";
   };

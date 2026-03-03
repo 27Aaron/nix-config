@@ -28,21 +28,18 @@
     };
   };
 
-  outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      ...
-    }:
-    let
-      inherit (nixpkgs) lib;
-      forEachSystem = lib.genAttrs lib.systems.flakeExposed;
-    in
-    {
-      nixosModules = import ./modules { inherit lib; };
-      nixosConfigurations = import ./hosts { inherit self inputs lib; };
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    ...
+  }: let
+    inherit (nixpkgs) lib;
+    forEachSystem = lib.genAttrs lib.systems.flakeExposed;
+  in {
+    nixosModules = import ./modules {inherit lib;};
+    nixosConfigurations = import ./hosts {inherit self inputs lib;};
 
-      # nix code formatter
-      formatter = forEachSystem (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
-    };
+    # nix code formatter
+    formatter = forEachSystem (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+  };
 }

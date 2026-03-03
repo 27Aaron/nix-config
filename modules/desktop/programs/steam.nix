@@ -3,11 +3,9 @@
   pkgs,
   config,
   ...
-}:
-let
+}: let
   cfg = config.programs'.steam;
-in
-{
+in {
   options.programs'.steam = {
     enable = lib.mkEnableOption "Steam gaming platform";
   };
@@ -22,7 +20,7 @@ in
         enable = true;
         gamescopeSession.enable = true;
         protontricks.enable = true;
-        extraCompatPackages = with pkgs; [ proton-ge-bin ];
+        extraCompatPackages = with pkgs; [proton-ge-bin];
         remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
         dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
         localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers

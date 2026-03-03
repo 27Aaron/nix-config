@@ -3,12 +3,10 @@
   pkgs,
   config,
   ...
-}:
-let
+}: let
   mkSymlink = config.home-manager.users.${config.core'.userName}.lib.file.mkOutOfStoreSymlink;
   confPath = "/etc/nixos/nix-config/modules/desktop/niri/conf";
-in
-{
+in {
   options.desktop'.niri = {
     enable = lib.mkEnableOption "Niri Wayland compositor";
   };
@@ -37,8 +35,8 @@ in
     hm'.systemd.user.services.polkit-gnome-authentication-agent = {
       Unit = {
         Description = "GNOME Polkit Authentication Agent";
-        After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" ];
+        After = ["graphical-session.target"];
+        PartOf = ["graphical-session.target"];
       };
       Service = {
         Type = "simple";
@@ -46,7 +44,7 @@ in
         Restart = "on-failure";
       };
       Install = {
-        WantedBy = [ "niri.service" ];
+        WantedBy = ["niri.service"];
       };
     };
 

@@ -2,11 +2,9 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   cfg = config.programs'.firefox;
-in
-{
+in {
   options.programs'.firefox = {
     enable = lib.mkEnableOption "Firefox web browser";
   };

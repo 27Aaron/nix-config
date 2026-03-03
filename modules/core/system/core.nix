@@ -3,15 +3,13 @@
   config,
   inputs,
   ...
-}:
-let
+}: let
   cfg = config.core';
-in
-{
+in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
-    (lib.mkAliasOptionModule [ "user'" ] [ "users" "users" cfg.userName ])
-    (lib.mkAliasOptionModule [ "hm'" ] [ "home-manager" "users" cfg.userName ])
+    (lib.mkAliasOptionModule ["user'"] ["users" "users" cfg.userName])
+    (lib.mkAliasOptionModule ["hm'"] ["home-manager" "users" cfg.userName])
   ];
 
   options.core' = {
@@ -39,7 +37,7 @@ in
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA6xNNhF6jaPKuch8vSHwHTGlbyn4i2zSHxrqGOiacxG Aaron@Deployment"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKHjMAQUXfyMv8TG1NfqjmQJG3gqZkh25KAvAMvxVrWS Aaron@MacBook-Pro"
       ];
-      example = [ "ssh-ed25519 AAAA..." ];
+      example = ["ssh-ed25519 AAAA..."];
       description = "SSH public keys for the main user";
     };
   };
@@ -53,7 +51,7 @@ in
       };
       ${cfg.userName} = {
         isNormalUser = true;
-        extraGroups = [ "wheel" ];
+        extraGroups = ["wheel"];
         hashedPassword = "$y$j9T$9BVbJKhiRZ/U5iTL7sZtT/$3xUVDretSE/RqiacfJbu/vK0Li0H8Z/S4LESEj1E/u1";
         openssh.authorizedKeys.keys = cfg.sshKeys;
       };

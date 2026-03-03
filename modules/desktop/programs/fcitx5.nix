@@ -3,11 +3,9 @@
   pkgs,
   config,
   ...
-}:
-let
+}: let
   cfg = config.programs'.fcitx5;
-in
-{
+in {
   options.programs'.fcitx5 = {
     enable = lib.mkEnableOption "Fcitx5 input method";
   };
@@ -20,7 +18,7 @@ in
         waylandFrontend = true;
         addons = with pkgs; [
           fcitx5-rime
-          (qt6Packages.fcitx5-configtool.override { kcmSupport = false; })
+          (qt6Packages.fcitx5-configtool.override {kcmSupport = false;})
         ];
       };
     };

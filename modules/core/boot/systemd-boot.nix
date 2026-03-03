@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   boot.loader.systemd-boot = {
     enable = lib.mkDefault false;
     editor = lib.mkDefault false;
