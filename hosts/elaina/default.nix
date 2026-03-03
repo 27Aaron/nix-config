@@ -20,6 +20,7 @@
     firefox.enable = true;
     kitty.enable = true;
     zed.enable = true;
+    telegram.enable = true;
   };
 
   services' = {
