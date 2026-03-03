@@ -26,7 +26,9 @@ in
     };
 
     preservation'.user.directories = [
-      ".config/fcitx5"
+      ".config/ibus"
+      ".config/fcitx"
+      ".congig/fcitx5"
       ".local/share/fcitx5"
     ];
   };
