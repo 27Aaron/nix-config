@@ -12,6 +12,7 @@
   };
 
   programs' = {
+    vscode.enable = true;
     claudecode.enable = true;
     opencode.enable = true;
 
