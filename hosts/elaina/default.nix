@@ -12,6 +12,9 @@
   };
 
   programs' = {
+    claudecode.enable = true;
+    opencode.enable = true;
+
     fcitx5.enable = true;
     firefox.enable = true;
     kitty.enable = true;
