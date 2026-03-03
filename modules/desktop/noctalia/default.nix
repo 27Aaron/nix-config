@@ -37,6 +37,8 @@
           clipboardWatchImageCommand = "wl-paste --type image --watch cliphist store";
           clipboardWatchTextCommand = "wl-paste --type text --watch cliphist store";
           clipboardWrapText = true;
+          customLaunchPrefix = "";
+          customLaunchPrefixEnabled = false;
           density = "default";
           enableClipPreview = true;
           enableClipboardHistory = false;
@@ -83,11 +85,13 @@
           hideOnOverview = false;
           marginHorizontal = 4;
           marginVertical = 4;
+          monitors = [ ];
           mouseWheelAction = "none";
           mouseWheelWrap = true;
           outerCorners = true;
           position = "top";
           reverseScroll = false;
+          screenOverrides = [ ];
           showCapsule = true;
           showOnWorkspaceSwitch = true;
           showOutline = false;
@@ -110,6 +114,7 @@
                 labelMode = "index";
                 occupiedColor = "secondary";
                 pillSize = 0.6;
+                showApplications = false;
                 showBadge = true;
                 showLabelsOnlyWhenOccupied = true;
                 unfocusedIconsOpacity = 1;
@@ -120,6 +125,7 @@
               {
                 colorizeDistroLogo = false;
                 colorizeSystemIcon = "none";
+                customIconPath = "";
                 enableColorization = false;
                 icon = "noctalia";
                 id = "ControlCenter";
@@ -193,13 +199,10 @@
                 unreadBadgeColor = "primary";
               }
               {
-                deviceNativePath = "__default__";
-                displayMode = "icon-hover";
-                hideIfIdle = false;
-                hideIfNotDetected = true;
-                id = "Battery";
-                showNoctaliaPerformance = false;
-                showPowerProfiles = false;
+                displayMode = "onhover";
+                iconColor = "none";
+                id = "Network";
+                textColor = "none";
               }
               {
                 displayMode = "onhover";
@@ -214,6 +217,15 @@
                 iconColor = "none";
                 id = "Brightness";
                 textColor = "none";
+              }
+              {
+                deviceNativePath = "__default__";
+                displayMode = "icon-hover";
+                hideIfIdle = false;
+                hideIfNotDetected = true;
+                id = "Battery";
+                showNoctaliaPerformance = false;
+                showPowerProfiles = false;
               }
               {
                 clockColor = "none";
@@ -355,6 +367,7 @@
           indicatorThickness = 3;
           launcherIconColor = "none";
           launcherPosition = "end";
+          monitors = [ ];
           onlySameOutput = true;
           pinnedApps = [ ];
           pinnedStatic = false;
@@ -399,6 +412,7 @@
           lockScreenAnimations = false;
           lockScreenBlur = 0;
           lockScreenCountdownDuration = 10000;
+          lockScreenMonitors = [ ];
           passwordChars = false;
           radiusRatio = 1;
           reverseScroll = false;
@@ -490,6 +504,7 @@
           enabled = true;
           location = "top_right";
           lowUrgencyDuration = 3;
+          monitors = [ ];
           normalUrgencyDuration = 8;
           overlayLayer = true;
           respectExpireTimeout = false;
@@ -520,6 +535,7 @@
             3
           ];
           location = "bottom";
+          monitors = [ ];
           overlayLayer = true;
         };
 
@@ -536,42 +552,49 @@
           powerOptions = [
             {
               action = "lock";
+              command = "";
               countdownEnabled = true;
               enabled = true;
               keybind = "1";
             }
             {
               action = "suspend";
+              command = "";
               countdownEnabled = true;
               enabled = true;
               keybind = "2";
             }
             {
               action = "hibernate";
+              command = "";
               countdownEnabled = true;
               enabled = true;
               keybind = "3";
             }
             {
               action = "reboot";
+              command = "";
               countdownEnabled = true;
               enabled = true;
               keybind = "4";
             }
             {
               action = "logout";
+              command = "";
               countdownEnabled = true;
               enabled = true;
               keybind = "5";
             }
             {
               action = "shutdown";
+              command = "";
               countdownEnabled = true;
               enabled = true;
               keybind = "6";
             }
             {
               action = "rebootToUefi";
+              command = "";
               countdownEnabled = true;
               enabled = true;
               keybind = "7";
@@ -652,9 +675,24 @@
           useSolidColor = false;
           useWallhaven = false;
           viewMode = "single";
+          wallhavenApiKey = "";
+          wallhavenCategories = "111";
+          wallhavenOrder = "desc";
+          wallhavenPurity = "100";
+          wallhavenQuery = "";
+          wallhavenRatios = "";
+          wallhavenResolutionHeight = "";
+          wallhavenResolutionMode = "atleast";
+          wallhavenResolutionWidth = "";
+          wallhavenSorting = "relevance";
           wallpaperChangeMode = "random";
         };
       };
     };
+
+    preservation'.user.directories = [
+      ".cache/noctalia"
+      ".config/noctalia"
+    ];
   };
 }

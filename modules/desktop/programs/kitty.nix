@@ -34,5 +34,9 @@
         include ./themes/noctalia.conf
       '';
     };
+
+    preservation'.user.directories = [
+      ".cache/kitty"
+    ];
   };
 }
