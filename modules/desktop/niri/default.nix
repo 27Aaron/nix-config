@@ -14,6 +14,13 @@ in {
   config = lib.mkIf config.desktop'.niri.enable {
     programs.niri.enable = true;
 
+    hm' = {
+      gtk.enable = true;
+      gtk.gtk3.extraConfig = {gtk-application-prefer-dark-theme = true;};
+      gtk.gtk4.extraConfig = {gtk-application-prefer-dark-theme = true;};
+      dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+    };
+
     hm'.home.packages = with pkgs; [
       fuzzel
       polkit_gnome
