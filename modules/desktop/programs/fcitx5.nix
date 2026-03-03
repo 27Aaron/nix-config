@@ -28,7 +28,7 @@ in
     preservation'.user.directories = [
       ".config/ibus"
       ".config/fcitx"
-      ".congig/fcitx5"
+      ".config/fcitx5"
       ".local/share/fcitx5"
     ];
   };
