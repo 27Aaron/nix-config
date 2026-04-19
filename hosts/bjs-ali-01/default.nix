@@ -21,6 +21,7 @@
   services'.docker.enable = true;
 
   # Database
+  services'.redis.enable = true;
   services'.postgresql.enable = true;
   services'.postgresql.openFirewall = true;
 
