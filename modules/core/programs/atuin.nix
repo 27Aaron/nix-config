@@ -3,7 +3,7 @@
     atuin = {
       enable = true;
       enableBashIntegration = true;
-      enableFishIntegration = false;
+      enableFishIntegration = true;
       daemon.enable = true;
       settings = {
         sync_frequency = 0;
