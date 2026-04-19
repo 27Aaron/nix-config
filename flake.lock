@@ -47,11 +47,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776587175,
-        "narHash": "sha256-L1SgsZfPvebUDvhd+/jNJ3nGY0HYa/+qG3thj94Rvfk=",
+        "lastModified": 1776592955,
+        "narHash": "sha256-FCRmOODg4CqQuXZNxmLQYv1EMmp8BIYlzP9LU7dZLQ4=",
         "owner": "27Aaron",
         "repo": "mimotion",
-        "rev": "c1acca7e8ebdbe4e308246c5357ec8c96195af29",
+        "rev": "c789e3e9e0930cb92472cc35d2550670a8e5c904",
         "type": "github"
       },
       "original": {
@@ -63,10 +63,10 @@
     "my-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1776591134,
-        "narHash": "sha256-0wyQSyYILETpxvx/kuq4YKiP3WhkqGSoIowCCln8x4U=",
+        "lastModified": 1776595133,
+        "narHash": "sha256-sx72dWYVdnDJawlfa+SzKyOd2ROHiMwN7fd/lFaSBt8=",
         "ref": "refs/heads/main",
-        "rev": "30c0db815a483b661b68ca539994a82d8d3b268f",
+        "rev": "8520243c63fe184261b4d1f7ababcf52fa7c8b7d",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/27Aaron/nix-secrets.git"
