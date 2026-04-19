@@ -12,11 +12,6 @@
 
   hm'.programs.fish = {
     enable = true;
-    # interactiveShellInit = ''
-    #   # Atuin shell history with fish fix for "bind -k up" issue
-    #   # https://github.com/atuinsh/atuin/issues/2803
-    #   ${pkgs.atuin}/bin/atuin init fish | sed 's/-k up/up/' | source
-    # '';
   };
 
   preservation'.user.directories = [
