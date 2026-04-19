@@ -57,8 +57,6 @@ in {
 
     systemd.tmpfiles.rules = [
       "d /var/lib/new-api 0755 root root -"
-      "d /var/lib/new-api/data 0755 root root -"
-      "d /var/lib/new-api/logs 0755 root root -"
     ];
 
     virtualisation.oci-containers.containers = {
