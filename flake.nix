@@ -30,6 +30,11 @@
       url = "git+https://codeberg.org/niceboy/nur-packages.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    mimotion = {
+      url = "github:27Aaron/mimotion";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {

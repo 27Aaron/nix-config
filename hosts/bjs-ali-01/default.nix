@@ -4,6 +4,7 @@
     ./hardware.nix
     "${inputs.my-secrets}/hosts/bjs-ali-01/caddy.nix"
     "${inputs.my-secrets}/hosts/bjs-ali-01/proxy.nix"
+    "${inputs.my-secrets}/hosts/bjs-ali-01/mimotion.nix"
   ];
 
   # Alibaba Beijing 2C-2G-40G
@@ -23,4 +24,7 @@
   # Proxy
   services'.dae.enable = true;
   services'.snell-server.enable = true;
+
+  # MiMotion
+  services'.mimotion.enable = true;
 }
