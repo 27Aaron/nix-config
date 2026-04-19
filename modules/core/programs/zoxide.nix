@@ -3,7 +3,7 @@
     zoxide = {
       enable = true;
       enableBashIntegration = true;
-      enableFishIntegration = false;
+      enableFishIntegration = true;
     };
   };
 }
