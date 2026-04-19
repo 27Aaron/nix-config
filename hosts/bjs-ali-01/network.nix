@@ -1,4 +1,4 @@
-{lib, ...}: {
+{
   # Networking
   networking = {
     useDHCP = false;
@@ -11,6 +11,7 @@
     networks."10-eth0" = {
       DHCP = "yes";
       matchConfig.Name = "eth0";
+      dns = [ "223.5.5.5" "223.6.6.6" ];
     };
   };
 
@@ -20,10 +21,4 @@
     LLMNR = false;
     MulticastDNS = false;
   };
-
-  environment.etc."resolv.conf".text = lib.mkForce ''
-    nameserver 223.5.5.5
-    nameserver 223.6.6.6
-    options edns0 trust-ad
-  '';
 }
