@@ -17,14 +17,8 @@
   services'.caddy.enable = true;
   services'.tang.enable = true;
 
-  # Container
-  services'.docker.enable = true;
-  containers'.new-api.enable = true;
-
   # Database
-  services'.redis.enable = true;
   services'.postgresql.enable = true;
-  services'.postgresql.openFirewall = true;
 
   # Proxy
   services'.dae.enable = true;
