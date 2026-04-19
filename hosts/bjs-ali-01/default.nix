@@ -19,6 +19,7 @@
 
   # Container
   services'.docker.enable = true;
+  containers'.new-api.enable = true;
 
   # Database
   services'.redis.enable = true;
