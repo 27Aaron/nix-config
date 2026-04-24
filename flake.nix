@@ -35,6 +35,11 @@
       url = "github:27Aaron/mimotion";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    defuddle = {
+      url = "github:27Aaron/defuddle-proxy";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
