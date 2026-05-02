@@ -1,6 +1,4 @@
-{inputs, ...}: let
-  secrets = import "${inputs.my-secrets}/hosts/hkg-dmit-01/network.nix";
-in {
+{
   # Networking
   networking = {
     useDHCP = false;
@@ -11,13 +9,8 @@ in {
   systemd.network = {
     enable = true;
     networks."10-eth0" = {
+      DHCP = "yes";
       matchConfig.Name = "eth0";
-      inherit (secrets) address;
-      networkConfig = {
-        IPv6AcceptRA = false;
-        LinkLocalAddressing = "ipv6";
-      };
-      routes = secrets.routes;
     };
   };
 
