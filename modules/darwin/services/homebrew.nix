@@ -41,7 +41,6 @@
       "wechat"
 
       # Development
-      "mactex"
       "orbstack"
 
       # Editor
