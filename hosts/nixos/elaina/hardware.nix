@@ -23,7 +23,7 @@
     efi.canTouchEfiVariables = true;
   };
 
-  hardware'.disko = {
+  storage'.disko = {
     enable = true;
     device = "/dev/nvme0n1";
     espSize = "1G";
