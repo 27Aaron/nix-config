@@ -1,34 +1,69 @@
 {
+  config,
+  lib,
   hostName,
   myvars,
   ...
 }: let
-  userName = myvars.username;
-  hashedPassword = myvars.hashedPassword;
-  sshKeys = myvars.sshAuthorizedKeys;
+  cfg = config.core';
 in {
-  users.mutableUsers = false;
+  imports = [
+    (lib.mkAliasOptionModule ["user'"] ["users" "users" myvars.username])
+    (lib.mkAliasOptionModule ["hm'"] ["home-manager" "users" myvars.username])
+  ];
 
-  users.users = {
-    root = {
-      inherit hashedPassword;
-      openssh.authorizedKeys.keys = sshKeys;
+  options.core' = {
+    hostName = lib.mkOption {
+      type = lib.types.str;
+      default = hostName;
+      description = "NixOS host name";
     };
 
-    ${userName} = {
-      isNormalUser = true;
-      extraGroups = ["wheel"];
-      inherit hashedPassword;
-      openssh.authorizedKeys.keys = sshKeys;
+    timeZone = lib.mkOption {
+      type = lib.types.str;
+      default = myvars.timeZone;
+      description = "System time zone";
+    };
+
+    hashedPassword = lib.mkOption {
+      type = lib.types.str;
+      default = myvars.hashedPassword;
+      description = "Hashed password shared by the primary user and root";
+    };
+
+    sshAuthorizedKeys = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = myvars.sshAuthorizedKeys;
+      description = "SSH keys authorized for the primary user and root";
     };
   };
 
-  networking.hostName = hostName;
-  time.timeZone = myvars.timeZone;
-  system.stateVersion = myvars.stateVersion;
+  config = {
+    users.mutableUsers = false;
 
-  documentation = {
-    man.cache.enable = false;
-    nixos.enable = false;
+    users.users = {
+      root = {
+        hashedPassword = cfg.hashedPassword;
+        openssh.authorizedKeys.keys = cfg.sshAuthorizedKeys;
+      };
+
+      ${myvars.username} = {
+        isNormalUser = true;
+        extraGroups = ["wheel"];
+        hashedPassword = cfg.hashedPassword;
+        openssh.authorizedKeys.keys = cfg.sshAuthorizedKeys;
+      };
+    };
+
+    networking.hostName = cfg.hostName;
+    time.timeZone = lib.mkDefault cfg.timeZone;
+
+    # Add the terminfo database of all known terminals to the system profile.
+    environment.enableAllTerminfo = lib.mkDefault true;
+
+    documentation = {
+      man.cache.enable = false;
+      nixos.enable = false;
+    };
   };
 }

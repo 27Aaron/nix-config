@@ -1,4 +1,6 @@
 {...}: {
+  system.stateVersion = "26.11";
+
   imports = [
     ./hardware.nix
   ];

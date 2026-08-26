@@ -5,8 +5,6 @@
 
   timeZone = "Asia/Singapore";
 
-  stateVersion = "26.11";
-
   hashedPassword = "$y$j9T$fXIHIyb1usprTzAw.ntqJ/$I/sbwudS.KESDGLwKV8QzsLqr7pNQvYYv20GcWKFsV1";
 
   sshAuthorizedKeys = [
