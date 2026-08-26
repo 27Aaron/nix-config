@@ -35,5 +35,12 @@ in {
       StateDirectory = "smartmontools";
       StateDirectoryMode = "0750";
     };
+
+    preservation'.os.directories = [
+      {
+        directory = "/var/lib/smartmontools";
+        mode = "0750";
+      }
+    ];
   };
 }
