@@ -39,6 +39,5 @@ in {
 
   programs = {
     man.enable = false;
-    man.generateCaches = false;
   };
 }

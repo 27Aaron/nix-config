@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  myvars,
   pkgs,
   ...
 }: let
@@ -12,7 +11,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home-manager.users.${myvars.username}.home.pointerCursor = {
+    hm'.home.pointerCursor = {
       enable = true;
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Classic";
