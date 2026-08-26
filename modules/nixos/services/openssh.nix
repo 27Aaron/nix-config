@@ -32,6 +32,5 @@ in {
       };
       openFirewall = cfg.openFirewall;
     };
-
   };
 }
