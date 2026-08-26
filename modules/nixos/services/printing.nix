@@ -10,6 +10,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    services.printing.enable = lib.mkDefault true;
+    services.printing.enable = true;
   };
 }

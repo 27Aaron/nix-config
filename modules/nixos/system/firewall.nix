@@ -12,10 +12,10 @@ in {
   config = lib.mkIf cfg.enable {
     networking = {
       firewall = {
-        enable = lib.mkDefault true;
-        allowPing = lib.mkDefault true;
+        enable = true;
+        allowPing = true;
       };
-      nftables.enable = lib.mkDefault true;
+      nftables.enable = true;
     };
   };
 }

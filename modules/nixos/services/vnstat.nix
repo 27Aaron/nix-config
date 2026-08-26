@@ -10,6 +10,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    services.vnstat.enable = lib.mkDefault true;
+    services.vnstat.enable = true;
   };
 }
