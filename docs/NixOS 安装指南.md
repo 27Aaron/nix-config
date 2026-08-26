@@ -170,7 +170,7 @@ sudo nixos-generate-config --no-filesystems --root /mnt
 
 检查 `/mnt/etc/nixos/hardware-configuration.nix`，将仍然需要的硬件探测结果合并到 `hosts/nixos/elaina/hardware.nix`，不要覆盖已有的 Disko 和引导配置。
 
-确认 `vars/default.nix` 中的用户名、密码哈希、SSH 公钥、时区和状态版本正确，然后安装系统：
+确认 `vars/default.nix` 中的用户名、密码哈希、SSH 公钥和默认时区，以及 `hosts/nixos/<主机名>/default.nix` 中的系统状态版本正确，然后安装系统：
 
 ```bash
 sudo nixos-install \
@@ -188,20 +188,7 @@ sudo reboot
 启动时输入 LUKS 密码，然后使用 `vars/default.nix` 中配置的账户登录。
 
 > [!IMPORTANT]
-> 根文件系统使用 tmpfs。只有 `modules/nixos/persistent/` 中声明的目录和文件会保存在 `/persistent`，其余内容会在重启后消失。
-
-## 配置目录
-
-NixOS 模块由入口模块自动发现，按职责分为以下目录：
-
-- `modules/nixos/system/`：基础系统配置，例如用户、主机名、区域设置和 Nix
-- `modules/nixos/services/`：主机级系统服务，例如 SSH、网络和监控
-- `modules/nixos/apps/`：应用级服务与数据库，例如 PostgreSQL
-- `modules/nixos/boot/`、`hardware/`、`security/`：启动、硬件和安全配置
-- `modules/nixos/desktop/`：桌面环境与桌面应用
-- `modules/nixos/persistent/`：需要保存在 `/persistent` 的目录和文件
-
-应用模块使用对应的 `apps'` 命名空间配置，例如 `apps'.postgresql.enable = true`。
+> 根文件系统使用 tmpfs，系统设计为将需要保留的数据存储到 `/persistent`；未持久化的数据会在重启后消失。
 
 ## 参考资料
 
