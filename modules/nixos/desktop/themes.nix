@@ -22,8 +22,8 @@ in {
         enable = true;
 
         theme = {
-          package = pkgs.flat-remix-gtk;
-          name = "Flat-Remix-GTK-Grey-Darkest";
+          package = pkgs.adw-gtk3;
+          name = "adw-gtk3-dark";
         };
 
         iconTheme = {
