@@ -1,13 +1,14 @@
 {
-  lib,
-  pkgs,
   config,
+  lib,
+  myvars,
+  pkgs,
   ...
 }: let
-  cfg = config.services'.postgresql;
-  user = config.core'.userName;
+  cfg = config.apps'.postgresql;
+  user = myvars.username;
 in {
-  options.services'.postgresql = {
+  options.apps'.postgresql = {
     enable = lib.mkEnableOption "Enable PostgreSQL service";
     openFirewall = lib.mkEnableOption "Open firewall port for PostgreSQL";
   };
