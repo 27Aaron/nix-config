@@ -1,22 +1,46 @@
 {
+  config,
+  lib,
   hostName,
   myvars,
   ...
-}: {
-  programs.fish.enable = true;
+}: let
+  cfg = config.core';
+in {
+  imports = [
+    (lib.mkAliasOptionModule ["user'"] ["users" "users" myvars.username])
+    (lib.mkAliasOptionModule ["hm'"] ["home-manager" "users" myvars.username])
+  ];
 
-  time.timeZone = myvars.timeZone;
+  options.core' = {
+    hostName = lib.mkOption {
+      type = lib.types.str;
+      default = hostName;
+      description = "macOS host name";
+    };
 
-  system = {
-    primaryUser = myvars.username;
-    stateVersion = 6;
+    timeZone = lib.mkOption {
+      type = lib.types.str;
+      default = myvars.timeZone;
+      description = "System time zone";
+    };
   };
 
-  users.users.${myvars.username}.home = "/Users/${myvars.username}";
+  config = {
+    programs.fish.enable = lib.mkDefault true;
 
-  networking = {
-    inherit hostName;
-    computerName = hostName;
+    time.timeZone = lib.mkDefault cfg.timeZone;
+
+    system = {
+      primaryUser = myvars.username;
+    };
+
+    users.users.${myvars.username}.home = "/Users/${myvars.username}";
+
+    networking = {
+      hostName = cfg.hostName;
+      computerName = cfg.hostName;
+    };
+    system.defaults.smb.NetBIOSName = cfg.hostName;
   };
-  system.defaults.smb.NetBIOSName = hostName;
 }
