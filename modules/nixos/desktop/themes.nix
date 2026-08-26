@@ -21,10 +21,10 @@ in {
       gtk = {
         enable = true;
 
-        theme = {
-          package = pkgs.flat-remix-gtk;
-          name = "Flat-Remix-GTK-Grey-Darkest";
-        };
+      theme = {
+        package = pkgs.adw-gtk3;
+        name = "adw-gtk3-dark";
+      };
 
         iconTheme = {
           package = pkgs.papirus-icon-theme;
