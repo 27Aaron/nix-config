@@ -1,97 +1,144 @@
 {
-  homebrew = {
-    enable = true;
-    enableFishIntegration = true;
-    enableZshIntegration = true;
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.apps'.homebrew;
+in {
+  options.apps'.homebrew = {
+    enable = lib.mkEnableOption "Homebrew package management";
+
+    enableFishIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable Homebrew integration for Fish";
+    };
+
+    enableZshIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable Homebrew integration for Zsh";
+    };
 
     onActivation = {
-      autoUpdate = true; # Fetch the newest stable branch of Homebrew's git repo
-      cleanup = "zap"; # Uninstall unlisted packages and their related files
-      upgrade = true; # Upgrade outdated casks, formulae, and App Store apps
+      autoUpdate = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Fetch the newest stable Homebrew branch on activation";
+      };
+
+      cleanup = lib.mkOption {
+        type = lib.types.enum ["none" "uninstall" "zap"];
+        default = "zap";
+        description = "How aggressively to remove packages not in the configuration";
+      };
+
+      upgrade = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Upgrade outdated Homebrew packages on activation";
+      };
     };
 
-    # Applications to install from Mac App Store using mas.
-    masApps = {
-      "Bob" = 1630034110;
-      "WPS" = 1443749478;
+    masApps = lib.mkOption {
+      type = lib.types.attrsOf lib.types.int;
+      default = {
+        "Bob" = 1630034110;
+        "WPS" = 1443749478;
+      };
+      description = "Applications to install from the Mac App Store";
     };
 
-    # `brew install`
-    brews = [
-      # Disk & Cleanup
-      "mole"
-    ];
+    brews = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        # Disk & Cleanup
+        "mole"
+      ];
+      description = "Homebrew formulae to install";
+    };
 
-    # `brew install --cask`
-    casks = [
-      # AI Development
-      "chatgpt"
-      "cc-switch"
-      "grok-build"
-      "steipete/tap/codexbar"
+    casks = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        # AI Development
+        "chatgpt"
+        "cc-switch"
+        "grok-build"
+        "steipete/tap/codexbar"
 
-      # Browser
-      # "brave-browser"
-      "firefox"
-      "google-chrome"
+        # Browser
+        # "brave-browser"
+        "firefox"
+        "google-chrome"
 
-      # Communication
-      "feishu"
-      "telegram"
-      "wechat"
+        # Communication
+        "feishu"
+        "telegram"
+        "wechat"
 
-      # Development
-      "orbstack"
+        # Development
+        "orbstack"
 
-      # Editor
-      "visual-studio-code"
+        # Editor
+        "visual-studio-code"
 
-      # Font
-      "font-lxgw-wenkai"
-      "font-hack-nerd-font"
-      "font-material-icons"
-      "font-maple-mono-nf-cn"
-      "font-jetbrains-mono-nerd-font"
+        # Font
+        "font-lxgw-wenkai"
+        "font-hack-nerd-font"
+        "font-material-icons"
+        "font-maple-mono-nf-cn"
+        "font-jetbrains-mono-nerd-font"
 
-      # Hardware
-      # "monitorcontrol"
-      "macs-fan-control"
+        # Hardware
+        # "monitorcontrol"
+        "macs-fan-control"
 
-      # Input & Keyboard
-      "input-source-pro"
-      "karabiner-elements"
+        # Input & Keyboard
+        "input-source-pro"
+        "karabiner-elements"
 
-      # Knowledge Base
-      "obsidian"
+        # Knowledge Base
+        "obsidian"
 
-      # Media
-      "iina"
-      "neteasemusic"
-      "obs"
-      "plex"
+        # Media
+        "iina"
+        "neteasemusic"
+        "obs"
+        "plex"
 
-      # Menu Bar
-      "jordanbaird-ice@beta"
+        # Menu Bar
+        "jordanbaird-ice@beta"
 
-      # Network Tools
-      "surge"
+        # Network Tools
+        "surge"
 
-      # Productivity
-      "qspace-pro"
-      "raycast"
+        # Productivity
+        "qspace-pro"
+        "raycast"
 
-      # Remote Access
-      "uuremote"
+        # Remote Access
+        "uuremote"
 
-      # SSH Client
-      "termius"
+        # SSH Client
+        "termius"
 
-      # System Monitor
-      "stats"
+        # System Monitor
+        "stats"
 
-      # Terminal Emulator
-      "ghostty"
-      "kitty"
-    ];
+        # Terminal Emulator
+        "ghostty"
+        "kitty"
+      ];
+      description = "Homebrew casks to install";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    homebrew = {
+      enable = true;
+      inherit (cfg) enableFishIntegration enableZshIntegration masApps brews casks;
+      onActivation = cfg.onActivation;
+    };
   };
 }
