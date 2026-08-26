@@ -7,6 +7,30 @@
 in {
   options.services'.zram = {
     enable = lib.mkEnableOption "compressed RAM swap with Zram";
+
+    algorithm = lib.mkOption {
+      type = lib.types.str;
+      default = "zstd";
+      description = "Compression algorithm used by Zram";
+    };
+
+    memoryPercent = lib.mkOption {
+      type = lib.types.ints.between 1 100;
+      default = 50;
+      description = "Maximum Zram swap size as a percentage of system memory";
+    };
+
+    memoryMax = lib.mkOption {
+      type = lib.types.nullOr lib.types.int;
+      default = null;
+      description = "Optional absolute maximum Zram swap size in bytes";
+    };
+
+    priority = lib.mkOption {
+      type = lib.types.int;
+      default = 100;
+      description = "Swap priority for the Zram device";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -19,12 +43,13 @@ in {
       zswap.enable = false;
     };
 
-    zramSwap = {
-      enable = true;
-      algorithm = "zstd";
-      memoryPercent = 50;
-      memoryMax = 8 * 1024 * 1024 * 1024;
-      priority = 100;
-    };
+    zramSwap =
+      {
+        enable = true;
+        inherit (cfg) algorithm memoryPercent priority;
+      }
+      // lib.optionalAttrs (cfg.memoryMax != null) {
+        memoryMax = cfg.memoryMax;
+      };
   };
 }

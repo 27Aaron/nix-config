@@ -1,8 +1,4 @@
-{
-  myvars,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   programs.fish = {
     enable = true;
     useBabelfish = true;
@@ -11,5 +7,5 @@
     '';
   };
 
-  users.users.${myvars.username}.shell = pkgs.fish;
+  user'.shell = pkgs.fish;
 }
