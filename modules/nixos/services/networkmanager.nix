@@ -13,5 +13,13 @@ in {
     networking.networkmanager.enable = true;
 
     user'.extraGroups = ["networkmanager"];
+
+    preservation'.os.directories = [
+      {
+        directory = "/etc/NetworkManager/system-connections";
+        mode = "0700";
+      }
+      "/var/lib/NetworkManager"
+    ];
   };
 }
