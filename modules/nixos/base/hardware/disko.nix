@@ -11,7 +11,7 @@
       "@nix" = {
         mountpoint = "/nix";
         mountOptions = [
-          "compress-force=zstd:1"
+          "compress=zstd:1"
           "discard=async"
           "noatime"
         ];
@@ -20,7 +20,7 @@
       "@persistent" = {
         mountpoint = "/persistent";
         mountOptions = [
-          "compress-force=zstd:1"
+          "compress=zstd:1"
           "discard=async"
           "noatime"
         ];
@@ -29,7 +29,7 @@
       "@snapshots" = {
         mountpoint = "/snapshots";
         mountOptions = [
-          "compress-force=zstd:1"
+          "compress=zstd:1"
           "discard=async"
           "noatime"
         ];
