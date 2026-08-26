@@ -5,23 +5,42 @@
   pkgs,
   ...
 }: let
-  cfg = config.apps'.postgresql;
+  cfg = config.services'.postgresql;
   user = myvars.username;
 in {
-  options.apps'.postgresql = {
+  options.services'.postgresql = {
     enable = lib.mkEnableOption "Enable PostgreSQL service";
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.postgresql_18;
+      description = "PostgreSQL package to use";
+    };
+
+    dataDir = lib.mkOption {
+      type = lib.types.str;
+      default = "/var/lib/postgresql";
+      description = "Directory in which PostgreSQL stores its data";
+    };
+
+    port = lib.mkOption {
+      type = lib.types.port;
+      default = 5432;
+      description = "TCP port used by PostgreSQL";
+    };
+
     openFirewall = lib.mkEnableOption "Open firewall port for PostgreSQL";
   };
 
   config = lib.mkIf cfg.enable {
     services.postgresql = {
       enable = true;
-      package = pkgs.postgresql_18;
+      inherit (cfg) package dataDir;
       enableJIT = true;
       enableTCPIP = cfg.openFirewall;
 
       settings = {
-        port = 5432;
+        port = cfg.port;
         max_connections = 100;
         log_connections = true;
         log_statement = "ddl";
@@ -68,10 +87,7 @@ in {
       '';
     };
 
-    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [5432];
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [cfg.port];
 
-    preservation'.os.directories = [
-      "/var/lib/postgresql"
-    ];
   };
 }
