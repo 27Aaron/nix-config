@@ -1,6 +1,8 @@
 {...}: {
   system.stateVersion = "26.11";
 
+  storage'.persistence.enable = true;
+
   imports = [
     ./hardware.nix
   ];

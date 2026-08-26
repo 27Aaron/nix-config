@@ -1,6 +1,8 @@
 {...}: {
   system.stateVersion = "26.11";
 
+  storage'.persistence.enable = true;
+
   hm'.home'.apps = {
     firefox.enable = true;
     kitty.enable = true;
