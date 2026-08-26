@@ -34,7 +34,7 @@ in {
   home = {
     username = myvars.username;
     inherit (platform) homeDirectory;
-    stateVersion = myvars.stateVersion;
+    stateVersion = "26.11";
   };
 
   programs = {
