@@ -59,9 +59,9 @@ mv hosts/darwin/luna "hosts/darwin/$host_name"
 
 检查以下配置：
 
-- `vars/default.nix`：用户名、Git 姓名、邮箱、时区和状态版本
+- `vars/default.nix`：用户名、Git 姓名、邮箱、时区
 - `hosts/darwin/<主机名>/default.nix`：目标平台
-- `modules/darwin/services/homebrew.nix`：Homebrew 软件清单
+- `modules/darwin/apps/homebrew.nix`：Homebrew 软件清单
 
 > [!CAUTION]
 > 当前配置使用 `homebrew.onActivation.cleanup = "zap"`。首次构建会卸载所有未在配置中声明的 Homebrew 软件，并删除 Cask 的关联文件。
@@ -72,7 +72,7 @@ mv hosts/darwin/luna "hosts/darwin/$host_name"
 brew bundle dump --describe --force --file="$HOME/Desktop/Brewfile"
 ```
 
-根据导出的 Brewfile 更新 `modules/darwin/services/homebrew.nix` 后再继续。
+根据导出的 Brewfile 更新 `modules/darwin/apps/homebrew.nix` 后再继续。
 
 ## 初始化 nix-darwin
 
