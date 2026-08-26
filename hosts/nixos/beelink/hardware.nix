@@ -25,7 +25,7 @@
 
   storage'.disko = {
     enable = true;
-    device = "/dev/disk/by-id/nvme-CT1000P3PSSD8_24364AD5D8E0";
+    device = "/dev/nvme0n1";
     espSize = "1G";
     luks.enable = true;
   };
