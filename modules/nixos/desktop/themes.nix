@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  myvars,
   pkgs,
   ...
 }: let
@@ -12,35 +11,33 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home-manager.users.${myvars.username} = {
-      home.packages = with pkgs; [
-        gtk3
-        gtk4
-      ];
+    hm'.home.packages = with pkgs; [
+      gtk3
+      gtk4
+    ];
 
-      gtk = {
-        enable = true;
+    hm'.gtk = {
+      enable = true;
 
-        theme = {
-          package = pkgs.adw-gtk3;
-          name = "adw-gtk3-dark";
-        };
-
-        iconTheme = {
-          package = pkgs.papirus-icon-theme;
-          name = "Papirus-Dark";
-        };
-
-        font = {
-          package = pkgs.cantarell-fonts;
-          name = "Cantarell Regular";
-          size = 12;
-        };
+      theme = {
+        package = pkgs.adw-gtk3;
+        name = "adw-gtk3-dark";
       };
 
-      dconf.settings."org/gnome/desktop/interface" = {
-        color-scheme = "prefer-dark";
+      iconTheme = {
+        package = pkgs.papirus-icon-theme;
+        name = "Papirus-Dark";
       };
+
+      font = {
+        package = pkgs.cantarell-fonts;
+        name = "Cantarell Regular";
+        size = 12;
+      };
+    };
+
+    hm'.dconf.settings."org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
     };
   };
 }

@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  myvars,
   pkgs,
   ...
 }: let
@@ -38,7 +37,7 @@ in {
     services.gvfs.enable = true;
     services.udisks2.enable = true;
 
-    home-manager.users.${myvars.username}.xdg.mimeApps = {
+    hm'.xdg.mimeApps = {
       enable = true;
 
       # Home Manager derives all supported MIME types from the applications'

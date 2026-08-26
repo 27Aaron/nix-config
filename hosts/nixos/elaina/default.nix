@@ -1,6 +1,13 @@
 {...}: {
   system.stateVersion = "26.11";
 
+  hm'.home'.apps = {
+    firefox.enable = true;
+    kitty.enable = true;
+    telegram.enable = true;
+    vscode.enable = true;
+  };
+
   imports = [
     ./hardware.nix
   ];
