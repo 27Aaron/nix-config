@@ -8,4 +8,9 @@
   };
 
   user'.shell = pkgs.fish;
+
+  preservation'.user.directories = [
+    ".config/fish"
+    ".local/share/fish"
+  ];
 }

@@ -32,5 +32,7 @@ in {
       };
       openFirewall = cfg.openFirewall;
     };
+
+    preservation'.os.directories = ["/etc/ssh"];
   };
 }

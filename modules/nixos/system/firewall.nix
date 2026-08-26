@@ -17,5 +17,7 @@ in {
       };
       nftables.enable = true;
     };
+
+    preservation'.os.directories = ["/var/lib/nftables"];
   };
 }

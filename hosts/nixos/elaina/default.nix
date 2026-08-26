@@ -1,7 +1,10 @@
 {...}: {
   system.stateVersion = "26.11";
 
-  storage'.persistence.enable = true;
+  storage'.persistence = {
+    enable = true;
+    desktop.enable = true;
+  };
 
   hm'.home'.apps = {
     firefox.enable = true;

@@ -11,5 +11,13 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.vnstat.enable = true;
+
+    preservation'.os.directories = [
+      {
+        directory = "/var/lib/vnstat";
+        user = "vnstatd";
+        group = "vnstatd";
+      }
+    ];
   };
 }
