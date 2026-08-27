@@ -168,7 +168,7 @@ cd ~/nix-config
 sudo nixos-generate-config --no-filesystems --root /mnt
 ```
 
-检查 `/mnt/etc/nixos/hardware-configuration.nix`，将仍然需要的硬件探测结果合并到 `hosts/nixos/elaina/hardware.nix`，不要覆盖已有的 Disko 和引导配置。
+检查 `/mnt/etc/nixos/hardware-configuration.nix`，将仍然需要的硬件探测结果合并到 `hosts/nixos/elaina/hardware.nix`，不要覆盖已有的 Disko、持久化和引导配置。
 
 确认 `vars/default.nix` 中的用户名、密码哈希、SSH 公钥和默认时区，以及 `hosts/nixos/<主机名>/default.nix` 中的系统状态版本正确，然后安装系统：
 
