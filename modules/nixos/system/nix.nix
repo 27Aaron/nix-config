@@ -18,6 +18,6 @@ in {
 
   programs.nh = {
     enable = true;
-    flake = lib.mkDefault "/home/${user}/Dotfiles";
+    flake = lib.mkDefault "/home/${user}/nix-config";
   };
 }

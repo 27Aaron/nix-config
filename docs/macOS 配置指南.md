@@ -91,10 +91,12 @@ sudo nix run nix-darwin/master#darwin-rebuild -- \
 
 ```bash
 just switch  # 构建并应用当前主机配置
-just check   # 检查格式、未使用声明和 Flake 求值
+just check   # 检查格式、未使用声明、NixOS 和 Darwin 配置求值
 just update  # 更新 flake.lock
 just gc      # 清理 7 天前的旧 generation 及无引用 Store 路径
 ```
+
+CI 只检查格式、未使用声明和 Nix 语法。更新配置或依赖后，请在本地运行 `just check`，通过后再执行 `just switch`。
 
 新增的 `.nix` 文件会由入口模块自动发现。常用配置目录如下：
 
@@ -102,6 +104,22 @@ just gc      # 清理 7 天前的旧 generation 及无引用 Store 路径
 - `home/darwin/`：macOS 专用 Home Manager 配置
 - `modules/common/`：跨平台系统模块
 - `modules/darwin/`：nix-darwin 系统模块
+
+### 编辑 Karabiner 配置
+
+启用 Homebrew 并安装清单中的 `karabiner-elements` 后，首次应用配置会将已有的 Karabiner 配置复制到 `~/.local/share/karabiner/config`，并把 `~/.config/karabiner` 整个目录链接过去。没有已有配置时才使用仓库提供的初始键位。
+
+迁移后，可以在 Karabiner 设置界面修改，或直接编辑 `~/.config/karabiner/karabiner.json`。这些改动保存在可写目录里，不会被后续 `just switch` 覆盖，也不会自动写回 Git 仓库；请把该目录纳入个人备份。
+
+已有的普通配置目录由 Home Manager 备份为 `~/.config/karabiner.hm-bak`。如果同名备份已经存在，激活会停止，请先检查并自行保留该备份，不要直接覆盖它。
+
+首次迁移并启动 Karabiner 后，执行一次以下命令，让它重新监听配置目录；后续编辑无需重复执行：
+
+```bash
+launchctl kickstart -k "gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server"
+```
+
+如果提示找不到服务，先启动 Karabiner-Elements 再重试。目录链接与重启要求见 [Karabiner 官方说明](https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/)。
 
 ## 参考资料
 

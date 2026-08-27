@@ -158,8 +158,8 @@ lsblk -f
 克隆仓库并进入仓库根目录：
 
 ```bash
-git clone https://github.com/27Aaron/Dotfiles.git ~/Dotfiles
-cd ~/Dotfiles
+git clone https://github.com/27Aaron/Dotfiles.git ~/nix-config
+cd ~/nix-config
 ```
 
 生成不包含文件系统定义的硬件配置：

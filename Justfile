@@ -4,11 +4,12 @@ hostname := `hostname -s`
 default:
     @just --list
 
-# Check Nix formatting and unused declarations
+# Check formatting, unused declarations, and all host configurations locally
 check:
     @alejandra --check .
     @deadnix --fail .
     @nix flake check path:. --no-build --all-systems
+    @nix eval path:.#darwinConfigurations --json --apply 'builtins.mapAttrs (_: host: host.system.drvPath)' >/dev/null
 
 # Build and activate the nix-darwin configuration
 [macos]

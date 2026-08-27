@@ -63,7 +63,9 @@ config = lib.mkIf cfg.enable {
 
 PostgreSQL 文件按仓库约定放在 `modules/nixos/apps/`，但它是系统服务，所以选项仍使用 `services'.postgresql`。
 
-Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设置独立的启用开关。它读取 nix-darwin 的 `apps'.homebrew` 配置，只有 Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生成配置文件。不要在主机文件中重复添加 Karabiner 开关；Homebrew 的声明列表是唯一来源。
+Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设置独立的启用开关。它读取 nix-darwin 的 `apps'.homebrew` 配置，只有 Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才初始化配置并管理链接。不要在主机文件中重复添加 Karabiner 开关；Homebrew 的声明列表是唯一来源。
+
+Karabiner 使用整个配置目录的 out-of-store 链接，目标为 `${xdg.dataHome}/karabiner/config`，其中 JSON 必须是用户可编辑的普通文件。首次初始化先复制已有配置；没有已有 JSON 时才使用模块中的默认规则。初始化在 Home Manager 的 `writeBoundary` 之后、`linkGeneration` 之前执行，后续激活不覆盖用户修改。不要恢复成单个 JSON 的 Nix store 链接，也不要强制覆盖现有目录或备份。
 
 桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
 
