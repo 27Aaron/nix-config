@@ -109,7 +109,9 @@ CI 只检查格式、未使用声明和 Nix 语法。更新配置或依赖后，
 
 启用 Homebrew 并安装清单中的 `karabiner-elements` 后，应用配置会直接在 `~/.config/karabiner/karabiner.json` 写入 Nix 生成的键位。这个 JSON 是排版后的普通文件，权限为 `0600`，可以在 Karabiner 设置界面或编辑器中修改，不会链接到 Nix store；Karabiner 会在文件变化时自动重载。
 
-正常 `just switch` 会保留手动编辑。修改 Nix 中的键位规则后，再次应用时会把当前 JSON 改名为同目录的 `karabiner.json.hm-bak`（单份滚动备份，下次覆盖），然后写入新规则；手动编辑不会自动写回 Git。该行为通过旁边的 `.nix-generated-karabiner.json` 记录文件实现，请保留它，并把整个 Karabiner 配置目录纳入个人备份。
+正常 `just switch` 会保留手动编辑。修改 Nix 中的键位规则后，再次应用时会把当前 JSON 备份为同目录的 `karabiner.json.hm-bak`（单份滚动备份，下次覆盖），然后写入新规则；备份是独立文件，清理 Nix store 不会使其失效。手动编辑不会自动写回 Git。该行为通过旁边的 `.nix-generated-karabiner.json` 记录文件实现，请保留它，并把整个 Karabiner 配置目录纳入个人备份。
+
+如果之前使用了整个配置目录的链接，下次应用会将配置和附属文件复制到 `~/.config/karabiner`，改为普通目录，原链接指向的数据会保留。完成这种迁移后，退出并重新启动 Karabiner-Elements 一次。
 
 ## 参考资料
 

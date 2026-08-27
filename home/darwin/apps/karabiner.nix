@@ -92,24 +92,79 @@ in {
         export PATH="${lib.makeBinPath [pkgs.coreutils pkgs.jq]}:$PATH"
         dir=${lib.escapeShellArg "${config.xdg.configHome}/karabiner"}
         gen=${lib.escapeShellArg generatedConfig}
-        umask 077
-        target="$dir/karabiner.json"
-        marker="$dir/.nix-generated-karabiner.json"
-        mkdir -p -- "$dir"
 
-        # Same rules as the last install: leave the editable file alone.
-        if [[ -f "$target" && -f "$marker" ]] && cmp -s -- "$gen" "$marker"; then
+        # Home Manager previews must not create files, including redirects.
+        if [[ -v DRY_RUN ]]; then
+          echo "Would initialize editable Karabiner configuration in $dir"
           exit 0
         fi
 
-        jq . "$gen" > "$target.new"
-        if [[ -f "$target" ]]; then
-          mv -- "$target" "$target.hm-bak"
-          echo "Karabiner configuration backed up to $target.hm-bak"
-        fi
+        umask 077
+        mkdir -p -- "$(dirname -- "$dir")"
+        work=$(mktemp -d -- "$dir.activation.XXXXXX")
+        cleanup() {
+          local activationStatus=$?
+          if [[ -L "$work/old-link" && ! -e "$dir" && ! -L "$dir" ]]; then
+            if ! mv -T -- "$work/old-link" "$dir"; then
+              echo "Could not restore Karabiner link; recovery files are in $work" >&2
+              exit 1
+            fi
+          fi
+          rm -rf -- "$work"
+          exit "$activationStatus"
+        }
+        trap cleanup EXIT
+        trap 'exit 1' HUP INT TERM
 
-        mv -- "$target.new" "$target"
-        cp -- "$gen" "$marker"
+        # Prepare both files before replacing any existing configuration.
+        jq -e . "$gen" > "$work/karabiner.json"
+        install -m 600 -- "$gen" "$work/marker"
+
+        activeDir="$dir"
+        if [[ -L "$dir" ]]; then
+          if [[ ! -d "$dir" ]]; then
+            echo "Karabiner directory link is broken or does not point to a directory: $dir" >&2
+            exit 1
+          fi
+          # Dereference the old directory without changing its source data.
+          activeDir="$work/config"
+          mkdir -- "$activeDir"
+          cp -RL -- "$dir/." "$activeDir/"
+          chmod -R u+rwX -- "$activeDir"
+        else
+          mkdir -p -- "$dir"
+        fi
+        target="$activeDir/karabiner.json"
+        marker="$activeDir/.nix-generated-karabiner.json"
+
+        for file in "$target" "$marker"; do
+          if [[ -e "$file" && ! -f "$file" ]]; then
+            echo "Expected a regular Karabiner configuration file: $file" >&2
+            exit 1
+          fi
+        done
+
+        # An unchanged template preserves edits, but a JSON link must be replaced.
+        if [[ -f "$target" && ! -L "$target" && -f "$marker" ]] && cmp -s -- "$gen" "$marker"; then
+          chmod 600 -- "$target"
+        else
+          if [[ -e "$target" || -L "$target" ]]; then
+            # A backup must survive store GC, even if the old JSON was a link.
+            cp -L -- "$target" "$work/backup"
+            chmod 600 -- "$work/backup"
+            mv -fT -- "$work/backup" "$target.hm-bak"
+            echo "Karabiner configuration backed up to $dir/karabiner.json.hm-bak"
+          fi
+          mv -fT -- "$work/karabiner.json" "$target"
+        fi
+        # Replace rather than overwrite: old markers may be read-only or links.
+        mv -fT -- "$work/marker" "$marker"
+
+        if [[ "$activeDir" != "$dir" ]]; then
+          # Replace the directory link before Home Manager cleans old links.
+          mv -T -- "$dir" "$work/old-link"
+          mv -T -- "$activeDir" "$dir"
+        fi
       )
     '';
   };
