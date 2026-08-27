@@ -151,12 +151,3 @@ nix flake check --no-build
 如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
 
 本地的 `just check` 等价于 CI 加主机求值；格式化用 `just fmt` 或 `nix fmt`。CI（`.github/workflows/check.yml`）只跑格式、未使用声明和 Nix 语法三项检查。
-
-修改 Karabiner 激活逻辑后，导出实际脚本并运行隔离回归测试（主机名按实际配置调整）。测试只操作临时目录，不会应用真实用户配置：
-
-```bash
-nix eval --raw path:.#darwinConfigurations.luna.config.home-manager.users \
-  --apply 'users: (builtins.head (builtins.attrValues users)).home.activation.initializeKarabiner.data' \
-  > /tmp/karabiner-activation.sh
-python3 tests/karabiner_activation.py /tmp/karabiner-activation.sh
-```
