@@ -3,12 +3,12 @@
   lib,
   ...
 }: let
-  cfg = config.home'.apps.kitty;
+  cfg = config.desktop'.apps.kitty;
 in {
-  options.home'.apps.kitty.enable = lib.mkEnableOption "Kitty terminal emulator";
+  options.desktop'.apps.kitty.enable = lib.mkEnableOption "Kitty terminal emulator";
 
   config = lib.mkIf cfg.enable {
-    programs.kitty = {
+    hm'.programs.kitty = {
       enable = true;
 
       font = {

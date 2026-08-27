@@ -4,12 +4,12 @@
   pkgs,
   ...
 }: let
-  cfg = config.home'.apps.vscode;
+  cfg = config.desktop'.apps.vscode;
 in {
-  options.home'.apps.vscode.enable = lib.mkEnableOption "Visual Studio Code";
+  options.desktop'.apps.vscode.enable = lib.mkEnableOption "Visual Studio Code";
 
   config = lib.mkIf cfg.enable {
-    programs.vscode = {
+    hm'.programs.vscode = {
       enable = true;
 
       # Nixpkgs restores this integrity-sensitive binary after fixup, but the
@@ -23,5 +23,12 @@ in {
           '';
       });
     };
+
+    preservation'.user.directories = [
+      # Visual Studio Code
+      ".config/Code"
+      ".vscode"
+      ".vscode-shared"
+    ];
   };
 }
