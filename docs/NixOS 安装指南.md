@@ -190,6 +190,19 @@ sudo reboot
 > [!IMPORTANT]
 > 根文件系统使用 tmpfs，系统设计为将需要保留的数据存储到 `/persistent`；未持久化的数据会在重启后消失。
 
+## 后续维护
+
+仓库中的 `justfile` 提供以下命令（`just` 和 `nh` 已由配置安装，flake 路径固定为 `~/nix-config`）：
+
+```bash
+just switch  # 构建并应用当前主机配置
+just check   # 检查格式、未使用声明和所有主机求值
+just update  # 更新 flake.lock
+just gc      # 清理旧的 generation 及无引用 Store 路径
+```
+
+CI 只检查格式、未使用声明和 Nix 语法。更新配置或依赖后，请在本地运行 `just check`，通过后再执行 `just switch`。
+
 ## 参考资料
 
 - [Disko](https://github.com/nix-community/disko)

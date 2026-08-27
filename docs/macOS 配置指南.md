@@ -107,19 +107,11 @@ CI 只检查格式、未使用声明和 Nix 语法。更新配置或依赖后，
 
 ### 编辑 Karabiner 配置
 
-启用 Homebrew 并安装清单中的 `karabiner-elements` 后，首次应用配置会将已有的 Karabiner 配置复制到 `~/.local/share/karabiner/config`，并把 `~/.config/karabiner` 整个目录链接过去。没有已有配置时才使用仓库提供的初始键位。
+启用 Homebrew 并安装清单中的 `karabiner-elements` 后，应用配置会直接在 `~/.config/karabiner/karabiner.json` 写入 Nix 生成的键位。这个 JSON 是排版后的普通文件，权限为 `0600`，可以在 Karabiner 设置界面或编辑器中修改，不会链接到 Nix store；Karabiner 会在文件变化时自动重载。
 
-迁移后，可以在 Karabiner 设置界面修改，或直接编辑 `~/.config/karabiner/karabiner.json`。这些改动保存在可写目录里，不会被后续 `just switch` 覆盖，也不会自动写回 Git 仓库；请把该目录纳入个人备份。
+每次 `just switch` 都会先把现有 JSON 备份为同目录的 `karabiner.json.hm-bak`，覆盖上一份备份，再写入 Nix 配置。早期的时间戳备份也会清理，只保留这一份；备份是独立文件，不依赖 Nix store。
 
-已有的普通配置目录由 Home Manager 备份为 `~/.config/karabiner.hm-bak`。如果同名备份已经存在，激活会停止，请先检查并自行保留该备份，不要直接覆盖它。
-
-首次迁移并启动 Karabiner 后，执行一次以下命令，让它重新监听配置目录；后续编辑无需重复执行：
-
-```bash
-launchctl kickstart -k "gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server"
-```
-
-如果提示找不到服务，先启动 Karabiner-Elements 再重试。目录链接与重启要求见 [Karabiner 官方说明](https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/)。
+可以随时手动编辑 JSON，但下次 `just switch` 会覆盖这些修改，并把当时的内容留在备份中。需要长期保留的键位，请修改仓库中的 Nix 配置。若旧配置目录仍是软链接，先复制其内容并将链接换为普通目录，再应用配置。
 
 ## 参考资料
 
