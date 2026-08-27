@@ -18,7 +18,13 @@ in {
       };
     };
 
-    hardware.bluetooth.enable = lib.mkDefault true;
-    services.upower.enable = lib.mkDefault true;
+    preservation'.user.directories = [
+      # DankMaterialShell
+      ".config/DankMaterialShell"
+      {
+        directory = ".local/state/DankMaterialShell";
+        mode = "0700";
+      }
+    ];
   };
 }
