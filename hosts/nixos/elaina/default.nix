@@ -1,11 +1,19 @@
 {...}: {
-  system.stateVersion = "26.11";
-
-  storage'.persistence.enable = true;
-
   imports = [
     ./hardware.nix
   ];
+
+  services' = {
+    btrbk.enable = true;
+    btrfs-scrub.enable = true;
+    networkmanager.enable = true;
+    openssh.enable = true;
+    printing.enable = true;
+    smartd.enable = true;
+    upower.enable = true;
+    vnstat.enable = true;
+    zram.enable = true;
+  };
 
   desktop' = {
     applications.enable = true;
@@ -24,24 +32,8 @@
     themes.enable = true;
   };
 
-  hardware' = {
-    amdgpu.enable = true;
-    bluetooth.enable = true;
-  };
-
   security.rtkit.enable = true;
-
-  services' = {
-    btrbk.enable = true;
-    btrfs-scrub.enable = true;
-    networkmanager.enable = true;
-    openssh.enable = true;
-    printing.enable = true;
-    smartd.enable = true;
-    upower.enable = true;
-    vnstat.enable = true;
-    zram.enable = true;
-  };
-
   security'.firewall.enable = true;
+
+  system.stateVersion = "26.11";
 }
