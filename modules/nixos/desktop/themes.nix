@@ -10,34 +10,56 @@ in {
     enable = lib.mkEnableOption "GTK and icon themes";
   };
 
-  config = lib.mkIf cfg.enable {
-    hm'.home.packages = with pkgs; [
-      gtk3
-      gtk4
-    ];
+  config = lib.mkMerge [
+    # Icon caches exist for either theme feature, so this stays outside the
+    # themes-only enable gate.
+    {
+      preservation'.user.directories =
+        lib.optionals (cfg.enable || config.desktop'.cursors.enable)
+        [".icons"];
+    }
 
-    hm'.gtk = {
-      enable = true;
+    (lib.mkIf cfg.enable {
+      hm'.home.packages = with pkgs; [
+        gtk3
+        gtk4
+      ];
 
-      theme = {
-        package = pkgs.adw-gtk3;
-        name = "adw-gtk3-dark";
+      hm'.gtk = {
+        enable = true;
+
+        theme = {
+          package = pkgs.adw-gtk3;
+          name = "adw-gtk3-dark";
+        };
+
+        iconTheme = {
+          package = pkgs.papirus-icon-theme;
+          name = "Papirus-Dark";
+        };
+
+        font = {
+          package = pkgs.cantarell-fonts;
+          name = "Cantarell Regular";
+          size = 12;
+        };
       };
 
-      iconTheme = {
-        package = pkgs.papirus-icon-theme;
-        name = "Papirus-Dark";
+      hm'.dconf.settings."org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
       };
 
-      font = {
-        package = pkgs.cantarell-fonts;
-        name = "Cantarell Regular";
-        size = 12;
-      };
-    };
-
-    hm'.dconf.settings."org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-    };
-  };
+      # State read and written through the managed GTK setup above.
+      preservation'.user.directories = [
+        {
+          directory = ".config/gtk-3.0";
+          mode = "0700";
+        }
+        {
+          directory = ".config/dconf";
+          mode = "0700";
+        }
+      ];
+    })
+  ];
 }

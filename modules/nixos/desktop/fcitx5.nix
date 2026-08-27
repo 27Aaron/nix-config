@@ -23,5 +23,11 @@ in {
         ];
       };
     };
+
+    preservation'.user.directories = [
+      # Fcitx5
+      ".config/fcitx5"
+      ".local/share/fcitx5"
+    ];
   };
 }

@@ -7,6 +7,7 @@
 }: let
   cfg = config.storage'.persistence;
   user = myvars.username;
+  hm = config.home-manager.users.${user};
 in {
   imports = [
     inputs.preservation.nixosModules.default
@@ -17,11 +18,7 @@ in {
       ["preservation" "preserveAt" "/persistent" "users" user])
   ];
 
-  options.storage'.persistence = {
-    enable = lib.mkEnableOption "Preservation for an ephemeral NixOS root";
-
-    desktop.enable = lib.mkEnableOption "Persistence entries for desktop applications";
-  };
+  options.storage'.persistence.enable = lib.mkEnableOption "Preservation for an ephemeral NixOS root";
 
   config = lib.mkIf cfg.enable {
     boot = {
@@ -40,29 +37,14 @@ in {
       ];
     };
 
-    # Common user state shared by the always-enabled home modules.
-    preservation'.user = {
-      directories = [
+    # Baseline user state shared by every host. State owned by a feature is
+    # declared in that feature's module; Home Manager tools report theirs via
+    # persist' and get spliced in here.
+    preservation'.user.directories =
+      [
         # Keep caches off the tmpfs root to avoid excessive RAM usage.
         {
           directory = ".cache";
-          mode = "0700";
-        }
-
-        # AI assistants
-        ".codex"
-        ".claude"
-
-        # Atuin
-        {
-          directory = ".atuin";
-          mode = "0700";
-        }
-        ".local/share/atuin"
-
-        # GNUPG
-        {
-          directory = ".gnupg";
           mode = "0700";
         }
 
@@ -71,7 +53,7 @@ in {
         ".local/state/home-manager"
         ".local/state/nix/profiles"
 
-        # Configuration and credentials
+        # Credentials without a managing module live here.
         {
           directory = "nix-config";
           mode = "0700";
@@ -80,44 +62,14 @@ in {
           directory = ".ssh";
           mode = "0700";
         }
+        {
+          directory = ".gnupg";
+          mode = "0700";
+        }
+      ]
+      ++ hm.persist'.directories;
 
-        # XDG user directories
-        {
-          directory = "Desktop";
-          mountOptions = ["x-gvfs-trash"];
-        }
-        {
-          directory = "Documents";
-          mountOptions = ["x-gvfs-trash"];
-        }
-        {
-          directory = "Downloads";
-          mountOptions = ["x-gvfs-trash"];
-        }
-        {
-          directory = "Music";
-          mountOptions = ["x-gvfs-trash"];
-        }
-        {
-          directory = "Pictures";
-          mountOptions = ["x-gvfs-trash"];
-        }
-        {
-          directory = "Videos";
-          mountOptions = ["x-gvfs-trash"];
-        }
-
-        # Zoxide
-        ".local/share/zoxide"
-      ];
-
-      files = [
-        {
-          file = ".claude.json";
-          how = "bindmount";
-        }
-      ];
-    };
+    preservation'.user.files = hm.persist'.files;
 
     # Common NixOS state required by the base system.
     preservation'.os = {

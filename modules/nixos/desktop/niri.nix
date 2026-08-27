@@ -20,16 +20,18 @@ in {
       package = pkgs.niri;
     };
 
-    services.greetd = {
-      enable = true;
-      useTextGreeter = true;
-      settings = {
-        initial_session = {
-          command = niriSession;
-          user = myvars.username;
-        };
-        default_session.command = "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${niriSession}";
+    # Autologin into Niri through the machine's greeter.
+    services.greetd.settings = {
+      initial_session = {
+        command = niriSession;
+        user = myvars.username;
       };
+      default_session.command = "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${niriSession}";
     };
+
+    preservation'.user.directories = [
+      # Niri
+      ".config/niri"
+    ];
   };
 }

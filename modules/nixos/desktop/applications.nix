@@ -51,5 +51,31 @@ in {
         mpv
       ];
     };
+
+    preservation'.user.directories = [
+      # Desktop application launchers and file manager metadata
+      {
+        directory = ".local/share/applications";
+        mode = "0700";
+      }
+      {
+        directory = ".local/share/Trash";
+        mode = "0700";
+      }
+      {
+        directory = ".local/share/gvfs-metadata";
+        mode = "0700";
+      }
+
+      # Keyrings and certificate state used by desktop applications
+      {
+        directory = ".local/share/keyrings";
+        mode = "0700";
+      }
+      {
+        directory = ".local/share/pki";
+        mode = "0700";
+      }
+    ];
   };
 }

@@ -30,7 +30,7 @@ Home Manager 配置位于 `home/`：
 
 - `home/common/`：macOS 和 NixOS 共用的用户配置
 - `home/nixos/`、`home/darwin/`：平台专属用户配置
-- `home/nixos/apps/`、`home/darwin/apps/`：按应用启用的用户配置
+- `home/darwin/apps/`：平台专属的用户应用配置
 
 `modules/default.nix` 和 `home/default.nix` 会自动发现对应目录中的 Nix 文件。新增模块应放入正确的职责目录，不要在主机文件中堆积可复用逻辑。
 
@@ -59,9 +59,13 @@ config = lib.mkIf cfg.enable {
 
 模块的自定义 `enable` 是功能边界。若它负责启用底层服务，底层 `enable` 应直接设置为 `true`，避免自定义开关和原生开关产生分叉。`lib.mkDefault` 只用于确实需要让主机覆盖的默认值。
 
+一个模块文件只承载一个功能或服务。被多个桌面依赖的底层能力（如 Greetd、Bluetooth、UPower）拆成独立模块并持有自己的持久化条目，需要它们的模块或主机显式开启对应开关；持久化跟随最终服务状态判定，无论由哪个开关打开。
+
 PostgreSQL 文件按仓库约定放在 `modules/nixos/apps/`，但它是系统服务，所以选项仍使用 `services'.postgresql`。
 
 Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设置独立的启用开关。它读取 nix-darwin 的 `apps'.homebrew` 配置，只有 Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生成配置文件。不要在主机文件中重复添加 Karabiner 开关；Homebrew 的声明列表是唯一来源。
+
+桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
 
 ## 多设备配置
 
@@ -77,12 +81,15 @@ Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设置独立的启�
 
 ## 持久化规则
 
-`storage'.persistence.enable` 是 Preservation 的总开关，只在 `modules/nixos/storage/persistence.nix` 中负责启用持久化机制和系统基础状态。
+`storage'.persistence.enable` 是 Preservation 的总开关，只在 `modules/nixos/storage/persistence.nix` 中负责启用持久化机制。
 
-- `persistence.nix` 只放机器启动所需、系统基础和所有设备共用的状态
-- `persistence-desktop.nix` 只放桌面共用状态；应用状态必须跟随对应的桌面或 Home Manager 应用开关
-- 服务自己的状态由服务模块声明，例如 VNStat 放在 `services/vnstat.nix`
-- 服务模块不要重复判断 `storage'.persistence.enable`；Preservation 自身会根据总开关决定是否生成实际挂载
+持久化条目跟随所有权：功能开关定义在哪个模块，对应条目就声明在哪个模块内部。
+
+- `persistence.nix` 只放机器启动所需、系统基础和所有设备共用的用户基线（缓存、无归属模块的凭据等），并把 Home Manager 通过 `persist'` 上报的条目汇入 preservation 选项
+- 纯 Home Manager 工具无法直接写 NixOS 选项，通过 `home/common/persist.nix` 定义的 `persist'` 选项上报自己的状态目录和文件（例如 Atuin、Zoxide、AI CLI）
+- 桌面共用状态（GTK、dconf、密钥环等）跟随生成或消费它们的桌面功能声明，例如 GTK/dconf 放在 `desktop/themes.nix`；由上游模块间接触发的系统服务（如 PipeWire、AccountsService）也拥有自己的服务模块和 `services'.<name>.enable` 开关，持久化按最终服务状态判定
+- 服务自己的状态由服务模块声明，例如 VNStat 放在 `services/vnstat.nix`；桌面功能和应用由 `desktop/` 下定义各自开关的模块声明，例如 Firefox 放在 `desktop/firefox.nix`
+- 功能模块不要重复判断 `storage'.persistence.enable`；Preservation 自身会根据总开关决定是否生成实际挂载
 - 没有启用的服务、桌面功能或应用，不得加入它们专属的持久化目录
 
 推荐的服务模块形态：
