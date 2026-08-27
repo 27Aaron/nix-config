@@ -40,8 +40,15 @@
     nload
   ]);
 
-  # AI assistants
+  # State for the tools installed above.
   persist'.directories = [
+    # GitHub CLI account settings and fallback credentials.
+    {
+      directory = ".config/gh";
+      mode = "0700";
+    }
+
+    # AI assistants
     ".codex"
     ".claude"
   ];
