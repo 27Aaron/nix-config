@@ -16,4 +16,31 @@
     };
     configFile."user-dirs.locale".text = "en_US";
   };
+
+  persist'.directories = [
+    {
+      directory = "Desktop";
+      mountOptions = ["x-gvfs-trash"];
+    }
+    {
+      directory = "Documents";
+      mountOptions = ["x-gvfs-trash"];
+    }
+    {
+      directory = "Downloads";
+      mountOptions = ["x-gvfs-trash"];
+    }
+    {
+      directory = "Music";
+      mountOptions = ["x-gvfs-trash"];
+    }
+    {
+      directory = "Pictures";
+      mountOptions = ["x-gvfs-trash"];
+    }
+    {
+      directory = "Videos";
+      mountOptions = ["x-gvfs-trash"];
+    }
+  ];
 }

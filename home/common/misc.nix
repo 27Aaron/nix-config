@@ -39,4 +39,17 @@
     htop
     nload
   ]);
+
+  # AI assistants
+  persist'.directories = [
+    ".codex"
+    ".claude"
+  ];
+
+  persist'.files = [
+    {
+      file = ".claude.json";
+      how = "bindmount";
+    }
+  ];
 }
