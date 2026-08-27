@@ -7,10 +7,7 @@
 }: let
   brewCfg = osConfig.apps'.homebrew;
   enabled = brewCfg.enable && lib.elem "karabiner-elements" brewCfg.casks;
-  writableDir = "${config.xdg.dataHome}/karabiner/config";
-
-  # Only used when neither an existing configuration nor a writable copy exists.
-  initialConfig = builtins.toFile "karabiner-initial.json" (builtins.toJSON {
+  generatedConfig = builtins.toFile "karabiner.json" (builtins.toJSON {
     profiles = [
       {
         complex_modifications = {
@@ -87,46 +84,33 @@
   });
 in {
   config = lib.mkIf enabled {
-    # Karabiner watches the directory; its JSON must remain a writable file.
-    xdg.configFile."karabiner".source = config.lib.file.mkOutOfStoreSymlink writableDir;
-
+    # Install a plain editable karabiner.json; reinstall only when the Nix
+    # rules changed, keeping manual and Karabiner-GUI edits otherwise.
     home.activation.initializeKarabiner = lib.hm.dag.entryBetween ["linkGeneration"] ["writeBoundary"] ''
-      initializeKarabinerConfig() (
-        set -e
-        export PATH="${lib.makeBinPath [pkgs.coreutils]}:$PATH"
+      (
+        set -eu
+        export PATH="${lib.makeBinPath [pkgs.coreutils pkgs.jq]}:$PATH"
+        dir=${lib.escapeShellArg "${config.xdg.configHome}/karabiner"}
+        gen=${lib.escapeShellArg generatedConfig}
         umask 077
-        current=$1
-        target=$2
-        seed=$3
+        target="$dir/karabiner.json"
+        marker="$dir/.nix-generated-karabiner.json"
+        mkdir -p -- "$dir"
 
-        if [[ -e "$target" || -L "$target" ]]; then
-          if [[ ! -d "$target" ]]; then
-            echo "Karabiner configuration target is not a directory: $target" >&2
-            exit 1
-          fi
+        # Same rules as the last install: leave the editable file alone.
+        if [[ -f "$target" && -f "$marker" ]] && cmp -s -- "$gen" "$marker"; then
           exit 0
         fi
 
-        mkdir -p -- "$(dirname "$target")"
-        staging="$(mktemp -d "$target.XXXXXX")"
-        trap 'rm -rf -- "$staging"' EXIT
-
-        if [[ -d "$current" ]]; then
-          cp -RL --no-preserve=mode -- "$current/." "$staging/"
-        fi
-        if [[ ! -f "$staging/karabiner.json" ]]; then
-          cp -- "$seed" "$staging/karabiner.json"
+        jq . "$gen" > "$target.new"
+        if [[ -f "$target" ]]; then
+          mv -- "$target" "$target.hm-bak"
+          echo "Karabiner configuration backed up to $target.hm-bak"
         fi
 
-        chmod -R u+rwX -- "$staging"
-        mv -T --no-clobber -- "$staging" "$target"
+        mv -- "$target.new" "$target"
+        cp -- "$gen" "$marker"
       )
-
-      run initializeKarabinerConfig \
-        ${lib.escapeShellArg "${config.xdg.configHome}/karabiner"} \
-        ${lib.escapeShellArg writableDir} \
-        ${lib.escapeShellArg initialConfig}
-      unset -f initializeKarabinerConfig
     '';
   };
 }

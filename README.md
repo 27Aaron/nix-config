@@ -10,5 +10,5 @@ Declarative macOS and NixOS configuration powered by [nix-darwin](https://github
 ## References
 
 - [macos-defaults](https://github.com/yannbertrand/macos-defaults)
-- [LnL7/nix-darwin](https://github.com/LnL7/nix-darwin)
-- [ryan4yin/nix-darwin-kickstarter](https://github.com/ryan4yin/nix-darwin-kickstarter)
+- [nix-darwin](https://github.com/nix-darwin/nix-darwin)
+- [nix-darwin-kickstarter](https://github.com/ryan4yin/nix-darwin-kickstarter)
