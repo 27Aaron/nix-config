@@ -76,9 +76,9 @@ config = lib.mkIf cfg.enable {
 
 PostgreSQL 文件按仓库约定放在 `modules/nixos/apps/`，但它是系统服务，所以选项仍使用 `services'.postgresql`。
 
-Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生效，Homebrew 声明列表是唯一来源。激活脚本把生成的 JSON 写到 `${xdg.configHome}/karabiner/karabiner.json`，它是普通可编辑文件，不链接到 Nix store。同目录的 `.nix-generated-karabiner.json` 记录上次生成内容：规则未变就保留手动和图形界面的修改，规则变化时先把当前 JSON 备份为 `karabiner.json.hm-bak` 再写入新配置。JSON、记录文件和新备份均使用 `0600` 权限；记录文件通过临时文件替换，兼容旧的只读文件。
+Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生效，Homebrew 声明列表是唯一来源。每次激活先把已有 JSON 备份为 `karabiner.json.hm-bak`（覆盖上一份），再把 Nix 生成的内容写到 `${xdg.configHome}/karabiner/karabiner.json`。配置和新备份均为 `0600` 的普通文件，可直接编辑；手改会在下次激活时被 Nix 配置替换，并留在备份中。
 
-初始化在 Home Manager 的 `writeBoundary` 之后、`linkGeneration` 之前执行，`dry-run` 不写文件。迁移旧目录链接时先完整复制并去引用到临时目录，成功后再换成普通目录，原目录数据保留；发布失败则恢复旧链接。旧 JSON 链接的备份必须是独立普通文件，不能依赖 Nix store 或覆盖备份链接指向的文件。
+激活在 Home Manager 的 `writeBoundary` 之后、`linkGeneration` 之前执行，`dry-run` 不写文件。不再记录生成内容或自动迁移目录链接；旧目录链接需要先手动改成普通目录。写入新备份后清理早期的时间戳备份，完成后删除旧的规则记录文件，保持单份备份。JSON 链接需复制为独立备份，不修改已有备份链接指向的数据。
 
 桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
 
