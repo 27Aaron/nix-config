@@ -7,10 +7,7 @@
 }: let
   brewCfg = osConfig.apps'.homebrew;
   enabled = brewCfg.enable && lib.elem "karabiner-elements" brewCfg.casks;
-  writableDir = "${config.xdg.dataHome}/karabiner/config";
-
-  # Only used when neither an existing configuration nor a writable copy exists.
-  initialConfig = builtins.toFile "karabiner-initial.json" (builtins.toJSON {
+  generatedConfig = builtins.toFile "karabiner.json" (builtins.toJSON {
     profiles = [
       {
         complex_modifications = {
@@ -87,46 +84,41 @@
   });
 in {
   config = lib.mkIf enabled {
-    # Karabiner watches the directory; its JSON must remain a writable file.
-    xdg.configFile."karabiner".source = config.lib.file.mkOutOfStoreSymlink writableDir;
-
+    # Keep one backup, then install a writable file on every activation.
     home.activation.initializeKarabiner = lib.hm.dag.entryBetween ["linkGeneration"] ["writeBoundary"] ''
-      initializeKarabinerConfig() (
-        set -e
-        export PATH="${lib.makeBinPath [pkgs.coreutils]}:$PATH"
-        umask 077
-        current=$1
-        target=$2
-        seed=$3
+      (
+        set -eu
+        export PATH="${lib.makeBinPath [pkgs.coreutils pkgs.jq]}:$PATH"
+        dir=${lib.escapeShellArg "${config.xdg.configHome}/karabiner"}
+        gen=${lib.escapeShellArg generatedConfig}
 
-        if [[ -e "$target" || -L "$target" ]]; then
-          if [[ ! -d "$target" ]]; then
-            echo "Karabiner configuration target is not a directory: $target" >&2
-            exit 1
-          fi
+        if [[ -v DRY_RUN ]]; then
+          echo "Would back up and install editable Karabiner configuration in $dir"
           exit 0
         fi
-
-        mkdir -p -- "$(dirname "$target")"
-        staging="$(mktemp -d "$target.XXXXXX")"
-        trap 'rm -rf -- "$staging"' EXIT
-
-        if [[ -d "$current" ]]; then
-          cp -RL --no-preserve=mode -- "$current/." "$staging/"
-        fi
-        if [[ ! -f "$staging/karabiner.json" ]]; then
-          cp -- "$seed" "$staging/karabiner.json"
+        if [[ -L "$dir" ]]; then
+          echo "Replace the Karabiner directory link with a regular directory first: $dir" >&2
+          exit 1
         fi
 
-        chmod -R u+rwX -- "$staging"
-        mv -T --no-clobber -- "$staging" "$target"
+        umask 077
+        mkdir -p -- "$dir"
+        target="$dir/karabiner.json"
+        work=$(mktemp -d -- "$dir/.activation.XXXXXX")
+        trap 'rm -rf -- "$work"' EXIT
+        trap 'exit 1' HUP INT TERM
+
+        jq -e . "$gen" > "$work/karabiner.json"
+        if [[ -f "$target" ]]; then
+          cp -L -- "$target" "$work/backup"
+          chmod 600 -- "$work/backup"
+          mv -fT -- "$work/backup" "$target.hm-bak"
+          # Remove timestamped backups left by the earlier implementation.
+          rm -f -- "$dir"/karabiner.json.bak.*
+        fi
+        mv -fT -- "$work/karabiner.json" "$target"
+        rm -f -- "$dir/.nix-generated-karabiner.json"
       )
-
-      run initializeKarabinerConfig \
-        ${lib.escapeShellArg "${config.xdg.configHome}/karabiner"} \
-        ${lib.escapeShellArg writableDir} \
-        ${lib.escapeShellArg initialConfig}
-      unset -f initializeKarabinerConfig
     '';
   };
 }
