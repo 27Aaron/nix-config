@@ -1,8 +1,4 @@
 {...}: {
-  system.stateVersion = "26.11";
-
-  storage'.persistence.enable = true;
-
   imports = [
     ./hardware.nix
   ];
@@ -15,4 +11,6 @@
   };
 
   security'.firewall.enable = true;
+
+  system.stateVersion = "26.11";
 }

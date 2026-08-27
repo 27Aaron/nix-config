@@ -39,7 +39,8 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 - 每台主机注入同一组 `specialArgs`：`inputs`、`myvars`、`hostName`、`platformName`；Home Manager 通过 `extraSpecialArgs` 收到同一组，并以 `backupFileExtension = "hm-bak"` 接入主用户。模块和 Home Manager 文件可以直接取用这些参数。
 - `modules/default.nix` 递归扫描 `modules/common/` 和当前平台目录：含 `default.nix` 的目录作为单个模块整体导入，否则继续下钻；普通 `.nix` 文件直接导入。新增模块放入正确的职责目录即可，无需登记。
 - `home/default.nix` 递归导入 `home/common/` 和平台目录下的所有 `.nix` 文件。
-- NixOS 主机的 `hardware.nix` 持有硬件探测结果、内核、引导和 `storage'.disko` 磁盘参数（`device`、`espSize`、`swapSize`、`luks.enable`）。
+- NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`system.stateVersion` 的顺序组织，分组内按名称排序。
+- NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`espSize`、`swapSize`、`luks.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
 
 ## 模块和命名约定
 
