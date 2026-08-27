@@ -18,9 +18,9 @@ in {
     };
 
     dataDir = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.path;
       default = "/var/lib/postgresql";
-      description = "Directory in which PostgreSQL stores its data";
+      description = "PostgreSQL data directory; changing the major version requires an explicit data migration";
     };
 
     port = lib.mkOption {
@@ -89,6 +89,13 @@ in {
 
     networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [cfg.port];
 
-    preservation'.os.directories = [cfg.dataDir];
+    preservation'.os.directories = [
+      {
+        directory = cfg.dataDir;
+        user = "postgres";
+        group = "postgres";
+        mode = "0750";
+      }
+    ];
   };
 }

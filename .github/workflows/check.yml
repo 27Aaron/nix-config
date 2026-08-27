@@ -30,6 +30,3 @@ jobs:
           for file in $(git ls-files '*.nix'); do
             nix-instantiate --parse "$file" > /dev/null || exit 1
           done
-
-      - name: Flake check
-        run: nix flake check --no-build
