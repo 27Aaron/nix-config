@@ -34,7 +34,7 @@ in {
       type = lib.types.nullOr lib.types.str;
       default = null;
       example = "*.coder.example.com";
-      description = "Wildcard domain serving workspace apps";
+      description = "Wildcard domain serving workspace apps as a hostname pattern, without a scheme";
     };
 
     database = {
@@ -100,10 +100,19 @@ in {
 
     # Catch a crash-looping misconfiguration at eval time: with the local
     # database, the socket directory is fixed by the PostgreSQL module.
+    # Unlike accessUrl, Coder parses the wildcard access URL as a hostname
+    # pattern and rejects schemes.
     assertions = [
       {
         assertion = cfg.database.createLocally -> cfg.database.host == "/run/postgresql";
         message = "services'.coder.database.host must stay \"/run/postgresql\" while createLocally is enabled";
+      }
+      {
+        assertion =
+          cfg.wildcardAccessUrl
+          == null
+          || !(lib.hasPrefix "http://" cfg.wildcardAccessUrl || lib.hasPrefix "https://" cfg.wildcardAccessUrl);
+        message = "services'.coder.wildcardAccessUrl takes a hostname pattern like \"*.coder.example.com\" without a scheme";
       }
     ];
 
