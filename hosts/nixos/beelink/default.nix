@@ -4,6 +4,14 @@
   ];
 
   services' = {
+    coder = {
+      enable = true;
+      listenAddress = "0.0.0.0:34567";
+      accessUrl = "https://coder.in.ou.al";
+      wildcardAccessUrl = "https://*.coder.in.ou.al";
+      openFirewall = true;
+    };
+    postgresql.enable = true;
     networkmanager.enable = true;
     openssh.enable = true;
     vnstat.enable = true;
