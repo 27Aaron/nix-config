@@ -14,10 +14,6 @@
     kernelParams = ["audit=0" "net.ifnames=0"];
 
     initrd.availableKernelModules = ["uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod"];
-    initrd.kernelModules = [];
-    # The system runs as a PVE guest and does not host KVM guests itself.
-    kernelModules = [];
-    extraModulePackages = [];
 
     loader = {
       systemd-boot.enable = true;
