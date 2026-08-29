@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.desktop'.apps.ai-cli;
+  cfg = config.tools'.ai-cli;
 in {
-  options.desktop'.apps.ai-cli.enable = lib.mkEnableOption "AI coding CLIs (Claude Code and Codex)";
+  options.tools'.ai-cli.enable = lib.mkEnableOption "AI coding CLIs (Claude Code and Codex)";
 
   config = lib.mkIf cfg.enable {
     hm'.home.packages = with pkgs; [
@@ -19,7 +19,7 @@ in {
       cx = "codex --dangerously-bypass-approvals-and-sandbox";
     };
 
-    preservation'.user = {
+    hm'.persist' = {
       directories = [
         ".claude"
         ".codex"
