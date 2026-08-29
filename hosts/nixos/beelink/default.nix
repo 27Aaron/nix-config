@@ -20,5 +20,7 @@
 
   security'.firewall.enable = true;
 
+  tools'.dev.enable = true;
+
   system.stateVersion = "26.11";
 }

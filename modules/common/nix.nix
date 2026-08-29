@@ -1,14 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: {
-  environment.systemPackages = with pkgs; [
-    alejandra
-    deadnix
-    nixd
-  ];
-
+{lib, ...}: {
   nix = {
     # remove nix-channel related tools & configs, we use flakes instead.
     channel.enable = false;
