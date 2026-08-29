@@ -1,10 +1,10 @@
 {...}: {
   imports = [
+    ./network.nix
     ./hardware.nix
   ];
 
   services' = {
-    btrfs-scrub.enable = true;
     openssh.enable = true;
     vnstat.enable = true;
     zram.enable = true;
