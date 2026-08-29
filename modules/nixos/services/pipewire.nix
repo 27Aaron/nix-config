@@ -11,9 +11,14 @@ in {
 
   config = {
     services.pipewire = {
+      alsa.enable = lib.mkIf cfg.enable true;
       enable = lib.mkIf cfg.enable true;
+      pulse.enable = lib.mkIf cfg.enable true;
       wireplumber.enable = lib.mkIf cfg.enable true;
     };
+
+    # Let the audio server request real-time scheduling through RTKit.
+    security.rtkit.enable = lib.mkIf cfg.enable true;
 
     # Persistence follows the final service state, whoever turned it on.
     preservation'.user.directories =
