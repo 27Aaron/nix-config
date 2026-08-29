@@ -18,11 +18,9 @@
   boot = {
     initrd = {
       availableKernelModules = ["nvme" "xhci_pci" "thunderbolt" "usbhid" "usb_storage" "sd_mod"];
-      kernelModules = [];
     };
 
     kernelModules = ["kvm-amd"];
-    extraModulePackages = [];
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
 
     loader = {
