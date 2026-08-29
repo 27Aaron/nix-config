@@ -53,6 +53,13 @@ in {
       description = "Disk device path";
     };
 
+    tmpfsSize = lib.mkOption {
+      type = lib.types.str;
+      default = "4G";
+      example = "512M";
+      description = "Tmpfs root size";
+    };
+
     espSize = lib.mkOption {
       type = lib.types.str;
       default = "256M";
@@ -79,7 +86,7 @@ in {
           "nodev"
           "nosuid"
           "relatime"
-          "size=4G"
+          "size=${cfg.tmpfsSize}"
         ];
       };
 
