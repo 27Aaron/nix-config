@@ -67,11 +67,7 @@ in {
         mode = "0700";
       }
 
-      # Keyrings and certificate state used by desktop applications
-      {
-        directory = ".local/share/keyrings";
-        mode = "0700";
-      }
+      # Certificate state used by desktop applications
       {
         directory = ".local/share/pki";
         mode = "0700";

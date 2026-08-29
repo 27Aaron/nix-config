@@ -1,13 +1,18 @@
+# Elaina — MECHREVO Wujie 14X laptop (Ryzen 7 8845HS, 32 GB DDR5, 1 TB SSD).
 {...}: {
   imports = [
     ./hardware.nix
   ];
 
   services' = {
+    accounts-daemon.enable = true;
     btrbk.enable = true;
     btrfs-scrub.enable = true;
+    gnome-keyring.enable = true;
     networkmanager.enable = true;
     openssh.enable = true;
+    pipewire.enable = true;
+    power-profiles-daemon.enable = true;
     printing.enable = true;
     smartd.enable = true;
     upower.enable = true;
@@ -33,7 +38,6 @@
     xdg-user-dirs.enable = true;
   };
 
-  security.rtkit.enable = true;
   security'.firewall.enable = true;
 
   tools'.dev.enable = true;
