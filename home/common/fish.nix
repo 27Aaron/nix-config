@@ -3,9 +3,9 @@
     enable = true;
     interactiveShellInit = ''
       # Disable the greeting message.
-      set fish_greeting
+      set -g fish_greeting
 
-      # Add uv and uvx shell completions
+      # Load uv and uvx completions when the development toolset is installed.
       if command -q uv
         uv generate-shell-completion fish | source
       end
