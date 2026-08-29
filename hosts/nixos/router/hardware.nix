@@ -8,6 +8,11 @@
   ];
 
   boot = {
+    # Classic interface naming: the NIC shows up as eth0 instead of a
+    # predictable name like ens18. audit=0 turns off the kernel audit
+    # subsystem, whose event log is noise on a home router VM.
+    kernelParams = ["audit=0" "net.ifnames=0"];
+
     initrd.availableKernelModules = ["uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod"];
     initrd.kernelModules = [];
     # The system runs as a PVE guest and does not host KVM guests itself.
@@ -22,19 +27,6 @@
 
   # PVE uses the guest agent for clean shutdown and IP reporting.
   services.qemuGuest.enable = true;
-
-  # Headless VM: systemd-networkd instead of NetworkManager.
-  networking = {
-    useNetworkd = true;
-    useDHCP = false;
-  };
-
-  systemd.network.networks."10-ether" = {
-    matchConfig.Type = "ether";
-    networkConfig.DHCP = "yes";
-  };
-
-  services.resolved.enable = true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
