@@ -7,6 +7,11 @@
 }: let
   cfg = config.services'.postgresql;
   user = myvars.username;
+  remoteAuthentication =
+    lib.concatMapStringsSep "\n" (
+      cidr: "host    sameuser        all             ${cidr}               scram-sha-256"
+    )
+    cfg.allowedCIDRs;
 in {
   options.services'.postgresql = {
     enable = lib.mkEnableOption "Enable PostgreSQL service";
@@ -29,10 +34,24 @@ in {
       description = "TCP port used by PostgreSQL";
     };
 
+    allowedCIDRs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [];
+      example = ["192.168.1.0/24"];
+      description = "Network CIDRs allowed to authenticate remotely when openFirewall is enabled";
+    };
+
     openFirewall = lib.mkEnableOption "Open firewall port for PostgreSQL";
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !cfg.openFirewall || cfg.allowedCIDRs != [];
+        message = "services'.postgresql.allowedCIDRs must not be empty when openFirewall is enabled";
+      }
+    ];
+
     services.postgresql = {
       enable = true;
       inherit (cfg) package dataDir;
@@ -44,9 +63,7 @@ in {
         max_connections = 100;
         log_connections = true;
         log_statement = "ddl";
-        logging_collector = true;
         log_disconnections = true;
-        log_destination = lib.mkForce "syslog";
         shared_buffers = "128MB";
         huge_pages = "try";
       };
@@ -66,24 +83,25 @@ in {
       ];
 
       # https://www.postgresql.org/docs/current/auth-pg-hba-conf.html
-      authentication = lib.mkForce ''
+      authentication = ''
         # TYPE  DATABASE        USER            ADDRESS                 METHOD   OPTIONS
 
         # "local" is for Unix domain socket connections only
         local   all             all                                     peer     map=superuser_map
         # IPv4 local connections:
-        host    all             all             127.0.0.1/32            trust
+        host    all             all             127.0.0.1/32            scram-sha-256
         # IPv6 local connections:
-        host    all             all             ::1/128                 trust
+        host    all             all             ::1/128                 scram-sha-256
 
-        # Allow replication connections from localhost, by a user with the
-        # replication privilege.
-        local   replication     all                                     trust
-        host    replication     all             127.0.0.1/32            trust
-        host    replication     all             ::1/128                 trust
+        # Replication connections from localhost still require OS identity or
+        # a PostgreSQL password.
+        local   replication     all                                     peer     map=superuser_map
+        host    replication     all             127.0.0.1/32            scram-sha-256
+        host    replication     all             ::1/128                 scram-sha-256
 
-        # Other Remote Access - allow access only the database with the same name as the user
-        host    sameuser        all             0.0.0.0/0               scram-sha-256
+        # Remote access is opt-in per source network and only permits a
+        # database with the same name as the authenticated user.
+        ${remoteAuthentication}
       '';
     };
 

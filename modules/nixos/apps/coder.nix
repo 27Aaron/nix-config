@@ -108,6 +108,10 @@ in {
         message = "services'.coder.database.host must stay \"/run/postgresql\" while createLocally is enabled";
       }
       {
+        assertion = !cfg.database.createLocally || config.services'.postgresql.enable;
+        message = "services'.postgresql.enable must be true while services'.coder.database.createLocally is enabled";
+      }
+      {
         assertion =
           cfg.wildcardAccessUrl
           == null
@@ -122,13 +126,14 @@ in {
       "services'.coder.openFirewall is set but listenAddress ${cfg.listenAddress} is loopback-only; external clients still cannot reach Coder";
 
     # Reuse the repo's PostgreSQL module so its tuning, authentication map
-    # and /var/lib/postgresql persistence apply whenever Coder needs a local
-    # database. Hosts can still override it.
+    # and /var/lib/postgresql persistence cannot be disabled independently
+    # while Coder still expects a local database.
     services'.postgresql.enable = lib.mkDefault cfg.database.createLocally;
 
     # The upstream unit only orders after network.target, which races with
     # PostgreSQL init on first boot.
     systemd.services.coder.after = lib.mkIf cfg.database.createLocally ["postgresql.service"];
+    systemd.services.coder.requires = lib.mkIf cfg.database.createLocally ["postgresql.service"];
 
     networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [listenPort];
 
@@ -139,6 +144,7 @@ in {
         directory = "/var/lib/coder";
         user = "coder";
         group = "coder";
+        mode = "0700";
       }
     ];
   };
