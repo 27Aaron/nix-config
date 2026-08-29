@@ -2,8 +2,7 @@
   programs.zsh = {
     enable = true;
     initContent = ''
-      # Disable the greeting message.
-      # Add uv and uvx shell completions
+      # Load uv and uvx completions when the development toolset is installed.
       if command -v uv &>/dev/null; then
         eval "$(uv generate-shell-completion zsh)"
       fi
