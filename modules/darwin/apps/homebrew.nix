@@ -23,7 +23,7 @@ in {
     onActivation = {
       autoUpdate = lib.mkOption {
         type = lib.types.bool;
-        default = true;
+        default = false;
         description = "Fetch the newest stable Homebrew branch on activation";
       };
 
@@ -35,7 +35,7 @@ in {
 
       upgrade = lib.mkOption {
         type = lib.types.bool;
-        default = true;
+        default = false;
         description = "Upgrade outdated Homebrew packages on activation";
       };
     };
