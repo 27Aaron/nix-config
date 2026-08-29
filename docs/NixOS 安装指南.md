@@ -7,126 +7,15 @@
 
 ## Disko 配置
 
-将以下内容保存为 `disko.nix`。这是一份可以独立使用的安装配置，同时也作为当前磁盘布局的备份。
+仓库的 `docs/example/` 目录提供两份可以独立使用的 Disko 配置，同时也是当前磁盘布局的备份：
 
-```nix
-{...}: {
-  disko.devices = {
-    nodev."/" = {
-      fsType = "tmpfs";
-      mountOptions = [
-        "mode=755"
-        "nodev"
-        "nosuid"
-        "relatime"
-        "size=4G"
-      ];
-    };
+- [`luks-btrfs-subvolumes.nix`](./example/luks-btrfs-subvolumes.nix)：LUKS 加密，带 swap
+- [`btrfs-subvolumes.nix`](./example/btrfs-subvolumes.nix)：无加密，无 swap
 
-    disk.main = {
-      type = "disk";
-      device = "/dev/disk/by-id/nvme-CT1000P3PSSD8_24364AD5D8E0";
+选择其中一份，下载为 `disko.nix`（以下以 LUKS 版本为例）：
 
-      content = {
-        type = "gpt";
-        partitions = {
-          ESP = {
-            priority = 1;
-            size = "1G";
-            type = "EF00";
-            content = {
-              type = "filesystem";
-              format = "vfat";
-              mountpoint = "/boot";
-              extraArgs = [
-                "-n"
-                "BOOT"
-              ];
-              mountOptions = ["umask=0077"];
-            };
-          };
-
-          luks = {
-            priority = 2;
-            size = "100%";
-            type = "8309";
-            content = {
-              type = "luks";
-              name = "crypted";
-              askPassword = true;
-              initrdUnlock = true;
-              settings = {
-                allowDiscards = true;
-                bypassWorkqueues = true;
-                crypttabExtraOpts = [
-                  "same-cpu-crypt"
-                  "submit-from-crypt-cpus"
-                  "token-timeout=10"
-                ];
-              };
-              extraFormatArgs = [
-                "--type"
-                "luks2"
-                "--pbkdf"
-                "argon2id"
-              ];
-
-              content = {
-                type = "btrfs";
-                extraArgs = [
-                  "-f"
-                  "--csum"
-                  "xxhash64"
-                  "--label"
-                  "NixOS"
-                ];
-                mountpoint = "/btr_pool";
-                mountOptions = [
-                  "noatime"
-                  "subvolid=5"
-                ];
-
-                subvolumes = {
-                  "@nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "discard=async"
-                      "noatime"
-                    ];
-                  };
-
-                  "@persistent" = {
-                    mountpoint = "/persistent";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "discard=async"
-                      "noatime"
-                    ];
-                  };
-
-                  "@snapshots" = {
-                    mountpoint = "/snapshots";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "discard=async"
-                      "noatime"
-                    ];
-                  };
-
-                  "@swap" = {
-                    mountpoint = "/swap";
-                    swap.swapfile.size = "32769M";
-                  };
-                };
-              };
-            };
-          };
-        };
-      };
-    };
-  };
-}
+```bash
+curl -o disko.nix https://raw.githubusercontent.com/27Aaron/Dotfiles/main/docs/example/luks-btrfs-subvolumes.nix
 ```
 
 安装前确认配置中的 `device` 与目标磁盘一致：
@@ -146,7 +35,7 @@ sudo nix --experimental-features "nix-command flakes" \
   --mode destroy,format,mount ./disko.nix
 ```
 
-Disko 会要求确认清空磁盘，并交互式询问 LUKS 密码。完成后确认文件系统已经挂载到 `/mnt`：
+Disko 会要求确认清空磁盘；使用 LUKS 版本时还会交互式询问密码。完成后确认文件系统已经挂载到 `/mnt`：
 
 ```bash
 findmnt -R /mnt
@@ -185,7 +74,7 @@ sudo nixos-install \
 sudo reboot
 ```
 
-启动时输入 LUKS 密码，然后使用 `vars/default.nix` 中配置的账户登录。
+使用 LUKS 版本时，启动需要输入 LUKS 密码，然后使用 `vars/default.nix` 中配置的账户登录。
 
 > [!IMPORTANT]
 > 根文件系统使用 tmpfs，系统设计为将需要保留的数据存储到 `/persistent`；未持久化的数据会在重启后消失。
