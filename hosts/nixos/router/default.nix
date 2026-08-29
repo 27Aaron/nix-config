@@ -1,8 +1,17 @@
+# Router — planned PVE virtual-router guest (4 vCPU, 1 GB RAM, 32 GB disk).
+# It currently runs a minimal headless configuration on the existing LAN.
 {...}: {
   imports = [
-    ./network.nix
     ./hardware.nix
+    ./network.nix
   ];
+
+  # Avoid concurrent local builds exhausting the VM's 1 GB memory limit.
+  nix.settings.max-jobs = 1;
+
+  services.journald.extraConfig = ''
+    SystemMaxUse=128M
+  '';
 
   services' = {
     openssh.enable = true;
