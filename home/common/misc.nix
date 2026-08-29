@@ -5,8 +5,6 @@
 }: {
   home.packages = lib.mkAfter (with pkgs; [
     # Development
-    codex
-    claude-code
     gh
     just
     lazygit
@@ -24,9 +22,6 @@
     ripgrep
     tree
     wget
-
-    # Media
-    ffmpeg
 
     # Network
     iperf3
@@ -46,17 +41,6 @@
     {
       directory = ".config/gh";
       mode = "0700";
-    }
-
-    # AI assistants
-    ".codex"
-    ".claude"
-  ];
-
-  persist'.files = [
-    {
-      file = ".claude.json";
-      how = "bindmount";
     }
   ];
 }
