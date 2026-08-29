@@ -38,7 +38,7 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-  # Matches the layout in docs/disko.nix.
+  # Matches the layout in docs/example/btrfs-subvolumes.nix.
   storage' = {
     disko = {
       enable = true;
