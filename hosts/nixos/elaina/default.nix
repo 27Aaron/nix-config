@@ -30,10 +30,13 @@
     greetd.enable = true;
     niri.enable = true;
     themes.enable = true;
+    xdg-user-dirs.enable = true;
   };
 
   security.rtkit.enable = true;
   security'.firewall.enable = true;
+
+  tools'.dev.enable = true;
 
   system.stateVersion = "26.11";
 }

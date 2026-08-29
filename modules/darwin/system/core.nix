@@ -3,6 +3,7 @@
   lib,
   hostName,
   myvars,
+  pkgs,
   ...
 }: let
   cfg = config.core';
@@ -35,7 +36,13 @@ in {
       primaryUser = myvars.username;
     };
 
-    users.users.${myvars.username}.home = "/Users/${myvars.username}";
+    users.users.${myvars.username} = {
+      home = "/Users/${myvars.username}";
+
+      # fish must be registered in /etc/shells before it can be the
+      # login shell; programs.fish.enable above takes care of that.
+      shell = lib.mkDefault pkgs.fish;
+    };
 
     networking = {
       hostName = cfg.hostName;
