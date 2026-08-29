@@ -1,9 +1,12 @@
+# Beelink — headless home server (Ryzen 7 7735HS, 64 GB DDR5, 2 TB SSD).
 {...}: {
   imports = [
     ./hardware.nix
   ];
 
   services' = {
+    btrbk.enable = true;
+    btrfs-scrub.enable = true;
     coder = {
       enable = true;
       listenAddress = "0.0.0.0:34567";
@@ -11,9 +14,10 @@
       wildcardAccessUrl = "*.coder.in.ou.al";
       openFirewall = true;
     };
-    postgresql.enable = true;
     networkmanager.enable = true;
     openssh.enable = true;
+    postgresql.enable = true;
+    smartd.enable = true;
     vnstat.enable = true;
     zram.enable = true;
   };
