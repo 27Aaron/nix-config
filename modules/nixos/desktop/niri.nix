@@ -10,6 +10,7 @@
 in {
   options.desktop'.niri = {
     enable = lib.mkEnableOption "Niri desktop environment";
+    autoLogin = lib.mkEnableOption "automatic login to the Niri session";
   };
 
   config = lib.mkIf cfg.enable {
@@ -20,14 +21,16 @@ in {
       package = pkgs.niri;
     };
 
-    # Autologin into Niri through the machine's greeter.
-    services.greetd.settings = {
-      initial_session = {
-        command = niriSession;
-        user = myvars.username;
+    services.greetd.settings =
+      {
+        default_session.command = "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${niriSession}";
+      }
+      // lib.optionalAttrs cfg.autoLogin {
+        initial_session = {
+          command = niriSession;
+          user = myvars.username;
+        };
       };
-      default_session.command = "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${niriSession}";
-    };
 
     preservation'.user.directories = [
       # Niri
