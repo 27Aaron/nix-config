@@ -96,7 +96,7 @@ just update  # 更新 flake.lock
 just gc      # 清理 7 天前的旧 generation 及无引用 Store 路径
 ```
 
-CI 只检查格式、未使用声明和 Nix 语法。修改配置或依赖后，建议先在本地运行 `just check`，通过后再执行 `just switch`。
+仓库不设远程 CI。修改配置或依赖后，先在本地运行 `just check`，通过后再执行 `just switch`。
 
 新增的 `.nix` 文件会被自动导入，无需手动登记。常用的配置目录：
 
