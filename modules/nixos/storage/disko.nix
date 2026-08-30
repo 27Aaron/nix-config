@@ -41,6 +41,23 @@
         swap.swapfile.size = cfg.swapSize;
       };
     };
+
+  btrfsContent = {
+    type = "btrfs";
+    extraArgs = [
+      "-f"
+      "--csum"
+      "xxhash64"
+      "--label"
+      "NixOS"
+    ];
+    mountpoint = "/btr_pool";
+    mountOptions = [
+      "noatime"
+      "subvolid=5"
+    ];
+    subvolumes = btrfsSubvolumes;
+  };
 in {
   imports = [inputs.disko.nixosModules.disko];
 
@@ -140,22 +157,7 @@ in {
                       "--pbkdf"
                       "argon2id"
                     ];
-                    content = {
-                      type = "btrfs";
-                      extraArgs = [
-                        "-f"
-                        "--csum"
-                        "xxhash64"
-                        "--label"
-                        "NixOS"
-                      ];
-                      mountpoint = "/btr_pool";
-                      mountOptions = [
-                        "noatime"
-                        "subvolid=5"
-                      ];
-                      subvolumes = btrfsSubvolumes;
-                    };
+                    content = btrfsContent;
                   };
                 };
               }
@@ -163,22 +165,7 @@ in {
                 root = {
                   priority = 2;
                   size = "100%";
-                  content = {
-                    type = "btrfs";
-                    extraArgs = [
-                      "-f"
-                      "--csum"
-                      "xxhash64"
-                      "--label"
-                      "NixOS"
-                    ];
-                    mountpoint = "/btr_pool";
-                    mountOptions = [
-                      "noatime"
-                      "subvolid=5"
-                    ];
-                    subvolumes = btrfsSubvolumes;
-                  };
+                  content = btrfsContent;
                 };
               }
             );
