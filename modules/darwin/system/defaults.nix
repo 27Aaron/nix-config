@@ -21,10 +21,10 @@ in {
 
   config = lib.mkIf cfg.enable {
     system.defaults = {
-      menuExtraClock.Show24Hour = true; # show 24 hour clock
+      menuExtraClock.Show24Hour = true; # 使用 24 小时制
       menuExtraClock.ShowSeconds = true;
 
-      # customize dock
+      # 自定义 Dock
       dock = {
         autohide = true; # 自动隐藏 Dock
         show-recents = false; # 禁用最近应用
@@ -76,7 +76,7 @@ in {
         "com.apple.swipescrolldirection" = true; # 启用自然滚动（默认为true）
         "com.apple.sound.beep.feedback" = 0; # 关闭系统音量变化时的提示音
 
-        # Appearance
+        # 外观
         AppleInterfaceStyle = "Dark"; # 深色模式
 
         AppleKeyboardUIMode = 2; # 配置键盘控制行为
@@ -93,30 +93,30 @@ in {
         NSNavPanelExpandedStateForSaveMode2 = true; # 保存文件时的路径选择/文件名输入页
       };
 
-      # Customize settings that not supported by nix-darwin directly
-      # see the source code of this project to get more undocumented options:
+      # 以下设置暂无 nix-darwin 原生选项，通过 defaults 命令直接写入。
+      # 更多未文档化选项可参考 m-cli 源码：
       #    https://github.com/rgcr/m-cli
       #
-      # All custom entries can be found by running `defaults read` command.
-      # or `defaults read xxx` to read a specific domain.
+      # 已写入的条目可用 `defaults read` 查看，
+      # 或用 `defaults read <domain>` 查看单个域。
       CustomUserPreferences = {
         ".GlobalPreferences" = {
-          # automatically switch to a new space when switching to the application
+          # 切换应用时自动切换到它所在的空间
           AppleSpacesSwitchOnActivate = true;
         };
         NSGlobalDomain = {
-          # Add a context menu item for showing the Web Inspector in web views
+          # 在网页视图中增加显示 Web 检查器的右键菜单项
           WebKitDeveloperExtras = true;
         };
         "com.apple.desktopservices" = {
-          # Avoid creating .DS_Store files on network or USB volumes
+          # 避免在网络卷和 USB 卷上生成 .DS_Store 文件
           DSDontWriteNetworkStores = true;
           DSDontWriteUSBStores = true;
         };
         "com.apple.AdLib" = {
           allowApplePersonalizedAdvertising = false;
         };
-        # Prevent Photos from opening automatically when devices are plugged in
+        # 插入设备时阻止"照片"自动打开
         "com.apple.ImageCapture".disableHotPlug = true;
       };
     };
