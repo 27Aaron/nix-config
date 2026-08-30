@@ -105,7 +105,7 @@ in {
         mkdir -p -- "$dir"
         target="$dir/karabiner.json"
         work=$(mktemp -d -- "$dir/.activation.XXXXXX")
-        trap 'rm -rf -- "$work"' EXIT
+        trap 'if [[ -v work ]]; then rm -rf -- "$work"; fi' EXIT
         trap 'exit 1' HUP INT TERM
 
         jq -e . "$gen" > "$work/karabiner.json"
