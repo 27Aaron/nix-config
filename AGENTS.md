@@ -150,4 +150,4 @@ nix flake check --no-build
 
 如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
 
-本地的 `just check` 等价于 CI 加主机求值；格式化用 `just fmt` 或 `nix fmt`。CI（`.github/workflows/check.yml`）只跑格式和未使用声明两项检查。
+检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值；格式化用 `just fmt` 或 `nix fmt`。仓库不设远程 CI。
