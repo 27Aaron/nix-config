@@ -18,7 +18,9 @@ in {
       ["preservation" "preserveAt" "/persistent" "users" user])
   ];
 
-  options.storage'.persistence.enable = lib.mkEnableOption "Preservation for an ephemeral NixOS root";
+  options.storage'.persistence = {
+    enable = lib.mkEnableOption "Preservation for an ephemeral NixOS root";
+  };
 
   config = lib.mkIf cfg.enable {
     boot = {

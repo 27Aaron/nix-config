@@ -5,7 +5,9 @@
 }: let
   cfg = config.services'.gnome-keyring;
 in {
-  options.services'.gnome-keyring.enable = lib.mkEnableOption "GNOME Keyring secret service";
+  options.services'.gnome-keyring = {
+    enable = lib.mkEnableOption "GNOME Keyring secret service";
+  };
 
   config = {
     services.gnome.gnome-keyring.enable = lib.mkIf cfg.enable true;

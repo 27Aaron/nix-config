@@ -6,7 +6,9 @@
 }: let
   cfg = config.hardware'.amdgpu;
 in {
-  options.hardware'.amdgpu.enable = lib.mkEnableOption "AMD GPU support";
+  options.hardware'.amdgpu = {
+    enable = lib.mkEnableOption "AMD GPU support";
+  };
 
   config = lib.mkIf cfg.enable {
     hardware.graphics = {
