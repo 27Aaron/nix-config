@@ -34,5 +34,13 @@ in {
     };
 
     preservation'.os.directories = ["/etc/ssh"];
+
+    # Client keys and known_hosts; sshd also reads authorized_keys from here.
+    preservation'.user.directories = [
+      {
+        directory = ".ssh";
+        mode = "0700";
+      }
+    ];
   };
 }
