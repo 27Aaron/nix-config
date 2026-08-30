@@ -1,0 +1,30 @@
+name: label
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Label by commit type
+        run: |
+          type=$(printf '%s' "$TITLE" | grep -oE '^(feat|fix|docs|refactor|perf|ci|chore)(\(|:|!)' || true)
+          type=${type%?}
+          if [ -n "$type" ]; then
+            gh pr edit "$NUMBER" --repo "$REPO" --add-label "$type"
+          else
+            echo "Title has no conventional commit type prefix, skipping"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          TITLE: ${{ github.event.pull_request.title }}
+
+      - uses: actions/labeler@v5
