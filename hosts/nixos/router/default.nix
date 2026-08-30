@@ -1,5 +1,9 @@
-# Router — planned PVE virtual-router guest (4 vCPU, 1 GB RAM, 32 GB disk).
-# It currently runs a minimal headless configuration on the existing LAN.
+#####################################################
+#
+# Router - A NixOS VM running on Proxmox
+#   (4 vCPU, 1 GB RAM, 32 GB disk)
+#
+#####################################################
 {...}: {
   imports = [
     ./hardware.nix
