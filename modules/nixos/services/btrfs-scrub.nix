@@ -10,7 +10,9 @@ in {
 
     interval = lib.mkOption {
       type = lib.types.str;
-      default = "monthly";
+      # First day of the month at 04:00, away from the 00:00/12:00 snapshot
+      # slots of btrbk so the long scrub does not overlap with backups.
+      default = "*-*-01 04:00:00";
       description = "Systemd calendar expression controlling scrub frequency";
     };
   };
