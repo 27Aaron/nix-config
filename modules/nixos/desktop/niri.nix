@@ -16,21 +16,18 @@ in {
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [pkgs.xwayland-satellite];
 
-    programs.niri = {
-      enable = true;
-      package = pkgs.niri;
-    };
+    programs.niri.enable = true;
 
-    services.greetd.settings =
-      {
-        default_session.command = "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${niriSession}";
-      }
-      // lib.optionalAttrs cfg.autoLogin {
-        initial_session = {
-          command = niriSession;
-          user = myvars.username;
-        };
+    # Register the session with greetd when it drives the login screen; the
+    # greeter command itself is assembled by the greetd module.
+    desktop'.greetd.sessionCommand = lib.mkIf config.desktop'.greetd.enable niriSession;
+
+    services.greetd.settings = lib.mkIf (cfg.autoLogin && config.desktop'.greetd.enable) {
+      initial_session = {
+        command = niriSession;
+        user = myvars.username;
       };
+    };
 
     preservation'.user.directories = [
       # Niri
