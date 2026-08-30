@@ -5,7 +5,9 @@
 }: let
   cfg = config.desktop'.apps.kitty;
 in {
-  options.desktop'.apps.kitty.enable = lib.mkEnableOption "Kitty terminal emulator";
+  options.desktop'.apps.kitty = {
+    enable = lib.mkEnableOption "Kitty terminal emulator";
+  };
 
   config = lib.mkIf cfg.enable {
     hm'.programs.kitty = {

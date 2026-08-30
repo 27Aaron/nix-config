@@ -5,7 +5,9 @@
 }: let
   cfg = config.desktop'.xdg-user-dirs;
 in {
-  options.desktop'.xdg-user-dirs.enable = lib.mkEnableOption "XDG user directories";
+  options.desktop'.xdg-user-dirs = {
+    enable = lib.mkEnableOption "XDG user directories";
+  };
 
   config = lib.mkIf cfg.enable {
     hm'.xdg = {

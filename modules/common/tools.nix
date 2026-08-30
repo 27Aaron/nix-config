@@ -6,7 +6,9 @@
 }: let
   cfg = config.tools'.dev;
 in {
-  options.tools'.dev.enable = lib.mkEnableOption "development CLI toolset for interactive hosts";
+  options.tools'.dev = {
+    enable = lib.mkEnableOption "development CLI toolset for interactive hosts";
+  };
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [

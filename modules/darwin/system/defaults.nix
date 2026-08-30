@@ -13,7 +13,9 @@
   lib,
   ...
 }: {
-  options.system'.defaults.enable = lib.mkEnableOption "macOS system defaults";
+  options.system'.defaults = {
+    enable = lib.mkEnableOption "macOS system defaults";
+  };
 
   config = lib.mkIf config.system'.defaults.enable {
     system.defaults = {

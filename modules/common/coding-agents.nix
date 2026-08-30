@@ -5,7 +5,9 @@
 }: let
   cfg = config.tools'.coding-agents;
 in {
-  options.tools'.coding-agents.enable = lib.mkEnableOption "AI coding agents";
+  options.tools'.coding-agents = {
+    enable = lib.mkEnableOption "AI coding agents";
+  };
 
   config = lib.mkIf cfg.enable {
     # Bare enable only installs the packages; leaving settings unmanaged keeps
