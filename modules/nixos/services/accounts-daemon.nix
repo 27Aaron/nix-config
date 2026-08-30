@@ -9,11 +9,10 @@ in {
     enable = lib.mkEnableOption "AccountsService daemon";
   };
 
-  config = {
-    services.accounts-daemon.enable = lib.mkIf cfg.enable true;
+  config = lib.mkIf cfg.enable {
+    services.accounts-daemon.enable = true;
 
-    # Persistence follows the final service state, whoever turned it on.
-    preservation'.os.directories = lib.optionals config.services.accounts-daemon.enable [
+    preservation'.os.directories = [
       {
         directory = "/var/lib/AccountsService";
         mode = "0775";

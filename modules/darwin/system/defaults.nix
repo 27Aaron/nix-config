@@ -12,12 +12,14 @@
   config,
   lib,
   ...
-}: {
+}: let
+  cfg = config.system'.defaults;
+in {
   options.system'.defaults = {
     enable = lib.mkEnableOption "macOS system defaults";
   };
 
-  config = lib.mkIf config.system'.defaults.enable {
+  config = lib.mkIf cfg.enable {
     system.defaults = {
       menuExtraClock.Show24Hour = true; # show 24 hour clock
       menuExtraClock.ShowSeconds = true;
