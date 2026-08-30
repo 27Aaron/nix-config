@@ -1,18 +1,17 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
-  cfg = config.tools'.ai-cli;
+  cfg = config.tools'.coding-agents;
 in {
-  options.tools'.ai-cli.enable = lib.mkEnableOption "AI coding CLIs (Claude Code and Codex)";
+  options.tools'.coding-agents.enable = lib.mkEnableOption "AI coding agents";
 
   config = lib.mkIf cfg.enable {
-    hm'.home.packages = with pkgs; [
-      claude-code
-      codex
-    ];
+    # Bare enable only installs the packages; leaving settings unmanaged keeps
+    # HM from taking over the live files inside ~/.claude and ~/.codex.
+    hm'.programs.claude-code.enable = true;
+    hm'.programs.codex.enable = true;
 
     hm'.home.shellAliases = {
       cc = "claude --dangerously-skip-permissions";

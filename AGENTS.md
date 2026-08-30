@@ -51,7 +51,7 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 | `core'` | 主机与主用户元数据：hostName、timeZone、hashedPassword、sshAuthorizedKeys | `modules/*/system/core.nix` |
 | `system'` | 系统级杂项（darwin 系统偏好 `system'.defaults`） | `modules/darwin/system/` |
 | `apps'` | 应用级系统配置（darwin Homebrew `apps'.homebrew`） | `modules/darwin/apps/` |
-| `tools'` | 跨平台用户 CLI 工具分组（`tools'.dev`、`tools'.ai-cli`） | `modules/common/` |
+| `tools'` | 跨平台用户 CLI 工具分组（`tools'.dev`、`tools'.coding-agents`） | `modules/common/` |
 | `services'` | 主机级系统服务（含 PostgreSQL） | `modules/nixos/services/`、`modules/nixos/apps/` |
 | `desktop'` | 桌面功能与应用开关 | `modules/nixos/desktop/` |
 | `hardware'` | 可选硬件支持 | `modules/nixos/system/` |
@@ -84,7 +84,7 @@ Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：H
 
 桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
 
-跨平台的开发 CLI 工具集（gh、lazygit、uv、direnv、Nix 工具链）由 `tools'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`；Shell 专属的 `uv` / `uvx` 补全分别放在 `home/common/fish.nix` 和 `home/common/zsh.nix`，并按命令是否存在加载。Claude Code 和 Codex 由 `tools'.ai-cli.enable` 控制，配置收敛在 `modules/common/ai-cli.nix`。其他带开关的内容不放入 `home/common/` 基线。`just` 属于所有主机共用的基线工具，放在 `home/common/misc.nix`。XDG 用户目录是桌面能力，由 `desktop'.xdg-user-dirs.enable` 控制，不放进 `home/nixos/` 基线。
+跨平台的开发 CLI 工具集（gh、lazygit、uv、direnv、Nix 工具链）由 `tools'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`；Shell 专属的 `uv` / `uvx` 补全分别放在 `home/common/fish.nix` 和 `home/common/zsh.nix`，并按命令是否存在加载。Claude Code 和 Codex 由 `tools'.coding-agents.enable` 控制，配置收敛在 `modules/common/coding-agents.nix`。其他带开关的内容不放入 `home/common/` 基线。`just` 属于所有主机共用的基线工具，放在 `home/common/misc.nix`。XDG 用户目录是桌面能力，由 `desktop'.xdg-user-dirs.enable` 控制，不放进 `home/nixos/` 基线。
 
 ## 多设备配置
 
