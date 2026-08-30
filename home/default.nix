@@ -37,7 +37,7 @@ in {
     stateVersion = "26.05";
   };
 
-  programs = {
-    man.enable = false;
-  };
+  # The second switch is what skips building the option manual; man.enable alone does not.
+  programs.man.enable = false;
+  manual.manpages.enable = false;
 }
