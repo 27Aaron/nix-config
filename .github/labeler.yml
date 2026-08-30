@@ -1,0 +1,27 @@
+nixos:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "modules/nixos/**"
+          - "hosts/nixos/**"
+
+darwin:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "modules/darwin/**"
+          - "hosts/darwin/**"
+
+home-manager:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "home/**"
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "*.md"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
