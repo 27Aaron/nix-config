@@ -27,4 +27,4 @@ jobs:
           REPO: ${{ github.repository }}
           TITLE: ${{ github.event.pull_request.title }}
 
-      - uses: actions/labeler@v5
+      - uses: actions/labeler@v7
