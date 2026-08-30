@@ -3,12 +3,14 @@ nixos:
       - any-glob-to-any-file:
           - "modules/nixos/**"
           - "hosts/nixos/**"
+          - "modules/common/**"
 
 darwin:
   - changed-files:
       - any-glob-to-any-file:
           - "modules/darwin/**"
           - "hosts/darwin/**"
+          - "modules/common/**"
 
 home-manager:
   - changed-files:
@@ -20,8 +22,3 @@ docs:
       - any-glob-to-any-file:
           - "docs/**"
           - "*.md"
-
-ci:
-  - changed-files:
-      - any-glob-to-any-file:
-          - ".github/**"
