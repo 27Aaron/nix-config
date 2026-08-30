@@ -1,24 +1,33 @@
 # NixOS 安装指南
 
-本文档介绍如何从 NixOS 安装介质启动，使用独立的 Disko 配置创建文件系统，并通过本仓库的 Flake 安装 `elaina`。
+本文档介绍如何从 NixOS 安装介质启动，先用独立的 Disko 配置完成分区和格式化，再通过本仓库的 Flake 安装主机 `elaina`。
 
 > [!CAUTION]
-> Disko 会清空目标磁盘上的所有分区和数据。执行前请备份数据，并再次确认目标磁盘。
+> 下文的 Disko 命令会清空目标磁盘上的全部分区和数据。执行前请备份重要数据，并再次确认目标磁盘。
 
 ## Disko 配置
 
-仓库的 `docs/example/` 目录提供两份可以独立使用的 Disko 配置，同时也是当前磁盘布局的备份：
+仓库的 `docs/example/` 目录提供四份可独立使用的 Disko 配置，按根分区类型分为两组：
+
+**tmpfs 作根（当前布局，重启后根分区清空）**
 
 - [`luks-btrfs-subvolumes.nix`](./example/luks-btrfs-subvolumes.nix)：LUKS 加密，带 swap
 - [`btrfs-subvolumes.nix`](./example/btrfs-subvolumes.nix)：无加密，无 swap
 
-选择其中一份，下载为 `disko.nix`（以下以 LUKS 版本为例）：
+**根分区落盘（btrfs 子卷 `@root`，重启后保留）**
+
+- [`luks-btrfs-root.nix`](./example/luks-btrfs-root.nix)：LUKS 加密，带 swap
+- [`btrfs-root.nix`](./example/btrfs-root.nix)：无加密，无 swap
+
+仓库的主机配置固定按 tmpfs 根布局生成文件系统定义，推荐选择第一组；如果选择第二组，请同步调整主机配置中对应的文件系统定义。
+
+选定后下载为 `disko.nix`（下文以 LUKS tmpfs 版为例）：
 
 ```bash
 curl -o disko.nix https://raw.githubusercontent.com/27Aaron/Dotfiles/main/docs/example/luks-btrfs-subvolumes.nix
 ```
 
-安装前确认配置中的 `device` 与目标磁盘一致：
+编辑 `disko.nix`，把 `device` 改为目标磁盘，推荐使用 `/dev/disk/by-id/` 下的稳定路径：
 
 ```bash
 lsblk -o NAME,PATH,SIZE,MODEL,SERIAL
@@ -35,7 +44,7 @@ sudo nix --experimental-features "nix-command flakes" \
   --mode destroy,format,mount ./disko.nix
 ```
 
-Disko 会要求确认清空磁盘；使用 LUKS 版本时还会交互式询问密码。完成后确认文件系统已经挂载到 `/mnt`：
+Disko 会先要求确认清空磁盘，LUKS 版本还会交互式询问加密密码。完成后确认文件系统已挂载到 `/mnt`：
 
 ```bash
 findmnt -R /mnt
@@ -51,15 +60,20 @@ git clone https://github.com/27Aaron/Dotfiles.git ~/nix-config
 cd ~/nix-config
 ```
 
-生成不包含文件系统定义的硬件配置：
+生成不包含文件系统定义的硬件配置（文件系统定义由 Disko 和仓库配置负责）：
 
 ```bash
 sudo nixos-generate-config --no-filesystems --root /mnt
 ```
 
-检查 `/mnt/etc/nixos/hardware-configuration.nix`，将仍然需要的硬件探测结果合并到 `hosts/nixos/elaina/hardware.nix`，不要覆盖已有的 Disko、持久化和引导配置。
+查看 `/mnt/etc/nixos/hardware-configuration.nix`，把仍然需要的硬件探测结果合并进 `hosts/nixos/elaina/hardware.nix`，注意不要覆盖仓库中已有的 Disko、持久化和引导配置。
 
-确认 `vars/default.nix` 中的用户名、密码哈希、SSH 公钥和默认时区，以及 `hosts/nixos/<主机名>/default.nix` 中的系统状态版本正确，然后安装系统：
+安装前检查以下配置：
+
+- `vars/default.nix`：用户名、密码哈希、SSH 公钥、默认时区
+- `hosts/nixos/elaina/default.nix`：`system.stateVersion`
+
+然后安装系统：
 
 ```bash
 sudo nixos-install \
@@ -68,29 +82,29 @@ sudo nixos-install \
   --no-root-password
 ```
 
-安装完成后重启并拔出安装介质：
+安装完成后重启并移除安装介质：
 
 ```bash
 sudo reboot
 ```
 
-使用 LUKS 版本时，启动需要输入 LUKS 密码，然后使用 `vars/default.nix` 中配置的账户登录。
+使用 LUKS 版本时，开机需要先输入加密密码，再用 `vars/default.nix` 中配置的账户登录。
 
 > [!IMPORTANT]
-> 根文件系统使用 tmpfs，系统设计为将需要保留的数据存储到 `/persistent`；未持久化的数据会在重启后消失。
+> 根文件系统为 tmpfs，重启即清空；需要保留的数据由持久化机制统一存放在 `/persistent`，未持久化的内容重启后会丢失。
 
 ## 后续维护
 
-仓库中的 `justfile` 提供以下命令（`just` 和 `nh` 已由配置安装，flake 路径固定为 `~/nix-config`）：
+仓库的 `Justfile` 提供以下命令（`just` 和 `nh` 已随配置安装；`nh` 固定读取 `~/nix-config`，即上文的克隆路径）：
 
 ```bash
 just switch  # 构建并应用当前主机配置
 just check   # 检查格式、未使用声明和所有主机求值
 just update  # 更新 flake.lock
-just gc      # 清理旧的 generation 及无引用 Store 路径
+just gc      # 交互式清理旧 generation 及无引用 Store 路径
 ```
 
-CI 只检查格式、未使用声明和 Nix 语法。更新配置或依赖后，请在本地运行 `just check`，通过后再执行 `just switch`。
+CI 只检查格式、未使用声明和 Nix 语法。修改配置或依赖后，建议先在本地运行 `just check`，通过后再执行 `just switch`。
 
 ## 参考资料
 
