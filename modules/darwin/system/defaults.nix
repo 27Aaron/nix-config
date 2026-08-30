@@ -38,23 +38,43 @@ in {
 
       finder = {
         _FXShowPosixPathInTitle = true; # 显示Finder标题中的完整路径
+        _FXSortFoldersFirst = true; # 文件夹排序在文件之前
         AppleShowAllExtensions = true; # 显示所有文件扩展名
+        FXDefaultSearchScope = "SCcf"; # 搜索时默认仅搜索当前文件夹
         FXEnableExtensionChangeWarning = false; # 更改文件扩展名时禁用警告
         NewWindowTarget = "Home"; # 新 Finder 窗口默认显示用户主目录
         QuitMenuItem = true; # 启用退出菜单项
         ShowPathbar = true; # 显示路径栏
         ShowStatusBar = true; # 显示状态栏
+        ShowExternalHardDrivesOnDesktop = true; # 桌面显示外接硬盘
+        ShowHardDrivesOnDesktop = false; # 桌面不显示内置硬盘
+        ShowMountedServersOnDesktop = true; # 桌面显示已挂载的服务器
+        ShowRemovableMediaOnDesktop = true; # 桌面显示可移动介质
       };
 
-      # trackpad = {
-      #   Clicking = true; # 是否启用点击
-      #   TrackpadRightClick = true; # 启用两指右键点击
-      #   TrackpadThreeFingerDrag = true; # 是否启用三指拖动
-      # };
+      spaces.spans-displays = false; # 显示器各自拥有独立空间
+
+      WindowManager = {
+        EnableStandardClickToShowDesktop = false; # 点击壁纸不进入桌面
+        StandardHideDesktopIcons = false; # 桌面显示图标
+        HideDesktop = false; # 不隐藏桌面与台前调度中的项目
+        StageManagerHideWidgets = false; # 台前调度不隐藏小组件
+        StandardHideWidgets = false; # 点击壁纸显示桌面时不隐藏小组件
+      };
+
+      screensaver = {
+        askForPassword = true; # 屏保或睡眠后立即要求密码
+        askForPasswordDelay = 0;
+      };
+
+      screencapture = {
+        location = "~/Desktop"; # 截图保存位置
+        type = "png"; # 截图格式
+      };
 
       NSGlobalDomain = {
         "com.apple.swipescrolldirection" = true; # 启用自然滚动（默认为true）
-        "com.apple.sound.beep.feedback" = 0; # 系统音量改变时发出反馈声音。
+        "com.apple.sound.beep.feedback" = 0; # 关闭系统音量变化时的提示音
 
         # Appearance
         AppleInterfaceStyle = "Dark"; # 深色模式
@@ -88,38 +108,10 @@ in {
           # Add a context menu item for showing the Web Inspector in web views
           WebKitDeveloperExtras = true;
         };
-        "com.apple.finder" = {
-          ShowExternalHardDrivesOnDesktop = true;
-          ShowHardDrivesOnDesktop = false;
-          ShowMountedServersOnDesktop = true;
-          ShowRemovableMediaOnDesktop = true;
-          _FXSortFoldersFirst = true;
-          # When performing a search, search the current folder by default
-          FXDefaultSearchScope = "SCcf";
-        };
         "com.apple.desktopservices" = {
           # Avoid creating .DS_Store files on network or USB volumes
           DSDontWriteNetworkStores = true;
           DSDontWriteUSBStores = true;
-        };
-        "com.apple.spaces" = {
-          "spans-displays" = 0; # Display have seperate spaces
-        };
-        "com.apple.WindowManager" = {
-          EnableStandardClickToShowDesktop = 0; # Click wallpaper to reveal desktop
-          StandardHideDesktopIcons = 0; # Show items on desktop
-          HideDesktop = 0; # Do not hide items on desktop & stage manager
-          StageManagerHideWidgets = 0;
-          StandardHideWidgets = 0;
-        };
-        "com.apple.screensaver" = {
-          # Require password immediately after sleep or screen saver begins
-          askForPassword = 1;
-          askForPasswordDelay = 0;
-        };
-        "com.apple.screencapture" = {
-          location = "~/Desktop";
-          type = "png";
         };
         "com.apple.AdLib" = {
           allowApplePersonalizedAdvertising = false;
