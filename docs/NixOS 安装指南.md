@@ -104,7 +104,7 @@ just update  # 更新 flake.lock
 just gc      # 交互式清理旧 generation 及无引用 Store 路径
 ```
 
-CI 只检查格式、未使用声明和 Nix 语法。修改配置或依赖后，建议先在本地运行 `just check`，通过后再执行 `just switch`。
+CI 只检查格式和未使用声明。修改配置或依赖后，建议先在本地运行 `just check`，通过后再执行 `just switch`。
 
 ## 参考资料
 

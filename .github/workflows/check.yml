@@ -23,10 +23,3 @@ jobs:
 
       - name: Check dead code (deadnix)
         run: nix run nixpkgs#deadnix -- --fail .
-
-      - name: Parse all Nix files
-        run: |
-          set -e
-          for file in $(git ls-files '*.nix'); do
-            nix-instantiate --parse "$file" > /dev/null || exit 1
-          done

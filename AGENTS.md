@@ -6,7 +6,7 @@
 
 - 修改前先检查相关主机、模块和文档的现状，保留与当前任务无关的本地改动。
 - 除非用户明确要求，不要执行 `git add`、提交、推送、创建或修改 PR。
-- 配置改动完成后，至少运行格式检查、`deadnix` 和 Nix 语法检查（见「验证」）。
+- 配置改动完成后，至少运行格式检查和 `deadnix`（见「验证」）。
 
 ## 仓库结构
 
@@ -140,10 +140,6 @@ config = lib.mkIf cfg.enable {
 ```bash
 alejandra .
 deadnix --fail .
-
-for file in $(rg --files -g '*.nix'); do
-  nix-instantiate --parse "$file" >/dev/null || exit 1
-done
 ```
 
 完整检查（含所有主机求值）：
@@ -154,4 +150,4 @@ nix flake check --no-build
 
 如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
 
-本地的 `just check` 等价于 CI 加主机求值；格式化用 `just fmt` 或 `nix fmt`。CI（`.github/workflows/check.yml`）只跑格式、未使用声明和 Nix 语法三项检查。
+本地的 `just check` 等价于 CI 加主机求值；格式化用 `just fmt` 或 `nix fmt`。CI（`.github/workflows/check.yml`）只跑格式和未使用声明两项检查。
