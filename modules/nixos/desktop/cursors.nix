@@ -18,5 +18,10 @@ in {
       size = 32;
       gtk.enable = true;
     };
+
+    # Cursor theme links managed by home.pointerCursor under ~/.icons.
+    preservation'.user.directories = [
+      ".icons"
+    ];
   };
 }
