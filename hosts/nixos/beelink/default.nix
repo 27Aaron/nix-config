@@ -1,4 +1,9 @@
-# Beelink — headless home server (Ryzen 7 7735HS, 64 GB DDR5, 2 TB SSD).
+#####################################################
+#
+# Beelink SER6 Pro VEST - homelab server
+#   (Ryzen 7 7735HS, 64 GB DDR5, 4 TB NVMe SSD)
+#
+#####################################################
 {...}: {
   imports = [
     ./hardware.nix

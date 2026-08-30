@@ -1,4 +1,9 @@
-# Elaina — MECHREVO Wujie 14X laptop (Ryzen 7 8845HS, 32 GB DDR5, 1 TB SSD).
+#####################################################
+#
+# Elaina - MECHREVO Wujie 14X laptop
+#   (Ryzen 7 8845HS, 32 GB DDR5, 2 TB SSD)
+#
+#####################################################
 {...}: {
   imports = [
     ./hardware.nix
