@@ -83,5 +83,15 @@ in {
       cfg.sourceVolume
       cfg.snapshotDirectory
     ];
+
+    # The service user's home and systemd StateDirectory.
+    preservation'.os.directories = [
+      {
+        directory = "/var/lib/btrbk";
+        user = "btrbk";
+        group = "btrbk";
+        mode = "0750";
+      }
+    ];
   };
 }

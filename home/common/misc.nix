@@ -28,4 +28,9 @@
     fastfetch
     nload
   ]);
+
+  # btop rewrites its config when settings change from the UI.
+  persist'.directories = [
+    ".config/btop"
+  ];
 }

@@ -53,17 +53,7 @@ in {
         ".local/state/home-manager"
         ".local/state/nix/profiles"
 
-        # The configuration checkout used by nh.
-        {
-          directory = "nix-config";
-          mode = "0700";
-        }
-
         # Credentials without a managing module live here.
-        {
-          directory = ".ssh";
-          mode = "0700";
-        }
         {
           directory = ".gnupg";
           mode = "0700";

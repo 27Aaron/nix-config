@@ -20,4 +20,12 @@ in {
     enable = true;
     flake = lib.mkDefault "/home/${user}/nix-config";
   };
+
+  # The configuration checkout read by nh.
+  preservation'.user.directories = [
+    {
+      directory = "nix-config";
+      mode = "0700";
+    }
+  ];
 }
