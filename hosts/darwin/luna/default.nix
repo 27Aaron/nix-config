@@ -3,12 +3,10 @@
   apps'.homebrew.enable = true;
   security'.touch-id.enable = true;
   system'.defaults.enable = true;
-  tools' = {
-    ai-cli.enable = true;
-    dev.enable = true;
-  };
+
+  tools'.coding-agents.enable = true;
+  tools'.dev.enable = true;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
-
   system.stateVersion = 6;
 }
