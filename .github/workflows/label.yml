@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/labeler@v5
-
       - name: Label by commit type
         run: |
           type=$(printf '%s' "$TITLE" | grep -oE '^(feat|fix|docs|refactor|perf|ci|chore)(\(|:|!)' || true)
@@ -28,3 +26,5 @@ jobs:
           NUMBER: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}
           TITLE: ${{ github.event.pull_request.title }}
+
+      - uses: actions/labeler@v5
