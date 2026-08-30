@@ -13,7 +13,7 @@
 
     disk.main = {
       type = "disk";
-      device = "/dev/disk/by-id/nvme-CT1000P3PSSD8_24364AD5D8E0";
+      device = "/dev/sda";
 
       content = {
         type = "gpt";
