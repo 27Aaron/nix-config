@@ -14,7 +14,7 @@
     cfg.allowedCIDRs;
 in {
   options.services'.postgresql = {
-    enable = lib.mkEnableOption "Enable PostgreSQL service";
+    enable = lib.mkEnableOption "PostgreSQL service";
 
     package = lib.mkOption {
       type = lib.types.package;
