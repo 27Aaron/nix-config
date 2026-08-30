@@ -15,7 +15,7 @@ flake.nix             Flake 入口：导出所有主机、formatter 和模块
 vars/default.nix      全局变量：用户名、姓名、邮箱、时区、密码哈希、SSH 公钥
 hosts/
   darwin/<host>/      nix-darwin 主机（default.nix）
-  nixos/<host>/       NixOS 主机（default.nix + hardware.nix）
+  nixos/<host>/       NixOS 主机（default.nix + hardware.nix，可含 network.nix 等附加文件）
 modules/
   common/             跨平台系统模块
   nixos/system/       基础系统、引导、硬件和安全
@@ -30,6 +30,7 @@ home/
   common/             跨平台 Home Manager 配置
   nixos/  darwin/     平台专属用户配置
 docs/                 安装指南（面向使用者，不含内部设计）
+.github/              GitHub PR 自动化（label、dependabot 等，不含 CI 检查）
 Justfile              switch / check / update / gc / fmt 等常用命令
 ```
 
@@ -39,8 +40,8 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 - 每台主机注入同一组 `specialArgs`：`inputs`、`myvars`、`hostName`、`platformName`；Home Manager 通过 `extraSpecialArgs` 收到同一组，并以 `backupFileExtension = "hm-bak"` 接入主用户。模块和 Home Manager 文件可以直接取用这些参数。
 - `modules/default.nix` 递归扫描 `modules/common/` 和当前平台目录：含 `default.nix` 的目录作为单个模块整体导入，否则继续下钻；普通 `.nix` 文件直接导入。新增模块放入正确的职责目录即可，无需登记。
 - `home/default.nix` 递归导入 `home/common/` 和平台目录下的所有 `.nix` 文件。
-- NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`system.stateVersion` 的顺序组织，分组内按名称排序。
-- NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`espSize`、`swapSize`、`luks.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
+- NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`tools'`、`system.stateVersion` 的顺序组织，分组内按名称排序。
+- NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
 
 ## 模块和命名约定
 
@@ -152,4 +153,4 @@ nix flake check --no-build
 
 如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
 
-检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值；格式化用 `just fmt` 或 `nix fmt`。仓库不设远程 CI。
+检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值；格式化用 `just fmt` 或 `nix fmt`。仓库不设远程 CI 检查，GitHub 上仅保留 issue/PR 的标签和依赖更新自动化。
