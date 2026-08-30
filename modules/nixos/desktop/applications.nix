@@ -6,6 +6,9 @@
 }: let
   cfg = config.desktop'.applications;
 in {
+  # Baseline set of file and media applications installed together on every
+  # desktop host; apps that carry their own configuration live in separate
+  # desktop'.apps.<app> modules instead.
   options.desktop'.applications = {
     enable = lib.mkEnableOption "desktop file and media applications";
   };

@@ -21,8 +21,8 @@ in {
         download = "$HOME/Downloads";
         music = "$HOME/Music";
         pictures = "$HOME/Pictures";
-        publicShare = "/var/empty";
-        templates = "/var/empty";
+        publicShare = null;
+        templates = null;
         videos = "$HOME/Videos";
       };
       configFile."user-dirs.locale".text = "en_US";

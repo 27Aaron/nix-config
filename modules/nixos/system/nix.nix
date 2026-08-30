@@ -1,13 +1,11 @@
 {
   lib,
   myvars,
-  pkgs,
   ...
 }: let
   user = myvars.username;
 in {
   nix = {
-    package = pkgs.nix;
     gc.dates = lib.mkDefault "weekly";
     settings = {
       substituters = lib.mkAfter ["https://attic.xuyh0120.win/lantian"];

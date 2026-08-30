@@ -19,10 +19,7 @@ in {
 
     hm'.programs.direnv = {
       enable = true;
-      nix-direnv = {
-        enable = true;
-        package = pkgs.nix-direnv;
-      };
+      nix-direnv.enable = true;
     };
 
     hm'.home.packages = with pkgs; [

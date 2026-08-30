@@ -15,7 +15,7 @@
     || lib.hasPrefix "[::1]" cfg.listenAddress;
 in {
   options.services'.coder = {
-    enable = lib.mkEnableOption "Enable Coder server";
+    enable = lib.mkEnableOption "Coder server";
 
     listenAddress = lib.mkOption {
       type = lib.types.str;
@@ -132,8 +132,10 @@ in {
 
     # The upstream unit only orders after network.target, which races with
     # PostgreSQL init on first boot.
-    systemd.services.coder.after = lib.mkIf cfg.database.createLocally ["postgresql.service"];
-    systemd.services.coder.requires = lib.mkIf cfg.database.createLocally ["postgresql.service"];
+    systemd.services.coder = lib.mkIf cfg.database.createLocally {
+      after = ["postgresql.service"];
+      requires = ["postgresql.service"];
+    };
 
     networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [listenPort];
 
