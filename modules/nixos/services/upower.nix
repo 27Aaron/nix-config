@@ -9,11 +9,10 @@ in {
     enable = lib.mkEnableOption "UPower power management daemon";
   };
 
-  config = {
-    services.upower.enable = lib.mkIf cfg.enable true;
+  config = lib.mkIf cfg.enable {
+    services.upower.enable = true;
 
-    # Persistence follows the final service state, whoever turned it on.
-    preservation'.os.directories = lib.optionals config.services.upower.enable [
+    preservation'.os.directories = [
       "/var/lib/upower"
     ];
   };
