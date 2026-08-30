@@ -21,6 +21,12 @@ in {
     };
 
     onActivation = {
+      upgrade = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Upgrade outdated Homebrew packages on activation";
+      };
+
       autoUpdate = lib.mkOption {
         type = lib.types.bool;
         default = false;
@@ -32,12 +38,15 @@ in {
         default = "zap";
         description = "How aggressively to remove packages not in the configuration";
       };
+    };
 
-      upgrade = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Upgrade outdated Homebrew packages on activation";
-      };
+    taps = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "anomalyco/tap"
+        "steipete/tap"
+      ];
+      description = "Homebrew taps to install";
     };
 
     masApps = lib.mkOption {
@@ -54,6 +63,13 @@ in {
       default = [
         # Disk & Cleanup
         "mole"
+
+        # AI Agents
+        "anomalyco/tap/opencode"
+        "pi-coding-agent"
+
+        # Code Statistics
+        "tokei"
       ];
       description = "Homebrew formulae to install";
     };
@@ -66,6 +82,7 @@ in {
         "cc-switch"
         "grok-build"
         "steipete/tap/codexbar"
+        "zcode"
 
         # Browser
         # "brave-browser"
@@ -91,8 +108,8 @@ in {
         "font-jetbrains-mono-nerd-font"
 
         # Hardware
-        # "monitorcontrol"
         "macs-fan-control"
+        "monitorcontrol"
 
         # Input & Keyboard
         "input-source-pro"
@@ -139,6 +156,7 @@ in {
       enable = true;
       inherit (cfg) enableFishIntegration enableZshIntegration masApps brews casks;
       onActivation = cfg.onActivation;
+      taps = cfg.taps;
     };
   };
 }
