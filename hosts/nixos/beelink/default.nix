@@ -10,21 +10,39 @@
   ];
 
   services' = {
+    # Desktop support
+    accounts-daemon.enable = true;
+    gnome-keyring.enable = true;
+    pipewire.enable = true;
+    power-profiles-daemon.enable = true;
+    upower.enable = true;
+
+    # Storage and monitoring
     btrbk.enable = true;
     btrfs-scrub.enable = true;
-    coder = {
-      enable = true;
-      listenAddress = "0.0.0.0:34567";
-      accessUrl = "https://coder.in.ou.al";
-      wildcardAccessUrl = "*.coder.in.ou.al";
-      openFirewall = true;
-    };
-    networkmanager.enable = true;
-    openssh.enable = true;
-    postgresql.enable = true;
     smartd.enable = true;
     vnstat.enable = true;
     zram.enable = true;
+
+    # Network access
+    networkmanager.enable = true;
+    openssh.enable = true;
+  };
+
+  desktop' = {
+    # Applications
+    applications.enable = true;
+    apps.kitty.enable = true;
+
+    # Session and appearance
+    cursors.enable = true;
+    dms.enable = true;
+    fcitx5.enable = true;
+    fonts.enable = true;
+    greetd.enable = true;
+    niri.enable = true;
+    themes.enable = true;
+    xdg-user-dirs.enable = true;
   };
 
   security'.firewall.enable = true;
