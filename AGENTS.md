@@ -14,9 +14,11 @@
 flake.nix             Flake 入口：导出所有主机、formatter 和模块
 vars/default.nix      全局变量：用户名、姓名、邮箱、时区、密码哈希、SSH 公钥
 hosts/
+  default.nix         主机构造：目录名即 flake 里的主机名，自动发现
   darwin/<host>/      nix-darwin 主机（default.nix）
   nixos/<host>/       NixOS 主机（default.nix + hardware.nix，可含 network.nix 等附加文件）
 modules/
+  default.nix         模块装配：按平台递归导入 common/ 与平台目录
   common/             跨平台系统模块
   nixos/system/       基础系统、引导、硬件和安全
   nixos/services/     主机级服务
@@ -27,6 +29,7 @@ modules/
   darwin/apps/        nix-darwin 应用配置（Homebrew）
   darwin/security/    nix-darwin 安全配置
 home/
+  default.nix         用户配置装配：递归导入 common/ 与平台目录
   common/             跨平台 Home Manager 配置
   nixos/  darwin/     平台专属用户配置
 docs/                 安装指南（面向使用者，不含内部设计）
@@ -41,7 +44,8 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 - `modules/default.nix` 递归扫描 `modules/common/` 和当前平台目录：含 `default.nix` 的目录作为单个模块整体导入，否则继续下钻；普通 `.nix` 文件直接导入。新增模块放入正确的职责目录即可，无需登记。
 - `home/default.nix` 递归导入 `home/common/` 和平台目录下的所有 `.nix` 文件。
 - NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`tools'`、`system.stateVersion` 的顺序组织，分组内按名称排序。
-- NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
+- NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`、`bios.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
+- Flake inputs 中的 `secrets`（私有仓库 `27Aaron/nix-secrets`，sops 密钥库）和 `nur-aaron`（个人 NUR 包）为服务器主机预留；更新 lock 文件需要能访问前者的 SSH。
 
 ## 模块和命名约定
 
@@ -75,15 +79,15 @@ config = lib.mkIf cfg.enable {
 };
 ```
 
+选项声明风格：模块入口的总开关用 `lib.mkEnableOption`；其余选项（含子命名空间的布尔开关，如 `storage'.disko.luks.enable`）统一写成显式的 `lib.mkOption`，带 `type`、`default` 和 `description`。
+
 模块的自定义 `enable` 是功能边界。若它负责启用底层服务，底层 `enable` 应直接设置为 `true`，避免自定义开关和原生开关产生分叉。`lib.mkDefault` 只用于确实需要让主机覆盖的默认值。
 
 一个模块文件只承载一个功能或服务。被多个桌面依赖的底层能力（如 Greetd、Bluetooth、UPower）拆成独立模块并持有自己的持久化条目，需要它们的模块或主机显式开启对应开关；持久化跟随最终服务状态判定，无论由哪个开关打开。
 
 PostgreSQL 文件按仓库约定放在 `modules/nixos/apps/`，但它是系统服务，所以选项仍使用 `services'.postgresql`。
 
-Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生效，Homebrew 声明列表是唯一来源。每次激活先把已有 JSON 备份为 `karabiner.json.hm-bak`（覆盖上一份），再把 Nix 生成的内容写到 `${xdg.configHome}/karabiner/karabiner.json`。配置和新备份均为 `0600` 的普通文件，可直接编辑；手改会在下次激活时被 Nix 配置替换，并留在备份中。
-
-激活在 Home Manager 的 `writeBoundary` 之后、`linkGeneration` 之前执行，`dry-run` 不写文件。不再记录生成内容或自动迁移目录链接；旧目录链接需要先手动改成普通目录。写入新备份后清理早期的时间戳备份，完成后删除旧的规则记录文件，保持单份备份。JSON 链接需复制为独立备份，不修改已有备份链接指向的数据。
+Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生效，Homebrew 声明列表是唯一来源。激活在 Home Manager 的 `writeBoundary` 之后、`linkGeneration` 之前执行（`dry-run` 不写文件）：先把已有 JSON 备份为 `karabiner.json.hm-bak`（覆盖上一份的独立副本），再把 Nix 生成的内容写到 `${xdg.configHome}/karabiner/karabiner.json`，两者均为 `0600` 普通文件。配置可直接手改，但会在下次激活时被 Nix 配置替换，原内容留在备份中；模块不做旧目录链接的自动迁移。
 
 桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
 
@@ -148,9 +152,9 @@ deadnix --fail .
 完整检查（含所有主机求值）：
 
 ```bash
-nix flake check --no-build
+nix flake check --all-systems --no-build
 ```
 
-如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
+不带 `--all-systems` 时，flake check 只求值与本机架构相同的主机（例如在 Apple Silicon 上会跳过全部 NixOS 主机）。如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
 
 检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值；格式化用 `just fmt` 或 `nix fmt`。仓库不设远程 CI 检查，GitHub 上仅保留 issue/PR 的标签和依赖更新自动化。
