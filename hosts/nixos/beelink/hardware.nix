@@ -29,8 +29,6 @@
     };
   };
 
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
   storage' = {
     disko = {
       enable = true;
@@ -40,4 +38,8 @@
     };
     persistence.enable = true;
   };
+
+  hardware'.amdgpu.enable = true;
+
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
