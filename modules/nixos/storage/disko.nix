@@ -91,7 +91,17 @@ in {
       description = "Btrfs swap file size, or null to disable swap";
     };
 
-    luks.enable = lib.mkEnableOption "LUKS encryption";
+    luks.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to enable LUKS encryption";
+    };
+
+    bios.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to add a 1 MiB BIOS boot partition for GRUB";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -113,7 +123,14 @@ in {
         content = {
           type = "gpt";
           partitions =
-            {
+            lib.optionalAttrs cfg.bios.enable {
+              BIOS = {
+                priority = 0;
+                size = "1M";
+                type = "EF02";
+              };
+            }
+            // {
               ESP = {
                 priority = 1;
                 size = cfg.espSize;
