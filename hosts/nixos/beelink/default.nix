@@ -33,6 +33,7 @@
     # Applications
     applications.enable = true;
     apps.kitty.enable = true;
+    apps.vscode.enable = true;
 
     # Session and appearance
     cursors.enable = true;
