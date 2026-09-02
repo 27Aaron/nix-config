@@ -15,7 +15,7 @@ in {
     };
 
     memoryPercent = lib.mkOption {
-      type = lib.types.ints.between 1 100;
+      type = lib.types.ints.positive;
       default = 50;
       description = "Maximum Zram swap size as a percentage of system memory";
     };
