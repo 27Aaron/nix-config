@@ -6,7 +6,11 @@
   cfg = config.boot'.initrd-ssh;
 in {
   options.boot'.initrd-ssh = {
-    enable = lib.mkEnableOption "SSH in initrd";
+    enable = lib.mkEnableOption ''
+      SSH in initrd for remote LUKS unlock. The host must ensure its NIC
+      driver (e.g. r8169, igc, virtio_net) is present in
+      boot.initrd.availableKernelModules, or the initrd will have no network.
+    '';
 
     port = lib.mkOption {
       type = lib.types.port;
@@ -27,10 +31,12 @@ in {
       ssh = {
         enable = true;
         inherit (cfg) port hostKeys;
+
+        # Show the LUKS passphrase prompt inside the SSH session instead of
+        # a plain shell.
+        shell = "/bin/systemd-tty-ask-password-agent";
       };
     };
-
-    boot.initrd.systemd.users.root.shell = "/bin/systemd-tty-ask-password-agent";
 
     preservation'.os.directories = ["/etc/secrets/initrd"];
   };
