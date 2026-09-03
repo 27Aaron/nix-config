@@ -11,7 +11,6 @@
 
   services' = {
     # Desktop support
-    accounts-daemon.enable = true;
     gnome-keyring.enable = true;
     pipewire.enable = true;
     power-profiles-daemon.enable = true;
@@ -37,7 +36,6 @@
 
     # Session and appearance
     cursors.enable = true;
-    dms.enable = true;
     fcitx5.enable = true;
     fonts.enable = true;
     greetd.enable = true;
