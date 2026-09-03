@@ -43,7 +43,7 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 - 每台主机注入同一组 `specialArgs`：`inputs`、`myvars`、`hostName`、`platformName`；Home Manager 通过 `extraSpecialArgs` 收到同一组，并以 `backupFileExtension = "hm-bak"` 接入主用户。模块和 Home Manager 文件可以直接取用这些参数。
 - `modules/default.nix` 递归扫描 `modules/common/` 和当前平台目录：含 `default.nix` 的目录作为单个模块整体导入，否则继续下钻；普通 `.nix` 文件直接导入。新增模块放入正确的职责目录即可，无需登记。
 - `home/default.nix` 递归导入 `home/common/` 和平台目录下的所有 `.nix` 文件。
-- NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`tools'`、`system.stateVersion` 的顺序组织，分组内按名称排序。
+- NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`tools'`、`system.stateVersion` 的顺序组织。
 - NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`、`bios.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
 - Flake inputs 中的 `secrets`（私有仓库 `27Aaron/nix-secrets`，sops 密钥库）和 `nur-aaron`（个人 NUR 包）为服务器主机预留；更新 lock 文件需要能访问前者的 SSH。
 
@@ -54,6 +54,7 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 | 命名空间 | 职责 | 定义位置 |
 | --- | --- | --- |
 | `core'` | 主机与主用户元数据：hostName、timeZone、hashedPassword、sshAuthorizedKeys | `modules/*/system/core.nix` |
+| `boot'` | 引导：GRUB、initrd SSH | `modules/nixos/system/` |
 | `system'` | 系统级杂项（darwin 系统偏好 `system'.defaults`） | `modules/darwin/system/` |
 | `apps'` | 应用级系统配置（darwin Homebrew `apps'.homebrew`） | `modules/darwin/apps/` |
 | `tools'` | 跨平台用户 CLI 工具分组（`tools'.dev`、`tools'.coding-agents`） | `modules/common/` |
