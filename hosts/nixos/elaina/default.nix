@@ -36,6 +36,7 @@
     fcitx5.enable = true;
     fonts.enable = true;
     greetd.enable = true;
+    niri.autoLogin = true;
     niri.enable = true;
     themes.enable = true;
     xdg-user-dirs.enable = true;
