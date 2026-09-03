@@ -13,13 +13,22 @@ in {
       default = 7654;
       description = "TCP port on which Tang listens";
     };
+
+    ipAddressAllow = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = ["0.0.0.0/0"];
+      description = ''
+        Source addresses (IPs or CIDR prefixes) allowed to reach Tang,
+        applied by upstream as a systemd socket whitelist.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     services.tang = {
       enable = true;
       listenStream = [(toString cfg.port)];
-      ipAddressAllow = ["0.0.0.0/0"];
+      ipAddressAllow = cfg.ipAddressAllow;
     };
 
     networking.firewall.allowedTCPPorts = [cfg.port];
