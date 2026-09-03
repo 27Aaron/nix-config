@@ -20,11 +20,14 @@ hosts/
 modules/
   default.nix         模块装配：按平台递归导入 common/ 与平台目录
   common/             跨平台系统模块
-  nixos/system/       基础系统、引导、硬件和安全
-  nixos/services/     主机级服务
+  nixos/system/       系统基线：core、i18n、shell、nix 设置
+  nixos/boot/         引导：GRUB、systemd-boot、initrd SSH
+  nixos/hardware/     可选硬件支持
+  nixos/security/     安全功能（firewall）
+  nixos/services/     与桌面无关的系统服务（远程访问、网络、内存、打印）
   nixos/apps/         应用级系统服务（如 PostgreSQL）
-  nixos/storage/      Disko 和 Preservation
-  nixos/desktop/      桌面环境
+  nixos/desktop/      桌面：session/ 会话栈、apps/ 应用、environment/ 外观与输入
+  nixos/storage/      Disko、Preservation 与存储维护（btrbk、scrub、smartd）
   darwin/system/      nix-darwin 系统配置
   darwin/apps/        nix-darwin 应用配置（Homebrew）
   darwin/security/    nix-darwin 安全配置
@@ -54,14 +57,14 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 | 命名空间 | 职责 | 定义位置 |
 | --- | --- | --- |
 | `core'` | 主机与主用户元数据：hostName、timeZone、hashedPassword、sshAuthorizedKeys | `modules/*/system/core.nix` |
-| `boot'` | 引导：GRUB、initrd SSH | `modules/nixos/system/` |
+| `boot'` | 引导：GRUB、systemd-boot、initrd SSH | `modules/nixos/boot/` |
 | `system'` | 系统级杂项（darwin 系统偏好 `system'.defaults`） | `modules/darwin/system/` |
 | `apps'` | 应用级系统配置（darwin Homebrew `apps'.homebrew`） | `modules/darwin/apps/` |
 | `tools'` | 跨平台用户 CLI 工具分组（`tools'.dev`、`tools'.coding-agents`） | `modules/common/` |
-| `services'` | 主机级系统服务（含 PostgreSQL） | `modules/nixos/services/`、`modules/nixos/apps/` |
+| `services'` | 主机级系统服务（含 PostgreSQL） | `modules/nixos/services/`、`modules/nixos/apps/`、`modules/nixos/desktop/session/`、`modules/nixos/storage/` |
 | `desktop'` | 桌面功能与应用开关 | `modules/nixos/desktop/` |
-| `hardware'` | 可选硬件支持 | `modules/nixos/system/` |
-| `security'` | 安全功能（firewall、touch-id） | `modules/nixos/system/`、`modules/darwin/security/` |
+| `hardware'` | 可选硬件支持 | `modules/nixos/hardware/` |
+| `security'` | 安全功能（firewall、touch-id） | `modules/nixos/security/`、`modules/darwin/security/` |
 | `storage'` | 磁盘与持久化（disko、persistence） | `modules/nixos/storage/` |
 | `preservation'` | Preservation 选项别名，`os` / `user` 对应 `/persistent` 下的系统与用户条目 | `modules/nixos/storage/persistence.nix` |
 | `persist'` | 纯 Home Manager 工具上报的持久化条目 | `home/common/persist.nix` |
@@ -88,9 +91,11 @@ config = lib.mkIf cfg.enable {
 
 PostgreSQL 文件按仓库约定放在 `modules/nixos/apps/`，但它是系统服务，所以选项仍使用 `services'.postgresql`。
 
+NixOS 模块目录按职责域组织：`system/` 只放无独立开关的系统基线；引导、硬件、安全分别归 `boot/`、`hardware/`、`security/`；桌面的会话栈与底层会话服务归 `desktop/session/`，桌面应用归 `desktop/apps/`，外观与输入环境归 `desktop/environment/`；存储域服务（btrbk、btrfs-scrub、smartd）归 `storage/`。目录与命名空间不要求一一对应（`apps/`、`desktop/session/`、`storage/` 下都有 `services'.*` 模块），主机只通过选项开关使用模块，不感知文件位置。
+
 Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生效，Homebrew 声明列表是唯一来源。激活在 Home Manager 的 `writeBoundary` 之后、`linkGeneration` 之前执行（`dry-run` 不写文件）：先把已有 JSON 备份为 `karabiner.json.hm-bak`（覆盖上一份的独立副本），再把 Nix 生成的内容写到 `${xdg.configHome}/karabiner/karabiner.json`，两者均为 `0600` 普通文件。配置可直接手改，但会在下次激活时被 Nix 配置替换，原内容留在备份中；模块不做旧目录链接的自动迁移。
 
-桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
+桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/apps/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
 
 跨平台的开发 CLI 工具集（gh、lazygit、uv、direnv、Nix 工具链）由 `tools'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`；Shell 专属的 `uv` / `uvx` 补全分别放在 `home/common/fish.nix` 和 `home/common/zsh.nix`，并按命令是否存在加载。Claude Code 和 Codex 由 `tools'.coding-agents.enable` 控制，配置收敛在 `modules/common/coding-agents.nix`。其他带开关的内容不放入 `home/common/` 基线。`just` 属于所有主机共用的基线工具，放在 `home/common/misc.nix`。XDG 用户目录是桌面能力，由 `desktop'.xdg-user-dirs.enable` 控制，不放进 `home/nixos/` 基线。
 
@@ -116,8 +121,8 @@ NixOS 上 `nh` 的 flake 路径固定为 `/home/<username>/nix-config`（`module
 
 - `persistence.nix` 只放机器启动所需、系统基础和所有设备共用的用户基线（缓存、无归属模块的凭据等），并把 Home Manager 通过 `persist'` 上报的条目汇入 preservation 选项
 - 纯 Home Manager 工具无法直接写 NixOS 选项，通过 `home/common/persist.nix` 定义的 `persist'` 选项上报自己的状态目录和文件（例如 Atuin、Zoxide）
-- 桌面共用状态（GTK、dconf、密钥环等）跟随生成或消费它们的桌面功能声明，例如 GTK/dconf 放在 `desktop/themes.nix`；由上游模块间接触发的系统服务（如 GNOME Keyring 会被 niri 开启、power-profiles-daemon 会被 DMS 开启）也拥有自己的服务模块和 `services'.<name>.enable` 开关，持久化按最终服务状态判定
-- 服务自己的状态由服务模块声明，例如 VNStat 放在 `services/vnstat.nix`；桌面功能和应用由 `desktop/` 下定义各自开关的模块声明，例如 Firefox 放在 `desktop/firefox.nix`
+- 桌面共用状态（GTK、dconf、密钥环等）跟随生成或消费它们的桌面功能声明，例如 GTK/dconf 放在 `desktop/environment/themes.nix`；由上游模块间接触发的系统服务（如 GNOME Keyring 会被 niri 开启、power-profiles-daemon 会被 DMS 开启）也拥有自己的服务模块和 `services'.<name>.enable` 开关，持久化按最终服务状态判定
+- 服务自己的状态由服务模块声明，例如 VNStat 放在 `services/vnstat.nix`；桌面功能和应用由 `desktop/` 下定义各自开关的模块声明，例如 Firefox 放在 `desktop/apps/firefox.nix`
 - 功能模块不要重复判断 `storage'.persistence.enable`；Preservation 自身会根据总开关决定是否生成实际挂载
 - 没有启用的服务、桌面功能或应用，不得加入它们专属的持久化目录
 
