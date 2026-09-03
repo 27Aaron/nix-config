@@ -22,12 +22,9 @@
 
     kernelModules = ["kvm-amd"];
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
-
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
   };
+
+  boot'.systemd-boot.enable = true;
 
   storage' = {
     disko = {

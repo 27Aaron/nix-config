@@ -14,12 +14,9 @@
     kernelParams = ["audit=0" "net.ifnames=0"];
 
     initrd.availableKernelModules = ["uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod"];
-
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
   };
+
+  boot'.systemd-boot.enable = true;
 
   # PVE uses the guest agent for clean shutdown and IP reporting.
   services.qemuGuest.enable = true;
