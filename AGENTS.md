@@ -64,7 +64,7 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 | `services'` | 主机级系统服务（含 PostgreSQL） | `modules/nixos/services/`、`modules/nixos/apps/`、`modules/nixos/desktop/session/`、`modules/nixos/storage/` |
 | `desktop'` | 桌面功能与应用开关 | `modules/nixos/desktop/` |
 | `hardware'` | 可选硬件支持 | `modules/nixos/hardware/` |
-| `security'` | 安全功能（firewall、touch-id） | `modules/nixos/security/`、`modules/darwin/security/` |
+| `security'` | 安全功能（firewall、kernel-hardening、arp-filter、touch-id） | `modules/nixos/security/`、`modules/darwin/security/` |
 | `storage'` | 磁盘与持久化（disko、persistence） | `modules/nixos/storage/` |
 | `preservation'` | Preservation 选项别名，`os` / `user` 对应 `/persistent` 下的系统与用户条目 | `modules/nixos/storage/persistence.nix` |
 | `persist'` | 纯 Home Manager 工具上报的持久化条目 | `home/common/persist.nix` |

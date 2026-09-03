@@ -25,6 +25,7 @@
   };
 
   security'.firewall.enable = true;
+  security'.kernel-hardening.enable = true;
 
   system.stateVersion = "26.05";
 }
