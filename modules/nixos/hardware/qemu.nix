@@ -24,12 +24,6 @@ in {
         "virtio_rng"
       ];
 
-      compressor = "zstd";
-      compressorArgs = [
-        "-19"
-        "-T0"
-      ];
-
       systemd.enable = true;
     };
   };
