@@ -10,7 +10,6 @@
   ];
 
   services' = {
-    accounts-daemon.enable = true;
     btrbk.enable = true;
     btrfs-scrub.enable = true;
     gnome-keyring.enable = true;
@@ -30,11 +29,9 @@
     apps = {
       firefox.enable = true;
       kitty.enable = true;
-      telegram.enable = true;
       vscode.enable = true;
     };
     cursors.enable = true;
-    dms.enable = true;
     fcitx5.enable = true;
     fonts.enable = true;
     greetd.enable = true;

@@ -121,7 +121,7 @@ NixOS 上 `nh` 的 flake 路径固定为 `/home/<username>/nix-config`（`module
 
 - `persistence.nix` 只放机器启动所需、系统基础和所有设备共用的用户基线（缓存、无归属模块的凭据等），并把 Home Manager 通过 `persist'` 上报的条目汇入 preservation 选项
 - 纯 Home Manager 工具无法直接写 NixOS 选项，通过 `home/common/persist.nix` 定义的 `persist'` 选项上报自己的状态目录和文件（例如 Atuin、Zoxide）
-- 桌面共用状态（GTK、dconf、密钥环等）跟随生成或消费它们的桌面功能声明，例如 GTK/dconf 放在 `desktop/environment/themes.nix`；由上游模块间接触发的系统服务（如 GNOME Keyring 会被 niri 开启、power-profiles-daemon 会被 DMS 开启）也拥有自己的服务模块和 `services'.<name>.enable` 开关，持久化按最终服务状态判定
+- 桌面共用状态（GTK、dconf、密钥环等）跟随生成或消费它们的桌面功能声明，例如 GTK/dconf 放在 `desktop/environment/themes.nix`；由上游模块间接触发的系统服务（如 GNOME Keyring 会被 niri 生态开启、GVfs 会被桌面基线应用开启）也拥有自己的服务模块和 `services'.<name>.enable` 开关，持久化按最终服务状态判定
 - 服务自己的状态由服务模块声明，例如 VNStat 放在 `services/vnstat.nix`；桌面功能和应用由 `desktop/` 下定义各自开关的模块声明，例如 Firefox 放在 `desktop/apps/firefox.nix`
 - 功能模块不要重复判断 `storage'.persistence.enable`；Preservation 自身会根据总开关决定是否生成实际挂载
 - 没有启用的服务、桌面功能或应用，不得加入它们专属的持久化目录

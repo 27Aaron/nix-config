@@ -12,8 +12,8 @@ in {
   config = {
     services.power-profiles-daemon.enable = lib.mkIf cfg.enable true;
 
-    # DMS enables this daemon on its own, so persistence follows the final
-    # service state, whoever turned it on.
+    # Upstream consumers may enable this daemon on their own, so persistence
+    # follows the final service state, whoever turned it on.
     preservation'.os.directories = lib.optionals config.services.power-profiles-daemon.enable [
       # Power management
       "/var/lib/power-profiles-daemon"

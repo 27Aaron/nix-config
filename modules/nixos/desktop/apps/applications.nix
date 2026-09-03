@@ -31,10 +31,6 @@ in {
       ffmpegthumbnailer
     ];
 
-    programs = {
-      seahorse.enable = true;
-    };
-
     # GVfs provides trash, network locations, MTP, and removable-media
     # integration for Nautilus.
     services.gvfs.enable = true;
