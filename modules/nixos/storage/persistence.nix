@@ -74,6 +74,11 @@ in {
         }
         "/var/lib/lastlog"
         "/var/lib/systemd"
+        {
+          # Systemd-managed state of dynamic users (StateDirectory services).
+          directory = "/var/lib/private";
+          mode = "0700";
+        }
         "/var/log"
         {
           directory = "/var/tmp";
