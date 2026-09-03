@@ -42,6 +42,7 @@
   };
 
   security'.firewall.enable = true;
+  security'.kernel-hardening.enable = true;
 
   tools'.dev.enable = true;
 

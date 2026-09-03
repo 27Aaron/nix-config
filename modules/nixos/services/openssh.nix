@@ -39,9 +39,13 @@ in {
         # root user is used for remote deployment, so we need to allow it
         PermitRootLogin = lib.mkDefault "prohibit-password";
         PasswordAuthentication = lib.mkDefault false;
-        # Without this, keyboard-interactive still reaches the PAM password
-        # prompt and defeats the key-only intent above.
+        # Closing the keyboard-interactive channel leaves publickey as the
+        # only authentication method, no matter how the PAM stack is
+        # composed (older nixpkgs let the unix password through here, and
+        # any future PAM module like OTP would also ride this channel).
         KbdInteractiveAuthentication = lib.mkDefault false;
+        # Pure Wayland hosts gain nothing from X11 forwarding.
+        X11Forwarding = lib.mkDefault false;
       };
       openFirewall = cfg.openFirewall;
     };
