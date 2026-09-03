@@ -15,6 +15,7 @@
     gnome-keyring.enable = true;
     networkmanager.enable = true;
     openssh.enable = true;
+    openssh.port = 233;
     pipewire.enable = true;
     power-profiles-daemon.enable = true;
     printing.enable = true;
