@@ -44,6 +44,7 @@
     greetd.enable = true;
     niri.autoLogin = true;
     niri.enable = true;
+    noctalia.enable = true;
     themes.enable = true;
     xdg-user-dirs.enable = true;
   };
