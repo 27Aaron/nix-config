@@ -10,6 +10,7 @@
   ];
 
   services' = {
+    avahi.enable = true;
     btrbk.enable = true;
     btrfs-scrub.enable = true;
     gnome-keyring.enable = true;
@@ -18,7 +19,6 @@
     openssh.port = 233;
     pipewire.enable = true;
     power-profiles-daemon.enable = true;
-    printing.enable = true;
     smartd.enable = true;
     upower.enable = true;
     vnstat.enable = true;
