@@ -17,6 +17,9 @@
   };
 
   boot'.systemd-boot.enable = true;
+  # The VM was installed with a 256M ESP; keep fewer generations so it does
+  # not fill up with LTO kernels (~50M per generation).
+  boot.loader.systemd-boot.configurationLimit = 4;
 
   # PVE uses the guest agent for clean shutdown and IP reporting.
   services.qemuGuest.enable = true;
