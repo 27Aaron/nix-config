@@ -10,6 +10,8 @@
   ];
 
   services' = {
+    avahi.enable = true;
+
     # Desktop support
     gnome-keyring.enable = true;
     pipewire.enable = true;
