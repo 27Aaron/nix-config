@@ -5,11 +5,11 @@
   pkgs,
   ...
 }: let
-  cfg = config.tools'.coding-agents;
-  dsh = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.dsh;
+  cfg = config.tools'.ai;
+  agentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 in {
-  options.tools'.coding-agents = {
-    enable = lib.mkEnableOption "AI coding agents";
+  options.tools'.ai = {
+    enable = lib.mkEnableOption "AI development tools";
   };
 
   config = lib.mkIf cfg.enable {
@@ -18,18 +18,22 @@ in {
     hm'.programs.claude-code.enable = true;
     hm'.programs.codex.enable = true;
 
-    hm'.home.packages = [dsh];
+    hm'.home.packages = with agentPackages; [
+      dsh
+      zcode
+    ];
 
     hm'.home.shellAliases = {
       cc = "claude --dangerously-skip-permissions";
       cx = "codex --dangerously-bypass-approvals-and-sandbox";
     };
 
-    hm'.persist' = {
+    preservation'.user = {
       directories = [
         ".claude"
         ".codex"
         ".dsh"
+        ".zcode"
       ];
 
       files = [

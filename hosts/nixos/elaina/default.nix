@@ -46,6 +46,7 @@
   security'.firewall.enable = true;
   security'.kernel-hardening.enable = true;
 
+  tools'.ai.enable = true;
   tools'.dev.enable = true;
 
   system.stateVersion = "26.05";
