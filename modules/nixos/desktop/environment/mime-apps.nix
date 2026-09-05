@@ -6,6 +6,7 @@
 }: let
   browser = [
     "firefox.desktop"
+    "google-chrome.desktop"
   ];
   editor = [
     "code.desktop"
