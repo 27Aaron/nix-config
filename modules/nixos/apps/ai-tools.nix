@@ -19,6 +19,7 @@ in {
     hm'.programs.codex.enable = true;
 
     hm'.home.packages = with agentPackages; [
+      chatgpt
       dsh
       zcode
     ];

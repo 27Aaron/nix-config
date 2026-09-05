@@ -97,7 +97,7 @@ Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：H
 
 桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/apps/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
 
-跨平台的开发 CLI 工具集（gh、lazygit、uv、direnv、Nix 工具链）由 `tools'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`；Shell 专属的 `uv` / `uvx` 补全分别放在 `home/common/fish.nix` 和 `home/common/zsh.nix`，并按命令是否存在加载。NixOS 的 AI 开发工具集（Claude Code、Codex、DeepSeek CLI 和 ZCode）由 `tools'.ai.enable` 控制，配置收敛在 `modules/nixos/apps/ai-tools.nix`；其中 DeepSeek CLI（`dsh`）和 ZCode 使用 `llm-agents` input 提供的包，持久化直接声明在 `preservation'.user` 下。其他带开关的内容不放入 `home/common/` 基线。`just` 属于所有主机共用的基线工具，放在 `home/common/misc.nix`。XDG 用户目录是桌面能力，由 `desktop'.xdg-user-dirs.enable` 控制，不放进 `home/nixos/` 基线。
+跨平台的开发 CLI 工具集（gh、lazygit、uv、direnv、Nix 工具链）由 `tools'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`；Shell 专属的 `uv` / `uvx` 补全分别放在 `home/common/fish.nix` 和 `home/common/zsh.nix`，并按命令是否存在加载。NixOS 的 AI 开发工具集（ChatGPT 桌面端、Claude Code、Codex、DeepSeek CLI 和 ZCode）由 `tools'.ai.enable` 控制，配置收敛在 `modules/nixos/apps/ai-tools.nix`；其中 ChatGPT（`chatgpt`）、DeepSeek CLI（`dsh`）和 ZCode 使用 `llm-agents` input 提供的包，持久化直接声明在 `preservation'.user` 下。其他带开关的内容不放入 `home/common/` 基线。`just` 属于所有主机共用的基线工具，放在 `home/common/misc.nix`。XDG 用户目录是桌面能力，由 `desktop'.xdg-user-dirs.enable` 控制，不放进 `home/nixos/` 基线。
 
 ## 多设备配置
 
