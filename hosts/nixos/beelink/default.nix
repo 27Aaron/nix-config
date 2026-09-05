@@ -38,6 +38,7 @@
     apps.firefox.enable = true;
     apps.google-chrome.enable = true;
     apps.kitty.enable = true;
+    apps.telegram.enable = true;
     apps.vscode.enable = true;
     apps.zed.enable = true;
 
