@@ -9,6 +9,7 @@
     "google-chrome.desktop"
   ];
   editor = [
+    "dev.zed.Zed.desktop"
     "code.desktop"
     "org.gnome.TextEditor.desktop"
   ];

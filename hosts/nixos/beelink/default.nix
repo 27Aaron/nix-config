@@ -39,6 +39,7 @@
     apps.google-chrome.enable = true;
     apps.kitty.enable = true;
     apps.vscode.enable = true;
+    apps.zed.enable = true;
 
     # Session and appearance
     cursors.enable = true;
