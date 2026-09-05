@@ -5,6 +5,11 @@
   ...
 }: let
   cfg = config.desktop'.fcitx5;
+  wanxiangModel = pkgs.fetchurl {
+    url = "https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram";
+    # Upstream replaces this asset in place; verify its contents on updates.
+    hash = "sha256-ZU1/H+Sxvz1CX4wKRKxhQj3tWMeEJntN8DJWAw1yIz8=";
+  };
 in {
   options.desktop'.fcitx5 = {
     enable = lib.mkEnableOption "Fcitx5 input method";
@@ -19,7 +24,9 @@ in {
         waylandFrontend = true;
         addons = with pkgs; [
           fcitx5-gtk
-          fcitx5-rime
+          (fcitx5-rime.override {
+            rimeDataPkgs = [rime-wanxiang];
+          })
           (qt6Packages.fcitx5-configtool.override {kcmSupport = false;})
         ];
       };
@@ -31,6 +38,16 @@ in {
     hm'.xdg.configFile."fcitx5/profile" = {
       source = ./fcitx5/profile;
       force = true;
+    };
+
+    hm'.xdg.dataFile = {
+      "fcitx5/rime/default.custom.yaml".text = ''
+        patch:
+          __include: wanxiang_suggested_default:/
+          schema_list:
+            - schema: wanxiang
+      '';
+      "fcitx5/rime/wanxiang-lts-zh-hans.gram".source = wanxiangModel;
     };
 
     preservation'.user.directories = [
