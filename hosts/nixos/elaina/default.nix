@@ -27,6 +27,7 @@
 
   desktop' = {
     applications.enable = true;
+    mime-apps.enable = true;
     apps = {
       firefox.enable = true;
       kitty.enable = true;
