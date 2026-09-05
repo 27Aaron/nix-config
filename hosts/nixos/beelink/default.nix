@@ -34,6 +34,7 @@
   desktop' = {
     # Applications
     applications.enable = true;
+    apps.firefox.enable = true;
     apps.kitty.enable = true;
     apps.vscode.enable = true;
 
