@@ -23,7 +23,6 @@ in {
       # Files and documents
       nautilus
       file-roller
-      papers
       loupe
 
       # Media
@@ -35,21 +34,6 @@ in {
     # integration for Nautilus.
     services.gvfs.enable = true;
     services.udisks2.enable = true;
-
-    hm'.xdg.mimeApps = {
-      enable = true;
-
-      # Home Manager derives all supported MIME types from the applications'
-      # desktop files. Earlier packages take precedence when MIME types overlap.
-      defaultApplicationPackages = with pkgs; [
-        file-roller
-        nautilus
-        loupe
-        papers
-        gnome-text-editor
-        mpv
-      ];
-    };
 
     preservation'.user.directories = [
       # Desktop application launchers and file manager metadata
