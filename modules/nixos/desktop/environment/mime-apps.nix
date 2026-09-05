@@ -63,6 +63,9 @@ in {
         # VS Code uses a dedicated desktop entry for vscode:// URLs.
         "x-scheme-handler/vscode" = ["code-url-handler.desktop"];
 
+        # Telegram URL links use the tg:// scheme.
+        "x-scheme-handler/tg" = ["org.telegram.desktop.desktop"];
+
         # These applications are installed by applications.nix. Their
         # associations are listed explicitly so package metadata cannot
         # silently change the user's defaults.
