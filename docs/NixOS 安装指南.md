@@ -19,12 +19,12 @@
 - [`luks-btrfs-root.nix`](./example/luks-btrfs-root.nix)：LUKS 加密，带 swap
 - [`btrfs-root.nix`](./example/btrfs-root.nix)：无加密，无 swap
 
-仓库的主机配置固定按 tmpfs 根布局生成文件系统定义，推荐选择第一组；如果选择第二组，请同步调整主机配置中对应的文件系统定义。
+仓库的主机配置固定按 tmpfs 根布局生成文件系统定义（见 `modules/nixos/storage/disko.nix`），推荐选择第一组；主机 `hosts/nixos/elaina/hardware.nix` 中 `storage'.disko` 的参数（`device`、`luks.enable`、`swapSize` 等）请与所选示例保持一致。第二组（根分区落盘）在仓库模块中没有对应开关，需要自行修改该模块。
 
 选定后下载为 `disko.nix`（下文以 LUKS tmpfs 版为例）：
 
 ```bash
-curl -o disko.nix https://raw.githubusercontent.com/27Aaron/Dotfiles/main/docs/example/luks-btrfs-subvolumes.nix
+curl -o disko.nix https://raw.githubusercontent.com/27Aaron/nix-config/main/docs/example/luks-btrfs-subvolumes.nix
 ```
 
 编辑 `disko.nix`，把 `device` 改为目标磁盘，推荐使用 `/dev/disk/by-id/` 下的稳定路径：
@@ -56,7 +56,7 @@ lsblk -f
 克隆仓库并进入仓库根目录：
 
 ```bash
-git clone https://github.com/27Aaron/Dotfiles.git ~/nix-config
+git clone https://github.com/27Aaron/nix-config.git ~/nix-config
 cd ~/nix-config
 ```
 
@@ -71,6 +71,7 @@ sudo nixos-generate-config --no-filesystems --root /mnt
 安装前检查以下配置：
 
 - `helpers/constants/user.nix`：用户名、密码哈希、SSH 公钥、默认时区
+- `hosts/nixos/elaina/hardware.nix`：`storage'.disko` 的各项参数与所选 Disko 示例一致（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`）
 - `hosts/nixos/elaina/default.nix`：`system.stateVersion`
 
 然后安装系统：
@@ -94,6 +95,13 @@ sudo reboot
 > 根文件系统为 tmpfs，重启即清空；需要保留的数据由持久化机制统一存放在 `/persistent`，未持久化的内容重启后会丢失。
 
 ## 后续维护
+
+重启进入新系统后，安装介质里的克隆已随重启消失，先重新克隆一次（`~/nix-config` 已纳入持久化，后续重启无需再次克隆）：
+
+```bash
+git clone https://github.com/27Aaron/nix-config.git ~/nix-config
+cd ~/nix-config
+```
 
 仓库的 `Justfile` 提供以下命令（`just` 和 `nh` 已随配置安装；`nh` 固定读取 `~/nix-config`，即上文的克隆路径）：
 

@@ -46,8 +46,8 @@ nix --version
 克隆仓库并进入仓库根目录：
 
 ```bash
-git clone https://github.com/27Aaron/Dotfiles.git ~/Dotfiles
-cd ~/Dotfiles
+git clone https://github.com/27Aaron/nix-config.git ~/nix-config
+cd ~/nix-config
 ```
 
 主机目录名必须与 `hostname -s` 的结果一致。仓库默认主机为 `luna`，如果当前主机名不同，请重命名目录：
@@ -56,6 +56,8 @@ cd ~/Dotfiles
 host_name="$(hostname -s)"
 mv hosts/darwin/luna "hosts/darwin/$host_name"
 ```
+
+重命名后，同步更新 `lib/eval-tests.nix` 中 `darwinConfigurations` 下的主机名（默认 `luna`），否则 `just check` 会因找不到该主机而失败。
 
 检查以下配置：
 
