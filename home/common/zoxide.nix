@@ -5,5 +5,5 @@
     enableZshIntegration = true;
   };
 
-  persist'.directories = [".local/share/zoxide"];
+  persist'.directories = [ ".local/share/zoxide" ];
 }

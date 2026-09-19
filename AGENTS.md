@@ -11,7 +11,7 @@
 ## 仓库结构
 
 ```
-flake.nix             Flake 入口：导出所有主机、formatter 和模块
+flake.nix             Flake 入口：导出所有主机、devShells、formatter 和模块
 vars/default.nix      全局变量：用户名、姓名、邮箱、时区、密码哈希、SSH 公钥
 lib/
   default.nix         通用函数：scanPaths 递归收集模块路径
@@ -42,6 +42,7 @@ home/
 docs/                 安装指南（面向使用者，不含内部设计）
 .github/              GitHub PR 自动化（label、dependabot 等，不含 CI 检查）
 Justfile              switch / check / update / gc / fmt 等常用命令
+.envrc                direnv：进入仓库时加载 devShell（use flake）
 ```
 
 装配与自动发现：
@@ -151,10 +152,12 @@ config = lib.mkIf cfg.enable {
 
 ## 验证
 
+格式化用 `just fmt` 或 `nix fmt`（nixfmt-rs）。
+
 常规检查：
 
 ```bash
-alejandra .
+nix fmt . -- --check
 deadnix --fail .
 ```
 
@@ -166,4 +169,4 @@ nix flake check --all-systems --no-build
 
 不带 `--all-systems` 时，flake check 只求值与本机架构相同的主机（例如在 Apple Silicon 上会跳过全部 NixOS 主机）。如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
 
-检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值；格式化用 `just fmt` 或 `nix fmt`。仓库不设远程 CI 检查，GitHub 上仅保留 issue/PR 的标签和依赖更新自动化。
+检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值。仓库不设远程 CI 检查，GitHub 上仅保留 issue/PR 的标签和依赖更新自动化。

@@ -4,18 +4,21 @@
   lib,
   myvars,
   ...
-}: let
+}:
+let
   cfg = config.storage'.persistence;
   user = myvars.username;
   hm = config.home-manager.users.${user};
-in {
+in
+{
   imports = [
     inputs.preservation.nixosModules.default
 
-    (lib.mkAliasOptionModule ["preservation'" "os"] ["preservation" "preserveAt" "/persistent"])
+    (lib.mkAliasOptionModule [ "preservation'" "os" ] [ "preservation" "preserveAt" "/persistent" ])
     (lib.mkAliasOptionModule
-      ["preservation'" "user"]
-      ["preservation" "preserveAt" "/persistent" "users" user])
+      [ "preservation'" "user" ]
+      [ "preservation" "preserveAt" "/persistent" "users" user ]
+    )
   ];
 
   options.storage'.persistence = {
@@ -42,26 +45,25 @@ in {
     # Baseline user state shared by every host. State owned by a feature is
     # declared in that feature's module; Home Manager tools report theirs via
     # persist' and get spliced in here.
-    preservation'.user.directories =
-      [
-        # Keep caches off the tmpfs root to avoid excessive RAM usage.
-        {
-          directory = ".cache";
-          mode = "0700";
-        }
+    preservation'.user.directories = [
+      # Keep caches off the tmpfs root to avoid excessive RAM usage.
+      {
+        directory = ".cache";
+        mode = "0700";
+      }
 
-        # Nix and Home Manager
-        ".local/share/nix"
-        ".local/state/home-manager"
-        ".local/state/nix/profiles"
+      # Nix and Home Manager
+      ".local/share/nix"
+      ".local/state/home-manager"
+      ".local/state/nix/profiles"
 
-        # Credentials without a managing module live here.
-        {
-          directory = ".gnupg";
-          mode = "0700";
-        }
-      ]
-      ++ hm.persist'.directories;
+      # Credentials without a managing module live here.
+      {
+        directory = ".gnupg";
+        mode = "0700";
+      }
+    ]
+    ++ hm.persist'.directories;
 
     preservation'.user.files = hm.persist'.files;
 
@@ -96,7 +98,7 @@ in {
 
     # systemd-machine-id-commit.service would fail, but it is not relevant
     # in this specific setup for a persistent machine-id so we disable it.
-    systemd.suppressedSystemUnits = ["systemd-machine-id-commit.service"];
+    systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
 
     # Let the service commit the transient ID to the persistent volume.
     systemd.services.systemd-machine-id-commit = {

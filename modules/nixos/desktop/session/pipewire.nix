@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.pipewire;
-in {
+in
+{
   options.services'.pipewire = {
     enable = lib.mkEnableOption "PipeWire audio stack";
   };

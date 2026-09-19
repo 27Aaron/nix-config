@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.gnome-keyring;
-in {
+in
+{
   options.services'.gnome-keyring = {
     enable = lib.mkEnableOption "GNOME Keyring secret service with Seahorse GUI";
   };

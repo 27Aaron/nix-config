@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.tools'.dev;
-in {
+in
+{
   options.tools'.dev = {
     enable = lib.mkEnableOption "development CLI toolset for interactive hosts";
   };

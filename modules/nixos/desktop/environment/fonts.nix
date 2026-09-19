@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.fonts;
-in {
+in
+{
   options.desktop'.fonts = {
     enable = lib.mkEnableOption "System fonts configuration";
   };
@@ -45,8 +47,8 @@ in {
           "Source Han Sans SC"
           "Source Han Sans TC"
         ];
-        monospace = ["Maple Mono NF CN"];
-        emoji = ["Noto Color Emoji"];
+        monospace = [ "Maple Mono NF CN" ];
+        emoji = [ "Noto Color Emoji" ];
       };
     };
   };

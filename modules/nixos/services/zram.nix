@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.zram;
-in {
+in
+{
   options.services'.zram = {
     enable = lib.mkEnableOption "compressed RAM swap with Zram";
 
@@ -38,19 +40,18 @@ in {
     # notable exception). Disable it to avoid putting a compressed cache in
     # front of the compressed Zram swap device.
     boot = {
-      kernelParams = ["zswap.enabled=0"];
+      kernelParams = [ "zswap.enabled=0" ];
       kernel.sysctl."vm.swappiness" = 100;
       kernel.sysfs.module.zswap.parameters.enabled = false;
       zswap.enable = false;
     };
 
-    zramSwap =
-      {
-        enable = true;
-        inherit (cfg) algorithm memoryPercent priority;
-      }
-      // lib.optionalAttrs (cfg.memoryMax != null) {
-        memoryMax = cfg.memoryMax;
-      };
+    zramSwap = {
+      enable = true;
+      inherit (cfg) algorithm memoryPercent priority;
+    }
+    // lib.optionalAttrs (cfg.memoryMax != null) {
+      memoryMax = cfg.memoryMax;
+    };
   };
 }

@@ -4,15 +4,15 @@
   myvars,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services'.postgresql;
   user = myvars.username;
-  remoteAuthentication =
-    lib.concatMapStringsSep "\n" (
-      cidr: "host    sameuser        all             ${cidr}               scram-sha-256"
-    )
-    cfg.allowedCIDRs;
-in {
+  remoteAuthentication = lib.concatMapStringsSep "\n" (
+    cidr: "host    sameuser        all             ${cidr}               scram-sha-256"
+  ) cfg.allowedCIDRs;
+in
+{
   options.services'.postgresql = {
     enable = lib.mkEnableOption "PostgreSQL service";
 
@@ -36,8 +36,8 @@ in {
 
     allowedCIDRs = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
-      example = ["192.168.1.0/24"];
+      default = [ ];
+      example = [ "192.168.1.0/24" ];
       description = "Network CIDRs allowed to authenticate remotely when openFirewall is enabled";
     };
 
@@ -47,7 +47,7 @@ in {
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = !cfg.openFirewall || cfg.allowedCIDRs != [];
+        assertion = !cfg.openFirewall || cfg.allowedCIDRs != [ ];
         message = "services'.postgresql.allowedCIDRs must not be empty when openFirewall is enabled";
       }
     ];
@@ -105,7 +105,7 @@ in {
       '';
     };
 
-    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [cfg.port];
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.port ];
 
     preservation'.os.directories = [
       {

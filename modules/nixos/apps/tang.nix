@@ -2,9 +2,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.services'.tang;
-in {
+in
+{
   options.services'.tang = {
     enable = lib.mkEnableOption "Tang key derivation service";
 
@@ -16,7 +18,7 @@ in {
 
     ipAddressAllow = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = ["0.0.0.0/0"];
+      default = [ "0.0.0.0/0" ];
       description = ''
         Source addresses (IPs or CIDR prefixes) allowed to reach Tang,
         applied by upstream as a systemd socket whitelist.
@@ -27,10 +29,10 @@ in {
   config = lib.mkIf cfg.enable {
     services.tang = {
       enable = true;
-      listenStream = [(toString cfg.port)];
+      listenStream = [ (toString cfg.port) ];
       ipAddressAllow = cfg.ipAddressAllow;
     };
 
-    networking.firewall.allowedTCPPorts = [cfg.port];
+    networking.firewall.allowedTCPPorts = [ cfg.port ];
   };
 }

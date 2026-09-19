@@ -3,9 +3,11 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   cfg = config.hardware'.disable-balloon;
-in {
+in
+{
   options.hardware'.disable-balloon = {
     enable = lib.mkEnableOption "Disable virtio_balloon module";
   };

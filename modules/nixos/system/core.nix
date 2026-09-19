@@ -4,12 +4,14 @@
   hostName,
   myvars,
   ...
-}: let
+}:
+let
   cfg = config.core';
-in {
+in
+{
   imports = [
-    (lib.mkAliasOptionModule ["user'"] ["users" "users" myvars.username])
-    (lib.mkAliasOptionModule ["hm'"] ["home-manager" "users" myvars.username])
+    (lib.mkAliasOptionModule [ "user'" ] [ "users" "users" myvars.username ])
+    (lib.mkAliasOptionModule [ "hm'" ] [ "home-manager" "users" myvars.username ])
   ];
 
   options.core' = {
@@ -49,7 +51,7 @@ in {
 
       ${myvars.username} = {
         isNormalUser = true;
-        extraGroups = ["wheel"];
+        extraGroups = [ "wheel" ];
         hashedPassword = cfg.hashedPassword;
         openssh.authorizedKeys.keys = cfg.sshAuthorizedKeys;
       };

@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.power-profiles-daemon;
-in {
+in
+{
   options.services'.power-profiles-daemon = {
     enable = lib.mkEnableOption "Power profiles management daemon";
   };

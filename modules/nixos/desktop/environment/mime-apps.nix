@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   browser = [
     "firefox.desktop"
     "google-chrome.desktop"
@@ -13,18 +14,19 @@
     "code.desktop"
     "org.gnome.TextEditor.desktop"
   ];
-  archive = ["org.gnome.FileRoller.desktop"];
-  fileManager = ["org.gnome.Nautilus.desktop"];
-  imageViewer = ["org.gnome.Loupe.desktop"];
-  mediaPlayer = ["mpv.desktop"];
+  archive = [ "org.gnome.FileRoller.desktop" ];
+  fileManager = [ "org.gnome.Nautilus.desktop" ];
+  imageViewer = [ "org.gnome.Loupe.desktop" ];
+  mediaPlayer = [ "mpv.desktop" ];
   cfg = config.desktop'.mime-apps;
-in {
+in
+{
   options.desktop'.mime-apps = {
     enable = lib.mkEnableOption "XDG MIME application associations";
   };
 
   config = lib.mkIf cfg.enable {
-    hm'.home.packages = [pkgs.xdg-utils];
+    hm'.home.packages = [ pkgs.xdg-utils ];
 
     # Replace an existing unmanaged file so old desktop preferences cannot
     # override the declarative defaults below.
@@ -61,10 +63,10 @@ in {
         "application/x-wine-extension-ini" = editor;
 
         # VS Code uses a dedicated desktop entry for vscode:// URLs.
-        "x-scheme-handler/vscode" = ["code-url-handler.desktop"];
+        "x-scheme-handler/vscode" = [ "code-url-handler.desktop" ];
 
         # Telegram URL links use the tg:// scheme.
-        "x-scheme-handler/tg" = ["org.telegram.desktop.desktop"];
+        "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
 
         # These applications are installed by applications.nix. Their
         # associations are listed explicitly so package metadata cannot
@@ -103,7 +105,7 @@ in {
 
       # Keep the association section explicit and leave unrelated desktop
       # entries untouched.
-      associations.removed = {};
+      associations.removed = { };
     };
   };
 }

@@ -2,9 +2,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.services'.avahi;
-in {
+in
+{
   options.services'.avahi = {
     enable = lib.mkEnableOption ''
       Avahi mDNS/Zeroconf: resolve and publish .local hostnames on the LAN

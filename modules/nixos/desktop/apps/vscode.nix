@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.apps.vscode;
-in {
+in
+{
   options.desktop'.apps.vscode = {
     enable = lib.mkEnableOption "Visual Studio Code";
   };
@@ -18,11 +20,9 @@ in {
       # copied file loses its executable bit and extension verification fails
       # with EACCES before the verifier can run.
       package = pkgs.vscode.overrideAttrs (oldAttrs: {
-        postFixup =
-          (oldAttrs.postFixup or "")
-          + ''
-            chmod +x "$out/lib/vscode/resources/app/node_modules/@vscode/vsce-sign/bin/vsce-sign"
-          '';
+        postFixup = (oldAttrs.postFixup or "") + ''
+          chmod +x "$out/lib/vscode/resources/app/node_modules/@vscode/vsce-sign/bin/vsce-sign"
+        '';
       });
     };
 

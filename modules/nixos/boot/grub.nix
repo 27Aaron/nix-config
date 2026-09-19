@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.boot'.grub;
   diskoCfg = config.storage'.disko;
-in {
+in
+{
   options.boot'.grub = {
     enable = lib.mkEnableOption "GRUB bootloader";
   };
@@ -33,11 +35,7 @@ in {
       # installs onto the disk itself, with the ESP staying populated as a
       # fallback; pure UEFI hosts install nothing but the removable EFI
       # binary, which upstream expresses as the special device "nodev".
-      device = lib.mkDefault (
-        if diskoCfg.bios.enable
-        then diskoCfg.device
-        else "nodev"
-      );
+      device = lib.mkDefault (if diskoCfg.bios.enable then diskoCfg.device else "nodev");
 
       # Kernels live in the Nix store on the encrypted btrfs root, so GRUB
       # must open the LUKS container itself before loading them.

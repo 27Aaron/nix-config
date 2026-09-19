@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.security'.firewall;
-in {
+in
+{
   options.security'.firewall = {
     enable = lib.mkEnableOption "Firewall with nftables";
   };
@@ -18,6 +20,6 @@ in {
       nftables.enable = true;
     };
 
-    preservation'.os.directories = ["/var/lib/nftables"];
+    preservation'.os.directories = [ "/var/lib/nftables" ];
   };
 }

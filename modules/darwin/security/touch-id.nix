@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.security'.touch-id;
-in {
+in
+{
   options.security'.touch-id = {
     enable = lib.mkEnableOption "Touch ID authentication for sudo";
   };

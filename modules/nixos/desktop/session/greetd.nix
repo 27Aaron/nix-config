@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.greetd;
-in {
+in
+{
   options.desktop'.greetd = {
     enable = lib.mkEnableOption "Greetd login manager with Tuigreet";
 
@@ -25,7 +27,9 @@ in {
     services.greetd = {
       enable = true;
       useTextGreeter = true;
-      settings.default_session.command = lib.mkIf (cfg.sessionCommand != null) "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${cfg.sessionCommand}";
+      settings.default_session.command = lib.mkIf (
+        cfg.sessionCommand != null
+      ) "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${cfg.sessionCommand}";
     };
 
     preservation'.os.directories = [

@@ -2,9 +2,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.hardware'.qemu;
-in {
+in
+{
   options.hardware'.qemu = {
     enable = lib.mkEnableOption "QEMU initrd configuration";
   };

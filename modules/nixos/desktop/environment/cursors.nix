@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.cursors;
-in {
+in
+{
   options.desktop'.cursors = {
     enable = lib.mkEnableOption "Bibata cursor theme";
   };

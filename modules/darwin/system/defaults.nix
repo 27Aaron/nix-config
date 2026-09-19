@@ -12,9 +12,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.system'.defaults;
-in {
+in
+{
   options.system'.defaults = {
     enable = lib.mkEnableOption "macOS system defaults";
   };

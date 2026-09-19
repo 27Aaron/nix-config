@@ -3,15 +3,17 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.apps.telegram;
-in {
+in
+{
   options.desktop'.apps.telegram = {
     enable = lib.mkEnableOption "Telegram Desktop";
   };
 
   config = lib.mkIf cfg.enable {
-    hm'.home.packages = [pkgs.telegram-desktop];
+    hm'.home.packages = [ pkgs.telegram-desktop ];
 
     preservation'.user.directories = [
       # Telegram Desktop session data and settings, including tdata.

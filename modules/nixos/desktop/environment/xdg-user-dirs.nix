@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.xdg-user-dirs;
-in {
+in
+{
   options.desktop'.xdg-user-dirs = {
     enable = lib.mkEnableOption "XDG user directories";
   };
@@ -31,27 +33,27 @@ in {
     preservation'.user.directories = [
       {
         directory = "Desktop";
-        mountOptions = ["x-gvfs-trash"];
+        mountOptions = [ "x-gvfs-trash" ];
       }
       {
         directory = "Documents";
-        mountOptions = ["x-gvfs-trash"];
+        mountOptions = [ "x-gvfs-trash" ];
       }
       {
         directory = "Downloads";
-        mountOptions = ["x-gvfs-trash"];
+        mountOptions = [ "x-gvfs-trash" ];
       }
       {
         directory = "Music";
-        mountOptions = ["x-gvfs-trash"];
+        mountOptions = [ "x-gvfs-trash" ];
       }
       {
         directory = "Pictures";
-        mountOptions = ["x-gvfs-trash"];
+        mountOptions = [ "x-gvfs-trash" ];
       }
       {
         directory = "Videos";
-        mountOptions = ["x-gvfs-trash"];
+        mountOptions = [ "x-gvfs-trash" ];
       }
     ];
   };

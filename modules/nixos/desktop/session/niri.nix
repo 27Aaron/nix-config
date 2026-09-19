@@ -4,17 +4,19 @@
   myvars,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.niri;
   niriSession = lib.getExe' pkgs.niri "niri-session";
-in {
+in
+{
   options.desktop'.niri = {
     enable = lib.mkEnableOption "Niri desktop environment";
     autoLogin = lib.mkEnableOption "automatic login to the Niri session";
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [pkgs.xwayland-satellite];
+    environment.systemPackages = [ pkgs.xwayland-satellite ];
 
     programs.niri.enable = true;
 

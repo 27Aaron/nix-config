@@ -3,9 +3,11 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.security'.kernel-hardening;
-in {
+in
+{
   options.security'.kernel-hardening = {
     enable = lib.mkEnableOption ''
       kernel module blacklist mitigating the Dirty Frag LPE (esp4, esp6,
@@ -14,7 +16,11 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    boot.blacklistedKernelModules = ["esp4" "esp6" "rxrpc"];
+    boot.blacklistedKernelModules = [
+      "esp4"
+      "esp6"
+      "rxrpc"
+    ];
 
     boot.extraModprobeConfig = ''
       install esp4 ${pkgs.coreutils}/bin/false

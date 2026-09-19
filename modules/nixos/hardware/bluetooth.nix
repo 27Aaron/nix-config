@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.hardware'.bluetooth;
-in {
+in
+{
   options.hardware'.bluetooth = {
     enable = lib.mkEnableOption "Bluetooth support";
   };

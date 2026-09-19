@@ -2,9 +2,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.boot'.initrd-ssh;
-in {
+in
+{
   options.boot'.initrd-ssh = {
     enable = lib.mkEnableOption ''
       SSH in initrd for remote LUKS unlock. The host must ensure its NIC
@@ -20,7 +22,7 @@ in {
 
     hostKeys = lib.mkOption {
       type = lib.types.listOf (lib.types.either lib.types.str lib.types.path);
-      default = ["/etc/secrets/initrd/id_ed25519"];
+      default = [ "/etc/secrets/initrd/id_ed25519" ];
       description = "Host keys for initrd SSH";
     };
   };
@@ -38,6 +40,6 @@ in {
       };
     };
 
-    preservation'.os.directories = ["/etc/secrets/initrd"];
+    preservation'.os.directories = [ "/etc/secrets/initrd" ];
   };
 }

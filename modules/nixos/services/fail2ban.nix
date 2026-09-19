@@ -2,15 +2,17 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.fail2ban;
-in {
+in
+{
   options.services'.fail2ban = {
     enable = lib.mkEnableOption "fail2ban service";
 
     ignoreIP = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = [ ];
       description = ''
         IP addresses, CIDR masks or DNS hosts that fail2ban will never ban,
         for trusted networks such as a VPN or office range.
@@ -30,6 +32,6 @@ in {
       };
     };
 
-    preservation'.os.directories = ["/var/lib/fail2ban"];
+    preservation'.os.directories = [ "/var/lib/fail2ban" ];
   };
 }

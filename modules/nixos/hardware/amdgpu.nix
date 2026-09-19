@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.hardware'.amdgpu;
-in {
+in
+{
   options.hardware'.amdgpu = {
     enable = lib.mkEnableOption "AMD GPU support";
   };
@@ -16,7 +18,7 @@ in {
 
       # Rusticl provides OpenCL through Mesa and supports the Radeon 780M
       # without pulling in the considerably larger ROCm stack.
-      extraPackages = [pkgs.mesa.opencl];
+      extraPackages = [ pkgs.mesa.opencl ];
     };
 
     environment = {

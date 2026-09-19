@@ -4,11 +4,13 @@
   myvars,
   platformName,
   ...
-}: let
-  inherit (import ../lib {inherit lib;}) scanPaths;
-  platforms = import ../lib/platforms.nix {inherit inputs myvars;};
+}:
+let
+  inherit (import ../lib { inherit lib; }) scanPaths;
+  platforms = import ../lib/platforms.nix { inherit inputs myvars; };
   platform = platforms.${platformName};
-in {
+in
+{
   imports = scanPaths ./common ++ scanPaths platform.homeModulesPath;
 
   home = {

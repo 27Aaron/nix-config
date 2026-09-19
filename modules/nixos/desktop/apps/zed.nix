@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.apps.zed;
-in {
+in
+{
   options.desktop'.apps.zed = {
     enable = lib.mkEnableOption "Zed editor";
   };

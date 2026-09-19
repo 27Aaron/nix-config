@@ -41,23 +41,41 @@
     };
   };
 
-  outputs = inputs @ {nixpkgs, ...}: let
-    inherit (nixpkgs) lib;
+  outputs =
+    inputs@{ nixpkgs, ... }:
+    let
+      inherit (nixpkgs) lib;
 
-    myvars = import ./vars;
-    configurations = import ./hosts {inherit inputs myvars;};
+      myvars = import ./vars;
+      configurations = import ./hosts { inherit inputs myvars; };
 
-    supportedSystems = [
-      "aarch64-darwin"
-      "x86_64-linux"
-    ];
-    forEachSystem = lib.genAttrs supportedSystems;
-  in
+      supportedSystems = [
+        "aarch64-darwin"
+        "x86_64-linux"
+      ];
+      forEachSystem = lib.genAttrs supportedSystems;
+    in
     configurations
     // {
       darwinModules.default = import ./modules "darwin";
       nixosModules.default = import ./modules "nixos";
 
-      formatter = forEachSystem (system: nixpkgs.legacyPackages.${system}.alejandra);
+      devShells = forEachSystem (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShellNoCC {
+            packages = with pkgs; [
+              deadnix
+              just
+              nixfmt-rs
+            ];
+          };
+        }
+      );
+
+      formatter = forEachSystem (system: nixpkgs.legacyPackages.${system}.nixfmt-rs);
     };
 }

@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.upower;
-in {
+in
+{
   options.services'.upower = {
     enable = lib.mkEnableOption "UPower power management daemon";
   };

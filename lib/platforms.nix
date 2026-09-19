@@ -1,7 +1,8 @@
 {
   inputs,
   myvars,
-}: {
+}:
+{
   darwin = {
     builder = inputs.nix-darwin.lib.darwinSystem;
     homeManagerModule = inputs.home-manager.darwinModules.home-manager;

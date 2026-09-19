@@ -6,7 +6,7 @@ default:
 
 # Check formatting, unused declarations, and all host configurations locally
 check:
-    @alejandra --check .
+    @nix fmt . -- --check
     @deadnix --fail .
     @nix flake check path:. --no-build --all-systems
     @nix eval path:.#darwinConfigurations --json --apply 'builtins.mapAttrs (_: host: host.system.drvPath)' >/dev/null
@@ -42,4 +42,4 @@ install:
 
 # Format all Nix files in the flake
 fmt:
-    @nix fmt path:.
+    @nix fmt .

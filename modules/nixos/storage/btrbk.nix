@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.btrbk;
-in {
+in
+{
   options.services'.btrbk = {
     enable = lib.mkEnableOption "local Btrfs snapshots with btrbk";
 

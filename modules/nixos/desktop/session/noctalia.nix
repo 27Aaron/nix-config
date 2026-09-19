@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.noctalia;
-in {
+in
+{
   options.desktop'.noctalia = {
     enable = lib.mkEnableOption "Noctalia desktop shell";
   };

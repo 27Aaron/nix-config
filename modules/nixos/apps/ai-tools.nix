@@ -4,10 +4,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.tools'.ai;
   agentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
-in {
+in
+{
   options.tools'.ai = {
     enable = lib.mkEnableOption "AI development tools";
   };

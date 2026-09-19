@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   disko.devices = {
     nodev."/" = {
       fsType = "tmpfs";
@@ -30,7 +31,7 @@
                 "-n"
                 "BOOT"
               ];
-              mountOptions = ["umask=0077"];
+              mountOptions = [ "umask=0077" ];
             };
           };
 

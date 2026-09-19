@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services'.smartd;
-in {
+in
+{
   options.services'.smartd = {
     enable = lib.mkEnableOption "SMART and NVMe health monitoring";
   };

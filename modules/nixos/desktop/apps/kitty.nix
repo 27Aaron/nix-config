@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.apps.kitty;
-in {
+in
+{
   options.desktop'.apps.kitty = {
     enable = lib.mkEnableOption "Kitty terminal emulator";
   };

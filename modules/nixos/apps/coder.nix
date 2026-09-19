@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.coder;
 
   # The upstream option is a "host:port" string, including IPv6 forms like
@@ -13,7 +14,8 @@
     lib.hasPrefix "127." cfg.listenAddress
     || lib.hasPrefix "localhost" cfg.listenAddress
     || lib.hasPrefix "[::1]" cfg.listenAddress;
-in {
+in
+{
   options.services'.coder = {
     enable = lib.mkEnableOption "Coder server";
 
@@ -113,17 +115,17 @@ in {
       }
       {
         assertion =
-          cfg.wildcardAccessUrl
-          == null
-          || !(lib.hasPrefix "http://" cfg.wildcardAccessUrl || lib.hasPrefix "https://" cfg.wildcardAccessUrl);
+          cfg.wildcardAccessUrl == null
+          || !(
+            lib.hasPrefix "http://" cfg.wildcardAccessUrl || lib.hasPrefix "https://" cfg.wildcardAccessUrl
+          );
         message = "services'.coder.wildcardAccessUrl takes a hostname pattern like \"*.coder.example.com\" without a scheme";
       }
     ];
 
     warnings =
-      lib.optional
-      (cfg.openFirewall && loopbackListen)
-      "services'.coder.openFirewall is set but listenAddress ${cfg.listenAddress} is loopback-only; external clients still cannot reach Coder";
+      lib.optional (cfg.openFirewall && loopbackListen)
+        "services'.coder.openFirewall is set but listenAddress ${cfg.listenAddress} is loopback-only; external clients still cannot reach Coder";
 
     # Reuse the repo's PostgreSQL module so its tuning, authentication map
     # and /var/lib/postgresql persistence cannot be disabled independently
@@ -133,11 +135,11 @@ in {
     # The upstream unit only orders after network.target, which races with
     # PostgreSQL init on first boot.
     systemd.services.coder = lib.mkIf cfg.database.createLocally {
-      after = ["postgresql.service"];
-      requires = ["postgresql.service"];
+      after = [ "postgresql.service" ];
+      requires = [ "postgresql.service" ];
     };
 
-    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [listenPort];
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ listenPort ];
 
     # Upstream user/group/homeDir must stay at their defaults ("coder",
     # /var/lib/coder) for this ownership and directory to match.

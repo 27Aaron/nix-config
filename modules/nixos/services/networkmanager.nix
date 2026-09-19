@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.networkmanager;
-in {
+in
+{
   options.services'.networkmanager = {
     enable = lib.mkEnableOption "NetworkManager for network configuration";
   };
@@ -12,7 +14,7 @@ in {
   config = lib.mkIf cfg.enable {
     networking.networkmanager.enable = true;
 
-    user'.extraGroups = ["networkmanager"];
+    user'.extraGroups = [ "networkmanager" ];
 
     preservation'.os.directories = [
       {

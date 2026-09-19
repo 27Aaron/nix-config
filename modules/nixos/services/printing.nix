@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.printing;
-in {
+in
+{
   options.services'.printing = {
     enable = lib.mkEnableOption "CUPS printing service";
   };

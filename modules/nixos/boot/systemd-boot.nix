@@ -2,10 +2,12 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.boot'.systemd-boot;
   diskoCfg = config.storage'.disko;
-in {
+in
+{
   options.boot'.systemd-boot = {
     enable = lib.mkEnableOption "systemd-boot bootloader with EFI variable management";
   };

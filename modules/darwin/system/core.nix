@@ -5,12 +5,14 @@
   myvars,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.core';
-in {
+in
+{
   imports = [
-    (lib.mkAliasOptionModule ["user'"] ["users" "users" myvars.username])
-    (lib.mkAliasOptionModule ["hm'"] ["home-manager" "users" myvars.username])
+    (lib.mkAliasOptionModule [ "user'" ] [ "users" "users" myvars.username ])
+    (lib.mkAliasOptionModule [ "hm'" ] [ "home-manager" "users" myvars.username ])
   ];
 
   options.core' = {

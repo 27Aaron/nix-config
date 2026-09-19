@@ -2,7 +2,8 @@
   lib,
   modulesPath,
   ...
-}: {
+}:
+{
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
@@ -11,9 +12,20 @@
     # Classic interface naming: the NIC shows up as eth0 instead of a
     # predictable name like ens18. audit=0 turns off the kernel audit
     # subsystem, whose event log is noise on a home router VM.
-    kernelParams = ["audit=0" "net.ifnames=0"];
+    kernelParams = [
+      "audit=0"
+      "net.ifnames=0"
+    ];
 
-    initrd.availableKernelModules = ["uhci_hcd" "ehci_pci" "ahci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod"];
+    initrd.availableKernelModules = [
+      "uhci_hcd"
+      "ehci_pci"
+      "ahci"
+      "virtio_pci"
+      "virtio_scsi"
+      "sd_mod"
+      "sr_mod"
+    ];
   };
 
   boot'.systemd-boot.enable = true;

@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.btrfs-scrub;
-in {
+in
+{
   options.services'.btrfs-scrub = {
     enable = lib.mkEnableOption "monthly Btrfs data scrubbing";
 

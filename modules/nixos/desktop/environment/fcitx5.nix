@@ -3,58 +3,61 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktop'.fcitx5;
-  mkAyayaTheme = name: palette: let
-    theme = (pkgs.formats.ini {}).generate "theme.conf" {
-      Metadata = {
-        Name = "Ayaya ${name}";
-        Author = palette.author;
-        Description = "Port of the Ayaya Squirrel color scheme";
-        Version = 1;
+  mkAyayaTheme =
+    name: palette:
+    let
+      theme = (pkgs.formats.ini { }).generate "theme.conf" {
+        Metadata = {
+          Name = "Ayaya ${name}";
+          Author = palette.author;
+          Description = "Port of the Ayaya Squirrel color scheme";
+          Version = 1;
+        };
+        InputPanel = {
+          NormalColor = palette.text;
+          HighlightColor = palette.selectedText;
+          HighlightBackgroundColor = palette.highlight;
+          HighlightCandidateColor = palette.selectedText;
+          CandidateLabelColor = palette.label;
+          HighlightCandidateLabelColor = palette.selectedLabel;
+          CandidateCommentColor = palette.comment;
+          HighlightCandidateCommentColor = palette.selectedComment;
+          LabelTextSizeFactor = 73;
+          CommentTextSizeFactor = 73;
+          FullWidthHighlight = false;
+        };
+        "InputPanel/Background".Image = "background.png";
+        "InputPanel/Background/Margin" = {
+          Left = 7;
+          Right = 7;
+          Top = 3;
+          Bottom = 3;
+        };
+        "InputPanel/Highlight".Image = "highlight.png";
+        "InputPanel/Highlight/Margin" = {
+          Left = 7;
+          Right = 7;
+          Top = 3;
+          Bottom = 3;
+        };
+        "InputPanel/ContentMargin" = {
+          Left = 0;
+          Right = 0;
+          Top = 0;
+          Bottom = 0;
+        };
+        "InputPanel/TextMargin" = {
+          Left = 7;
+          Right = 7;
+          Top = 3;
+          Bottom = 3;
+        };
       };
-      InputPanel = {
-        NormalColor = palette.text;
-        HighlightColor = palette.selectedText;
-        HighlightBackgroundColor = palette.highlight;
-        HighlightCandidateColor = palette.selectedText;
-        CandidateLabelColor = palette.label;
-        HighlightCandidateLabelColor = palette.selectedLabel;
-        CandidateCommentColor = palette.comment;
-        HighlightCandidateCommentColor = palette.selectedComment;
-        LabelTextSizeFactor = 73;
-        CommentTextSizeFactor = 73;
-        FullWidthHighlight = false;
-      };
-      "InputPanel/Background".Image = "background.png";
-      "InputPanel/Background/Margin" = {
-        Left = 7;
-        Right = 7;
-        Top = 3;
-        Bottom = 3;
-      };
-      "InputPanel/Highlight".Image = "highlight.png";
-      "InputPanel/Highlight/Margin" = {
-        Left = 7;
-        Right = 7;
-        Top = 3;
-        Bottom = 3;
-      };
-      "InputPanel/ContentMargin" = {
-        Left = 0;
-        Right = 0;
-        Top = 0;
-        Bottom = 0;
-      };
-      "InputPanel/TextMargin" = {
-        Left = 7;
-        Right = 7;
-        Top = 3;
-        Bottom = 3;
-      };
-    };
-  in
-    pkgs.runCommand "fcitx5-ayaya-${name}" {nativeBuildInputs = [pkgs.imagemagick];} ''
+    in
+    pkgs.runCommand "fcitx5-ayaya-${name}" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
       mkdir -p "$out"
       cp ${theme} "$out/theme.conf"
       magick -size 128x128 xc:none -fill '${palette.background}' \
@@ -94,7 +97,8 @@
     # Upstream replaces this asset in place; verify its contents on updates.
     hash = "sha256-ZU1/H+Sxvz1CX4wKRKxhQj3tWMeEJntN8DJWAw1yIz8=";
   };
-in {
+in
+{
   options.desktop'.fcitx5 = {
     enable = lib.mkEnableOption "Fcitx5 input method";
   };
@@ -109,9 +113,9 @@ in {
         addons = with pkgs; [
           fcitx5-gtk
           (fcitx5-rime.override {
-            rimeDataPkgs = [rime-wanxiang];
+            rimeDataPkgs = [ rime-wanxiang ];
           })
-          (qt6Packages.fcitx5-configtool.override {kcmSupport = false;})
+          (qt6Packages.fcitx5-configtool.override { kcmSupport = false; })
         ];
       };
     };

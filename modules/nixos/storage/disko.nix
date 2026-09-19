@@ -3,44 +3,44 @@
   inputs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.storage'.disko;
 
-  btrfsSubvolumes =
-    {
-      "@nix" = {
-        mountpoint = "/nix";
-        mountOptions = [
-          "compress=zstd:1"
-          "discard=async"
-          "noatime"
-        ];
-      };
-
-      "@persistent" = {
-        mountpoint = "/persistent";
-        mountOptions = [
-          "compress=zstd:1"
-          "discard=async"
-          "noatime"
-        ];
-      };
-
-      "@snapshots" = {
-        mountpoint = "/snapshots";
-        mountOptions = [
-          "compress=zstd:1"
-          "discard=async"
-          "noatime"
-        ];
-      };
-    }
-    // lib.optionalAttrs (cfg.swapSize != null) {
-      "@swap" = {
-        mountpoint = "/swap";
-        swap.swapfile.size = cfg.swapSize;
-      };
+  btrfsSubvolumes = {
+    "@nix" = {
+      mountpoint = "/nix";
+      mountOptions = [
+        "compress=zstd:1"
+        "discard=async"
+        "noatime"
+      ];
     };
+
+    "@persistent" = {
+      mountpoint = "/persistent";
+      mountOptions = [
+        "compress=zstd:1"
+        "discard=async"
+        "noatime"
+      ];
+    };
+
+    "@snapshots" = {
+      mountpoint = "/snapshots";
+      mountOptions = [
+        "compress=zstd:1"
+        "discard=async"
+        "noatime"
+      ];
+    };
+  }
+  // lib.optionalAttrs (cfg.swapSize != null) {
+    "@swap" = {
+      mountpoint = "/swap";
+      swap.swapfile.size = cfg.swapSize;
+    };
+  };
 
   btrfsContent = {
     type = "btrfs";
@@ -58,8 +58,9 @@
     ];
     subvolumes = btrfsSubvolumes;
   };
-in {
-  imports = [inputs.disko.nixosModules.disko];
+in
+{
+  imports = [ inputs.disko.nixosModules.disko ];
 
   options.storage'.disko = {
     enable = lib.mkEnableOption "Disko disk management";
@@ -143,48 +144,49 @@ in {
                     "-n"
                     "BOOT"
                   ];
-                  mountOptions = ["umask=0077"];
+                  mountOptions = [ "umask=0077" ];
                 };
               };
             }
             // (
-              if cfg.luks.enable
-              then {
-                luks = {
-                  priority = 2;
-                  size = "100%";
-                  type = "8309";
-                  content = {
-                    type = "luks";
-                    name = "crypted";
-                    askPassword = true;
-                    initrdUnlock = true;
-                    settings = {
-                      allowDiscards = true;
-                      bypassWorkqueues = true;
-                      crypttabExtraOpts = [
-                        "same-cpu-crypt"
-                        "submit-from-crypt-cpus"
-                        "token-timeout=10"
+              if cfg.luks.enable then
+                {
+                  luks = {
+                    priority = 2;
+                    size = "100%";
+                    type = "8309";
+                    content = {
+                      type = "luks";
+                      name = "crypted";
+                      askPassword = true;
+                      initrdUnlock = true;
+                      settings = {
+                        allowDiscards = true;
+                        bypassWorkqueues = true;
+                        crypttabExtraOpts = [
+                          "same-cpu-crypt"
+                          "submit-from-crypt-cpus"
+                          "token-timeout=10"
+                        ];
+                      };
+                      extraFormatArgs = [
+                        "--type"
+                        "luks2"
+                        "--pbkdf"
+                        "argon2id"
                       ];
+                      content = btrfsContent;
                     };
-                    extraFormatArgs = [
-                      "--type"
-                      "luks2"
-                      "--pbkdf"
-                      "argon2id"
-                    ];
+                  };
+                }
+              else
+                {
+                  root = {
+                    priority = 2;
+                    size = "100%";
                     content = btrfsContent;
                   };
-                };
-              }
-              else {
-                root = {
-                  priority = 2;
-                  size = "100%";
-                  content = btrfsContent;
-                };
-              }
+                }
             );
         };
       };

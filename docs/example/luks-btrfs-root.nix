@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   disko.devices = {
     disk.main = {
       type = "disk";
@@ -19,7 +20,7 @@
                 "-n"
                 "BOOT"
               ];
-              mountOptions = ["umask=0077"];
+              mountOptions = [ "umask=0077" ];
             };
           };
 

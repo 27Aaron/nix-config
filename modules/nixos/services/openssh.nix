@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services'.openssh;
-in {
+in
+{
   options.services'.openssh = {
     enable = lib.mkEnableOption "OpenSSH daemon";
 
@@ -24,7 +26,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.openssh = {
       enable = true;
-      ports = [cfg.port];
+      ports = [ cfg.port ];
 
       # Only the Ed25519 host identity is needed; upstream also generates
       # an RSA key by default.
@@ -50,7 +52,7 @@ in {
       openFirewall = cfg.openFirewall;
     };
 
-    preservation'.os.directories = ["/etc/ssh"];
+    preservation'.os.directories = [ "/etc/ssh" ];
 
     # Client keys and known_hosts; sshd also reads authorized_keys from here.
     preservation'.user.directories = [

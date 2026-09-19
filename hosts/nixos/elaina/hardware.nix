@@ -5,22 +5,29 @@
   modulesPath,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
   nixpkgs = {
     hostPlatform = lib.mkDefault "x86_64-linux";
-    overlays = [inputs.nix-cachyos-kernel.overlays.pinned];
+    overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
   };
 
   boot = {
     initrd = {
-      availableKernelModules = ["nvme" "sd_mod" "thunderbolt" "usb_storage" "xhci_pci"];
+      availableKernelModules = [
+        "nvme"
+        "sd_mod"
+        "thunderbolt"
+        "usb_storage"
+        "xhci_pci"
+      ];
     };
 
-    kernelModules = ["kvm-amd"];
+    kernelModules = [ "kvm-amd" ];
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-zen4;
   };
 

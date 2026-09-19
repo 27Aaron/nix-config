@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.apps'.homebrew;
-in {
+in
+{
   options.apps'.homebrew = {
     enable = lib.mkEnableOption "Homebrew package management";
 
@@ -34,7 +36,11 @@ in {
       };
 
       cleanup = lib.mkOption {
-        type = lib.types.enum ["none" "uninstall" "zap"];
+        type = lib.types.enum [
+          "none"
+          "uninstall"
+          "zap"
+        ];
         default = "zap";
         description = "How aggressively to remove packages not in the configuration";
       };
@@ -154,7 +160,13 @@ in {
   config = lib.mkIf cfg.enable {
     homebrew = {
       enable = true;
-      inherit (cfg) enableFishIntegration enableZshIntegration masApps brews casks;
+      inherit (cfg)
+        enableFishIntegration
+        enableZshIntegration
+        masApps
+        brews
+        casks
+        ;
       onActivation = cfg.onActivation;
       taps = cfg.taps;
     };
