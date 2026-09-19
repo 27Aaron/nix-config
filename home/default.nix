@@ -3,11 +3,12 @@
   inputs,
   myvars,
   platformName,
+  helpers,
   ...
 }:
 let
   inherit (import ../lib { inherit lib; }) scanPaths;
-  platforms = import ../lib/platforms.nix { inherit inputs myvars; };
+  platforms = import ../lib/platforms.nix { inherit inputs; };
   platform = platforms.${platformName};
 in
 {
@@ -15,7 +16,7 @@ in
 
   home = {
     username = myvars.username;
-    inherit (platform) homeDirectory;
+    inherit (helpers.path) homeDirectory;
     stateVersion = "26.05";
   };
 

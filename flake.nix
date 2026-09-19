@@ -46,8 +46,9 @@
     let
       inherit (nixpkgs) lib;
 
-      helpers = import ./helpers { inherit lib; };
-      myvars = helpers.user;
+      # The host list only needs the user registry; the full helpers set is
+      # evaluated per host in lib/mkHost.nix.
+      myvars = import ./helpers/constants/user.nix;
 
       configurations = import ./hosts { inherit inputs myvars; };
 

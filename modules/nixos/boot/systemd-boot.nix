@@ -14,15 +14,12 @@ in
 
   config = lib.mkIf cfg.enable {
     # systemd-boot is UEFI-only, so a BIOS boot partition would be dead
-    # weight; BIOS hosts should use boot'.grub instead.
+    # weight; BIOS hosts should use boot'.grub instead. The mutual
+    # exclusion with boot'.grub is asserted in grub.nix.
     assertions = [
       {
         assertion = !diskoCfg.bios.enable;
         message = "boot'.systemd-boot cannot be combined with storage'.disko.bios.enable; use boot'.grub for BIOS boot.";
-      }
-      {
-        assertion = !config.boot'.grub.enable;
-        message = "boot'.grub and boot'.systemd-boot are mutually exclusive; enable only one.";
       }
     ];
 

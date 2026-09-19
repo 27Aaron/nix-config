@@ -16,22 +16,17 @@
       "audit=0"
       "net.ifnames=0"
     ];
-
-    initrd.availableKernelModules = [
-      "uhci_hcd"
-      "ehci_pci"
-      "ahci"
-      "virtio_pci"
-      "virtio_scsi"
-      "sd_mod"
-      "sr_mod"
-    ];
   };
 
   boot'.systemd-boot.enable = true;
   # The VM was installed with a 256M ESP; keep fewer generations so it does
   # not fill up with LTO kernels (~50M per generation).
   boot.loader.systemd-boot.configurationLimit = 4;
+
+  # Guest storage and virtio modules come from the qemu-guest profile above
+  # and hardware'.qemu; the NixOS initrd defaults cover SATA/USB/SCSI, so
+  # this host keeps no hand-written module list.
+  hardware'.qemu.enable = true;
 
   # PVE uses the guest agent for clean shutdown and IP reporting.
   services.qemuGuest.enable = true;

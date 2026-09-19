@@ -1,5 +1,6 @@
 {
   config,
+  helpers,
   lib,
   hostName,
   myvars,
@@ -10,11 +11,6 @@ let
   cfg = config.core';
 in
 {
-  imports = [
-    (lib.mkAliasOptionModule [ "user'" ] [ "users" "users" myvars.username ])
-    (lib.mkAliasOptionModule [ "hm'" ] [ "home-manager" "users" myvars.username ])
-  ];
-
   options.core' = {
     hostName = lib.mkOption {
       type = lib.types.str;
@@ -39,7 +35,7 @@ in
     };
 
     users.users.${myvars.username} = {
-      home = "/Users/${myvars.username}";
+      home = helpers.path.homeDirectory;
 
       # fish must be registered in /etc/shells before it can be the
       # login shell; programs.fish.enable above takes care of that.

@@ -5,7 +5,7 @@
 let
   inherit (inputs.nixpkgs) lib;
 
-  platforms = import ../lib/platforms.nix { inherit inputs myvars; };
+  platforms = import ../lib/platforms.nix { inherit inputs; };
 
   mkHost =
     platformName: platform: hostName: _:

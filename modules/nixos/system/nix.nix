@@ -1,4 +1,5 @@
 {
+  helpers,
   lib,
   myvars,
   ...
@@ -8,7 +9,6 @@ let
 in
 {
   nix = {
-    gc.dates = lib.mkDefault "weekly";
     settings = {
       trusted-users = [ user ];
     };
@@ -16,13 +16,13 @@ in
 
   programs.nh = {
     enable = true;
-    flake = lib.mkDefault "/home/${user}/nix-config";
+    flake = lib.mkDefault helpers.path.nixConfig;
   };
 
   # The configuration checkout read by nh.
   preservation'.user.directories = [
     {
-      directory = "nix-config";
+      directory = helpers.path.nixConfigDir;
       mode = "0700";
     }
   ];

@@ -9,11 +9,6 @@ let
   cfg = config.core';
 in
 {
-  imports = [
-    (lib.mkAliasOptionModule [ "user'" ] [ "users" "users" myvars.username ])
-    (lib.mkAliasOptionModule [ "hm'" ] [ "home-manager" "users" myvars.username ])
-  ];
-
   options.core' = {
     hostName = lib.mkOption {
       type = lib.types.str;

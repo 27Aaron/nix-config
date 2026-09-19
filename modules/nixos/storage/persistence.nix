@@ -1,5 +1,6 @@
 {
   config,
+  helpers,
   inputs,
   lib,
   myvars,
@@ -7,6 +8,7 @@
 }:
 let
   cfg = config.storage'.persistence;
+  btrfs = helpers.btrfs;
   user = myvars.username;
   hm = config.home-manager.users.${user};
 in
@@ -14,10 +16,13 @@ in
   imports = [
     inputs.preservation.nixosModules.default
 
-    (lib.mkAliasOptionModule [ "preservation'" "os" ] [ "preservation" "preserveAt" "/persistent" ])
+    (lib.mkAliasOptionModule
+      [ "preservation'" "os" ]
+      [ "preservation" "preserveAt" btrfs.persistent.mountpoint ]
+    )
     (lib.mkAliasOptionModule
       [ "preservation'" "user" ]
-      [ "preservation" "preserveAt" "/persistent" "users" user ]
+      [ "preservation" "preserveAt" btrfs.persistent.mountpoint "users" user ]
     )
   ];
 
@@ -32,11 +37,11 @@ in
     };
 
     # Preservation needs the persistent storage in the initrd for machine-id.
-    fileSystems."/persistent".neededForBoot = true;
+    fileSystems."${btrfs.persistent.mountpoint}".neededForBoot = true;
 
     preservation = {
       enable = true;
-      preserveAt."/persistent".commonMountOptions = [
+      preserveAt."${btrfs.persistent.mountpoint}".commonMountOptions = [
         "x-gdu.hide"
         "x-gvfs-hide"
       ];

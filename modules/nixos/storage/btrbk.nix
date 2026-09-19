@@ -1,10 +1,12 @@
 {
   config,
+  helpers,
   lib,
   ...
 }:
 let
   cfg = config.services'.btrbk;
+  btrfs = helpers.btrfs;
 in
 {
   options.services'.btrbk = {
@@ -30,19 +32,19 @@ in
 
     sourceVolume = lib.mkOption {
       type = lib.types.str;
-      default = "/btr_pool";
+      default = btrfs.pool;
       description = "Mounted Btrfs top-level volume containing the source subvolume";
     };
 
     sourceSubvolume = lib.mkOption {
       type = lib.types.str;
-      default = "@persistent";
+      default = btrfs.persistent.subvolume;
       description = "Btrfs subvolume to snapshot, relative to sourceVolume";
     };
 
     snapshotDirectory = lib.mkOption {
       type = lib.types.str;
-      default = "/snapshots";
+      default = btrfs.snapshots;
       description = "Mounted Btrfs subvolume in which snapshots are created";
     };
   };

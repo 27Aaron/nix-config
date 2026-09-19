@@ -1,6 +1,7 @@
 {
   helpers,
   lib,
+  platformName,
   ...
 }:
 {
@@ -11,6 +12,9 @@
     gc = {
       automatic = lib.mkDefault true;
       options = lib.mkDefault "--delete-older-than 7d";
+      # NixOS would otherwise run daily at 03:15; nix-darwin has no gc.dates
+      # and runs weekly through its own gc.interval default.
+      dates = lib.mkIf (platformName == "nixos") (lib.mkDefault "weekly");
     };
 
     optimise.automatic = true;
