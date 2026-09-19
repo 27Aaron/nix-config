@@ -59,7 +59,7 @@ mv hosts/darwin/luna "hosts/darwin/$host_name"
 
 检查以下配置：
 
-- `vars/default.nix`：用户名、Git 姓名、邮箱、时区
+- `helpers/constants/user.nix`：用户名、Git 姓名、邮箱、时区
 - `hosts/darwin/<主机名>/default.nix`：目标平台
 - `modules/darwin/apps/homebrew.nix`：Homebrew 软件清单
 

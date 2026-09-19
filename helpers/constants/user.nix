@@ -1,3 +1,5 @@
+# User metadata injected into all hosts and Home Manager modules as
+# myvars.
 {
   username = "aaron";
   fullName = "Aaron";

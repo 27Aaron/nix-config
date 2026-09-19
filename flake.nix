@@ -46,7 +46,9 @@
     let
       inherit (nixpkgs) lib;
 
-      myvars = import ./vars;
+      helpers = import ./helpers { inherit lib; };
+      myvars = helpers.user;
+
       configurations = import ./hosts { inherit inputs myvars; };
 
       supportedSystems = [

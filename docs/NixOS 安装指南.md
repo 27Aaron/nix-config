@@ -70,7 +70,7 @@ sudo nixos-generate-config --no-filesystems --root /mnt
 
 安装前检查以下配置：
 
-- `vars/default.nix`：用户名、密码哈希、SSH 公钥、默认时区
+- `helpers/constants/user.nix`：用户名、密码哈希、SSH 公钥、默认时区
 - `hosts/nixos/elaina/default.nix`：`system.stateVersion`
 
 然后安装系统：
@@ -88,7 +88,7 @@ sudo nixos-install \
 sudo reboot
 ```
 
-使用 LUKS 版本时，开机需要先输入加密密码，再用 `vars/default.nix` 中配置的账户登录。
+使用 LUKS 版本时，开机需要先输入加密密码，再用 `helpers/constants/user.nix` 中配置的账户登录。
 
 > [!IMPORTANT]
 > 根文件系统为 tmpfs，重启即清空；需要保留的数据由持久化机制统一存放在 `/persistent`，未持久化的内容重启后会丢失。

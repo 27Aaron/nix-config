@@ -4,8 +4,9 @@
 let
   nix = import ./constants/nix.nix;
   ports = import ./constants/ports.nix { inherit lib; };
+  user = import ./constants/user.nix;
 in
 {
-  inherit nix;
+  inherit nix user;
   inherit (ports) port portStr;
 }

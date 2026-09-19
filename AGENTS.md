@@ -12,7 +12,12 @@
 
 ```
 flake.nix             Flake 入口：导出所有主机、devShells、formatter 和模块
-vars/default.nix      全局变量：用户名、姓名、邮箱、时区、密码哈希、SSH 公钥
+helpers/              共享库：作为 specialArgs 注入所有主机与 Home Manager
+  default.nix         汇聚入口：展开 constants/ 下的注册表
+  constants/          共享常量注册表
+    nix.nix           二进制缓存：substituters 与 trustedPublicKeys
+    ports.nix         服务端口：port 数字与 portStr 字符串
+    user.nix          用户元数据：用户名、姓名、邮箱、时区、密码哈希、SSH 公钥
 lib/
   default.nix         通用函数：scanPaths 递归收集模块路径
   platforms.nix       平台差异表：构建器、Home Manager 模块、模块目录、用户主目录
@@ -50,7 +55,8 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 装配与自动发现：
 
 - `hosts/default.nix` 把 `hosts/<平台>/<主机名>/default.nix` 构造成一台主机，目录名即 flake 里的主机名；构建器在 `lib/mkHost.nix`，平台差异集中在 `lib/platforms.nix`。
-- 每台主机注入同一组 `specialArgs`：`inputs`、`myvars`、`hostName`、`platformName`；Home Manager 通过 `extraSpecialArgs` 收到同一组，并以 `backupFileExtension = "hm-bak"` 接入主用户。模块和 Home Manager 文件可以直接取用这些参数。
+- 每台主机注入同一组 `specialArgs`：`inputs`、`myvars`、`hostName`、`platformName`、`helpers`；Home Manager 通过 `extraSpecialArgs` 收到同一组，并以 `backupFileExtension = "hm-bak"` 接入主用户。模块和 Home Manager 文件可以直接取用这些参数。
+- `helpers` 由 `lib/mkHost.nix` 从 `helpers/default.nix` 求值注入；`myvars` 就是其中的 `user` 注册表。模块通过 `helpers.port.openssh`、`helpers.portStr.coder`、`helpers.nix.substituters` 等路径引用共享常量。
 - `modules/default.nix` 与 `home/default.nix` 共用 `lib/default.nix` 的 `scanPaths` 递归收集：含 `default.nix` 的目录作为单个模块整体导入，否则继续下钻；普通 `.nix` 文件直接导入。前者收集 `modules/common/` 与当前平台模块目录，后者收集 `home/common/` 与当前平台 Home Manager 目录。新增模块放入正确的职责目录即可，无需登记。
 - NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`tools'`、`system.stateVersion` 的顺序组织。
 - NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`、`bios.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
@@ -107,7 +113,7 @@ Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：H
 
 ## 多设备配置
 
-`vars/default.nix` 中的 `myvars.username` 是所有主机的唯一用户名来源。需要引用当前用户时：
+`helpers/constants/user.nix` 中的 `myvars.username` 是所有主机的唯一用户名来源。需要引用当前用户时：
 
 - NixOS 和 nix-darwin 模块使用 `user'` 或 `hm'`；需要字符串时直接使用 `myvars.username`
 - Home Manager 直接使用 `myvars.username`
