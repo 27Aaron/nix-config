@@ -1,5 +1,6 @@
 {
   config,
+  helpers,
   lib,
   ...
 }:
@@ -12,7 +13,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.printing.enable = true;
+    services.printing = {
+      enable = true;
+      # Bind the listen address to the registry; upstream defaults to the
+      # same localhost:631.
+      listenAddresses = [ "localhost:${helpers.portStr.printing}" ];
+    };
 
     preservation'.os.directories = [
       {
