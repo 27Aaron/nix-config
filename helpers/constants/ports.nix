@@ -5,7 +5,6 @@ rec {
   port = {
     initrdSsh = 22; # SSH inside initrd, used for remote LUKS unlock.
     openssh = 233; # OpenSSH daemon.
-    coder = 3000; # Coder server.
     postgresql = 5432; # PostgreSQL.
     tang = 7654; # Tang key derivation service.
   };
