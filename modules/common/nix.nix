@@ -1,4 +1,8 @@
-{ lib, ... }:
+{
+  helpers,
+  lib,
+  ...
+}:
 {
   nix = {
     # remove nix-channel related tools & configs, we use flakes instead.
@@ -17,10 +21,8 @@
         "flakes"
       ];
 
-      extra-substituters = [ "https://cache.numtide.com" ];
-      extra-trusted-public-keys = [
-        "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-      ];
+      extra-substituters = helpers.nix.substituters;
+      extra-trusted-public-keys = helpers.nix.trustedPublicKeys;
     };
   };
 
