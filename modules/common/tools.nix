@@ -25,21 +25,13 @@ in
     };
 
     hm'.home.packages = with pkgs; [
-      gh
-      lazygit
       uv
     ];
 
-    # Runtime state of the toolset above: GitHub CLI account settings and
-    # fallback credentials, direnv .envrc allow-list, lazygit recent
-    # repositories, and uv-managed interpreters and tools.
+    # Runtime state of the toolset above: direnv .envrc allow-list and
+    # uv-managed interpreters and tools.
     hm'.persist'.directories = [
-      {
-        directory = ".config/gh";
-        mode = "0700";
-      }
       ".local/share/direnv"
-      ".local/state/lazygit"
       ".local/share/uv"
     ];
   };
