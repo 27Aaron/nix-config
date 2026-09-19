@@ -14,6 +14,7 @@
     avahi.enable = true;
     btrbk.enable = true;
     btrfs-scrub.enable = true;
+    fail2ban.enable = true;
     gnome-keyring.enable = true;
     networkmanager.enable = true;
     openssh.enable = true;

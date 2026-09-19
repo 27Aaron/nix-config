@@ -28,6 +28,10 @@
   # this host keeps no hand-written module list.
   hardware'.qemu.enable = true;
 
+  # Keep the balloon driver disabled: the host reclaiming memory from this
+  # VM would starve the router.
+  hardware'.disable-balloon.enable = true;
+
   # PVE uses the guest agent for clean shutdown and IP reporting.
   services.qemuGuest.enable = true;
 

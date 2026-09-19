@@ -27,6 +27,7 @@
     zram.enable = true;
 
     # Network access
+    fail2ban.enable = true;
     networkmanager.enable = true;
     openssh.enable = true;
   };
