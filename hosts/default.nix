@@ -4,38 +4,11 @@
 }: let
   inherit (inputs.nixpkgs) lib;
 
-  platforms = {
-    darwin = {
-      builder = inputs.nix-darwin.lib.darwinSystem;
-      homeManagerModule = inputs.home-manager.darwinModules.home-manager;
-    };
+  platforms = import ../lib/platforms.nix {inherit inputs myvars;};
 
-    nixos = {
-      builder = lib.nixosSystem;
-      homeManagerModule = inputs.home-manager.nixosModules.home-manager;
-    };
-  };
-
-  mkHost = platformName: platform: hostName: _: let
-    specialArgs = {inherit inputs myvars hostName platformName;};
-  in
-    platform.builder {
-      inherit specialArgs;
-
-      modules = [
-        (import ../modules platformName)
-        platform.homeManagerModule
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            backupFileExtension = "hm-bak";
-            extraSpecialArgs = specialArgs;
-            users.${myvars.username}.imports = [../home];
-          };
-        }
-        (./. + "/${platformName}/${hostName}")
-      ];
+  mkHost = platformName: platform: hostName: _:
+    import ../lib/mkHost.nix {
+      inherit inputs myvars platformName platform hostName;
     };
 
   mkConfigurations = platformName: platform:
