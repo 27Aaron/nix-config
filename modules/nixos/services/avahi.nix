@@ -11,7 +11,7 @@ in
   options.services'.avahi = {
     enable = lib.mkEnableOption ''
       Avahi mDNS/Zeroconf: resolve and publish .local hostnames on the LAN
-      (e.g. ssh <hostname>.local), and discover network printers for CUPS.
+      (e.g. ssh <hostname>.local).
     '';
   };
 

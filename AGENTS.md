@@ -38,7 +38,7 @@ modules/
   nixos/boot/         引导：GRUB、systemd-boot、initrd SSH
   nixos/hardware/     可选硬件支持
   nixos/security/     安全功能（firewall）
-  nixos/services/     与桌面无关的系统服务（远程访问、网络、内存、打印）
+  nixos/services/     与桌面无关的系统服务（远程访问、网络、内存）
   nixos/apps/         应用级系统服务（如 PostgreSQL）与用户工具集（如 AI 开发工具）
   nixos/desktop/      桌面：session/ 会话栈、apps/ 应用、environment/ 外观与输入
   nixos/storage/      Disko、Preservation 与存储维护（btrbk、scrub、smartd）

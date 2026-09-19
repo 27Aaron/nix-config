@@ -10,8 +10,7 @@ rec {
     initrdSsh = 22; # SSH inside initrd, used for remote LUKS unlock.
     resolved = 53; # systemd-resolved stub listener (loopback, router).
     openssh = 233; # OpenSSH daemon.
-    printing = 631; # CUPS IPP.
-    avahi = 5353; # Avahi mDNS: LAN hostname and printer discovery.
+    avahi = 5353; # Avahi mDNS: LAN hostname discovery.
     postgresql = 5432; # PostgreSQL.
     tang = 7654; # Tang key derivation service.
   };
