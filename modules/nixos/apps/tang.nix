@@ -1,6 +1,7 @@
 {
-  lib,
   config,
+  helpers,
+  lib,
   ...
 }:
 let
@@ -12,7 +13,7 @@ in
 
     port = lib.mkOption {
       type = lib.types.port;
-      default = 7654;
+      default = helpers.port.tang;
       description = "TCP port on which Tang listens";
     };
 

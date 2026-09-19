@@ -1,5 +1,6 @@
 {
   config,
+  helpers,
   lib,
   ...
 }:
@@ -21,7 +22,7 @@ in
 
     listenAddress = lib.mkOption {
       type = lib.types.str;
-      default = "127.0.0.1:3000";
+      default = "127.0.0.1:${helpers.portStr.coder}";
       description = "Address and port the Coder server listens on; use 0.0.0.0:3000 for direct LAN access";
     };
 

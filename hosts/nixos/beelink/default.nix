@@ -29,7 +29,6 @@
     # Network access
     networkmanager.enable = true;
     openssh.enable = true;
-    openssh.port = 233;
   };
 
   desktop' = {

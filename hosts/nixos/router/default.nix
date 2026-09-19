@@ -22,7 +22,6 @@
 
   services' = {
     openssh.enable = true;
-    openssh.port = 233;
     vnstat.enable = true;
     zram.enable = true;
   };

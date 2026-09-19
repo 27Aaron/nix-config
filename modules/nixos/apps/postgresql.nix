@@ -1,5 +1,6 @@
 {
   config,
+  helpers,
   lib,
   myvars,
   pkgs,
@@ -30,7 +31,7 @@ in
 
     port = lib.mkOption {
       type = lib.types.port;
-      default = 5432;
+      default = helpers.port.postgresql;
       description = "TCP port used by PostgreSQL";
     };
 

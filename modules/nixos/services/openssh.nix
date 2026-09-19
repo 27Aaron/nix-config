@@ -1,5 +1,6 @@
 {
   config,
+  helpers,
   lib,
   ...
 }:
@@ -12,7 +13,7 @@ in
 
     port = lib.mkOption {
       type = lib.types.port;
-      default = 22;
+      default = helpers.port.openssh;
       description = "TCP port on which OpenSSH listens";
     };
 

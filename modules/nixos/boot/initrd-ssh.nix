@@ -1,6 +1,7 @@
 {
-  lib,
   config,
+  helpers,
+  lib,
   ...
 }:
 let
@@ -16,7 +17,7 @@ in
 
     port = lib.mkOption {
       type = lib.types.port;
-      default = 22;
+      default = helpers.port.initrdSsh;
       description = "SSH port for initrd";
     };
 

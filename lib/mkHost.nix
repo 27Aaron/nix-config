@@ -6,12 +6,15 @@
   hostName,
 }:
 let
+  helpers = import ../helpers { inherit (inputs.nixpkgs) lib; };
+
   specialArgs = {
     inherit
       inputs
       myvars
       hostName
       platformName
+      helpers
       ;
   };
 in
