@@ -59,9 +59,6 @@
     in
     configurations
     // {
-      darwinModules.default = import ./modules "darwin";
-      nixosModules.default = import ./modules "nixos";
-
       checks = import ./lib/checks.nix {
         inherit
           self

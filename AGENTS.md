@@ -11,7 +11,7 @@
 ## 仓库结构
 
 ```
-flake.nix             Flake 入口：导出所有主机、devShells、formatter 和模块
+flake.nix             Flake 入口：导出所有主机、devShells、formatter 和 checks
 helpers/              共享库：作为 specialArgs 注入所有主机与 Home Manager
   default.nix         汇聚入口：展开 constants/ 下的注册表
   constants/          共享常量注册表
