@@ -17,6 +17,8 @@ lib/
   default.nix         通用函数：scanPaths 递归收集模块路径
   platforms.nix       平台差异表：构建器、Home Manager 模块、模块目录、用户主目录
   mkHost.nix          主机构建器：specialArgs、Home Manager 接线与主机目录组装
+  checks.nix          flake checks：格式、deadnix、darwin 求值与主机断言
+  eval-tests.nix      主机关键值断言：冻结主机角色与关键配置
 hosts/
   default.nix         主机发现：目录名即 flake 里的主机名
   darwin/<host>/      nix-darwin 主机（default.nix）
@@ -167,7 +169,7 @@ deadnix --fail .
 nix flake check --all-systems --no-build
 ```
 
-flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix` 和 `darwin-eval`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖。`--no-build` 时 checks 只求值不执行，本地检查用 `just check`。
+flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix`、`darwin-eval` 和 `hosts-eval`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖；`hosts-eval` 按 `lib/eval-tests.nix` 的清单断言各主机的角色与关键配置值（有意改变行为时同步更新清单）。`--no-build` 时 checks 只求值不执行，本地检查用 `just check`。
 
 不带 `--all-systems` 时，flake check 只求值与本机架构相同的主机（例如在 Apple Silicon 上会跳过全部 NixOS 主机）。如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
 

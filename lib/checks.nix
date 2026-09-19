@@ -7,6 +7,8 @@
 let
   inherit (nixpkgs) lib;
   forEachSystem = lib.genAttrs supportedSystems;
+
+  evalTestFailures = import ./eval-tests.nix { inherit lib configurations; };
 in
 forEachSystem (
   system:
@@ -35,6 +37,16 @@ forEachSystem (
           _: host: lib.unsafeDiscardStringContext host.system.drvPath
         ) configurations.darwinConfigurations
       );
+    } "touch $out";
+
+    # Frozen per-host invariants (lib/eval-tests.nix): fail the check when
+    # any expectation no longer holds.
+    hosts-eval = pkgs.runCommand "check-hosts-eval" {
+      result =
+        if evalTestFailures == [ ] then
+          "ok"
+        else
+          throw "host assertion failures:\n${lib.concatStringsSep "\n" evalTestFailures}";
     } "touch $out";
   }
 )
