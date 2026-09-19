@@ -24,9 +24,11 @@ in
     # Unlock the login keyring at greetd login, and keep it in sync when
     # the login password changes via passwd — without these, Secret
     # Service clients (gh, browsers) keep asking for a separate keyring
-    # password.
-    security.pam.services.greetd.enableGnomeKeyring = true;
-    security.pam.services.passwd.enableGnomeKeyring = true;
+    # password. The greetd PAM stack substacks `login`, which carries
+    # pam_gnome_keyring once the keyring service is on, so it needs no
+    # entry of its own; follow the keyring service state so hosts without
+    # it do not get keyring PAM rules.
+    security.pam.services.passwd.enableGnomeKeyring = config.services.gnome.gnome-keyring.enable;
 
     # Niri can also enable the native service, so follow its final state.
     preservation'.user.directories = lib.optionals config.services.gnome.gnome-keyring.enable [
