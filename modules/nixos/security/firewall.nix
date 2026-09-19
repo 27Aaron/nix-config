@@ -20,6 +20,7 @@ in
       nftables.enable = true;
     };
 
-    preservation'.os.directories = [ "/var/lib/nftables" ];
+    # The nftables service owns /var/lib/nftables as a systemd StateDirectory
+    # recreated on every boot, so it needs no persistence entry.
   };
 }

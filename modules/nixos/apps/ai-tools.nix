@@ -32,17 +32,31 @@ in
     };
 
     preservation'.user = {
+      # Credentials and session state; keep them private to the user.
       directories = [
-        ".claude"
-        ".codex"
-        ".dsh"
-        ".zcode"
+        {
+          directory = ".claude";
+          mode = "0700";
+        }
+        {
+          directory = ".codex";
+          mode = "0700";
+        }
+        {
+          directory = ".dsh";
+          mode = "0700";
+        }
+        {
+          directory = ".zcode";
+          mode = "0700";
+        }
       ];
 
       files = [
         {
           file = ".claude.json";
           how = "bindmount";
+          mode = "0600";
         }
       ];
     };
