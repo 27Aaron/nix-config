@@ -2,11 +2,14 @@
 #
 # Each entry pins a host role or a value that is easy to break when shared
 # modules change (e.g. a server accidentally gaining the desktop stack).
-# Update the expectations deliberately when the behavior is meant to change;
+# Values that live in the shared registries (the SSH port) are referenced
+# instead of frozen, so a registry change flows through the expectations.
+# Update the rest deliberately when the behavior is meant to change;
 # lib/checks.nix turns any mismatch into a failed flake check.
 {
   lib,
   configurations,
+  port,
 }:
 let
   expectations = {
@@ -22,7 +25,7 @@ let
       elaina = {
         "desktop'.niri.enable" = true;
         "desktop'.niri.autoLogin" = true;
-        "services'.openssh.port" = 233;
+        "services'.openssh.port" = port.openssh;
         "security'.firewall.enable" = true;
         "tools'.ai.enable" = true;
       };
@@ -30,7 +33,7 @@ let
       beelink = {
         "desktop'.apps.zed.enable" = true;
         "desktop'.niri.enable" = true;
-        "services'.openssh.port" = 233;
+        "services'.openssh.port" = port.openssh;
         "security'.firewall.enable" = true;
         "tools'.ai.enable" = true;
       };
@@ -42,7 +45,7 @@ let
         "tools'.ai.enable" = false;
         "tools'.dev.enable" = false;
         "nix.settings.max-jobs" = 1;
-        "services'.openssh.port" = 233;
+        "services'.openssh.port" = port.openssh;
         "security'.firewall.enable" = true;
       };
     };

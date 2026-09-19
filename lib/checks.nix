@@ -8,7 +8,13 @@ let
   inherit (nixpkgs) lib;
   forEachSystem = lib.genAttrs supportedSystems;
 
-  evalTestFailures = import ./eval-tests.nix { inherit lib configurations; };
+  # The port registry is platform-independent, so it can be read directly
+  # without evaluating the per-host helpers.
+  port = (import ../helpers/constants/ports.nix { inherit lib; }).port;
+
+  evalTestFailures = import ./eval-tests.nix {
+    inherit lib configurations port;
+  };
 in
 forEachSystem (
   system:
