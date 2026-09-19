@@ -14,9 +14,9 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      alejandra
       deadnix
       nixd
+      nixfmt-rs
     ];
 
     hm'.programs.direnv = {

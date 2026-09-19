@@ -42,7 +42,7 @@
   };
 
   outputs =
-    inputs@{ nixpkgs, ... }:
+    inputs@{ self, nixpkgs, ... }:
     let
       inherit (nixpkgs) lib;
 
@@ -59,6 +59,15 @@
     // {
       darwinModules.default = import ./modules "darwin";
       nixosModules.default = import ./modules "nixos";
+
+      checks = import ./lib/checks.nix {
+        inherit
+          self
+          nixpkgs
+          configurations
+          supportedSystems
+          ;
+      };
 
       devShells = forEachSystem (
         system:

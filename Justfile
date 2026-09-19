@@ -9,7 +9,6 @@ check:
     @nix fmt . -- --check
     @deadnix --fail .
     @nix flake check path:. --no-build --all-systems
-    @nix eval path:.#darwinConfigurations --json --apply 'builtins.mapAttrs (_: host: host.system.drvPath)' >/dev/null
 
 # Build and activate the nix-darwin configuration
 [macos]

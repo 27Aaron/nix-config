@@ -167,6 +167,8 @@ deadnix --fail .
 nix flake check --all-systems --no-build
 ```
 
+flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix` 和 `darwin-eval`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖。`--no-build` 时 checks 只求值不执行，本地检查用 `just check`。
+
 不带 `--all-systems` 时，flake check 只求值与本机架构相同的主机（例如在 Apple Silicon 上会跳过全部 NixOS 主机）。如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
 
 检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值。仓库不设远程 CI 检查，GitHub 上仅保留 issue/PR 的标签和依赖更新自动化。
