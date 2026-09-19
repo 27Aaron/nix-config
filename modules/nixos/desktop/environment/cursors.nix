@@ -13,6 +13,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = config.hm'.gtk.enable;
+        message = "desktop'.cursors requires the GTK module (desktop'.themes) to apply the cursor theme to GTK applications";
+      }
+    ];
+
     hm'.home.pointerCursor = {
       enable = true;
       package = pkgs.bibata-cursors;

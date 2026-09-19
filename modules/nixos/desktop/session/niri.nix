@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  myvars,
   pkgs,
   ...
 }:
@@ -20,20 +19,21 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !cfg.autoLogin || config.desktop'.greetd.enable;
+        message = "desktop'.niri.autoLogin requires desktop'.greetd.enable, which drives the login screen";
+      }
+    ];
+
     environment.systemPackages = [ pkgs.xwayland-satellite ];
 
     programs.niri.enable = true;
 
-    # Register the session with greetd when it drives the login screen; the
-    # greeter command itself is assembled by the greetd module.
+    # Report the session to greetd when it drives the login screen; the
+    # greeter command and autologin assembly stay inside the greetd module.
     desktop'.greetd.sessionCommand = lib.mkIf config.desktop'.greetd.enable niriSession;
-
-    services.greetd.settings = lib.mkIf (cfg.autoLogin && config.desktop'.greetd.enable) {
-      initial_session = {
-        command = niriSession;
-        user = myvars.username;
-      };
-    };
+    desktop'.greetd.autoLogin = lib.mkIf config.desktop'.greetd.enable cfg.autoLogin;
 
     preservation'.user.directories = [
       # Niri
