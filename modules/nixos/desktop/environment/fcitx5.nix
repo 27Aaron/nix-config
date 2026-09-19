@@ -1,5 +1,6 @@
 {
   config,
+  helpers,
   lib,
   pkgs,
   ...
@@ -130,7 +131,7 @@ in
 
     hm'.xdg.configFile."fcitx5/conf/classicui.conf".text = ''
       Vertical Candidate List=False
-      Font=LXGW WenKai,Source Han Sans SC Medium 13
+      Font=${helpers.fonts.cjk},Source Han Sans SC Medium 13
       Theme=ayaya-day
       DarkTheme=ayaya-night
       UseDarkTheme=True

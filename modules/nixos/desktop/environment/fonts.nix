@@ -39,12 +39,12 @@ in
 
       fontconfig.defaultFonts = {
         serif = [
-          "LXGW WenKai"
+          helpers.fonts.cjk
           "Source Han Serif SC"
           "Source Han Serif TC"
         ];
         sansSerif = [
-          "LXGW WenKai"
+          helpers.fonts.cjk
           "Source Han Sans SC"
           "Source Han Sans TC"
         ];
