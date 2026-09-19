@@ -32,7 +32,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.nftables.enable = lib.mkDefault true;
+    # The filter table below only loads with nftables; require it instead
+    # of letting a host silently disable the feature.
+    networking.nftables.enable = true;
 
     networking.nftables.tables.arp-filter = {
       family = "arp";
