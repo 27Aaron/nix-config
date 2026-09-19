@@ -42,7 +42,11 @@ in
       description = "Network CIDRs allowed to authenticate remotely when openFirewall is enabled";
     };
 
-    openFirewall = lib.mkEnableOption "Open firewall port for PostgreSQL";
+    openFirewall = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to open the PostgreSQL port in the firewall";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -59,14 +63,15 @@ in
       enableJIT = true;
       enableTCPIP = cfg.openFirewall;
 
+      # Tuning defaults; hosts may override individual values.
       settings = {
         port = cfg.port;
-        max_connections = 100;
-        log_connections = true;
-        log_statement = "ddl";
-        log_disconnections = true;
-        shared_buffers = "128MB";
-        huge_pages = "try";
+        max_connections = lib.mkDefault 100;
+        log_connections = lib.mkDefault true;
+        log_statement = lib.mkDefault "ddl";
+        log_disconnections = lib.mkDefault true;
+        shared_buffers = lib.mkDefault "128MB";
+        huge_pages = lib.mkDefault "try";
       };
 
       identMap = ''

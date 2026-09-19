@@ -12,7 +12,11 @@ in
 {
   options.desktop'.niri = {
     enable = lib.mkEnableOption "Niri desktop environment";
-    autoLogin = lib.mkEnableOption "automatic login to the Niri session";
+    autoLogin = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to log in to the Niri session automatically";
+    };
   };
 
   config = lib.mkIf cfg.enable {

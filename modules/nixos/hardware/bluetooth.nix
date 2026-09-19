@@ -11,10 +11,12 @@ in
     enable = lib.mkEnableOption "Bluetooth support";
   };
 
-  config = lib.mkIf cfg.enable {
-    hardware.bluetooth.enable = true;
+  config = {
+    hardware.bluetooth.enable = lib.mkIf cfg.enable true;
 
-    preservation'.os.directories = [
+    # Upstream consumers may enable this service on their own, so persistence
+    # follows the final service state, whoever turned it on.
+    preservation'.os.directories = lib.optionals config.hardware.bluetooth.enable [
       # Bluetooth
       {
         directory = "/var/lib/bluetooth";
