@@ -7,7 +7,8 @@
 }:
 let
   # Only manage the Karabiner configuration when the cask list installs it.
-  enabled = lib.elem "karabiner-elements" osConfig.homebrew.casks;
+  # nix-darwin normalises casks into attrs, so compare on the name field.
+  enabled = lib.any (c: (c.name or c) == "karabiner-elements") osConfig.homebrew.casks;
   generatedConfig = builtins.toFile "karabiner.json" (
     builtins.toJSON {
       profiles = [

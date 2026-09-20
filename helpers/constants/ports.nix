@@ -11,8 +11,6 @@ rec {
     resolved = 53; # systemd-resolved stub listener (loopback, router).
     openssh = 233; # OpenSSH daemon.
     avahi = 5353; # Avahi mDNS: LAN hostname discovery.
-    postgresql = 5432; # PostgreSQL.
-    tang = 7654; # Tang key derivation service.
   };
 
   # String form for config templates and string interpolation, since Nix

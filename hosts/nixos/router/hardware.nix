@@ -23,10 +23,9 @@
   # not fill up with LTO kernels (~50M per generation).
   boot.loader.systemd-boot.configurationLimit = 4;
 
-  # Guest storage and virtio modules come from the qemu-guest profile above
-  # and hardware'.qemu; the NixOS initrd defaults cover SATA/USB/SCSI, so
-  # this host keeps no hand-written module list.
-  hardware'.qemu.enable = true;
+  # Guest storage and virtio modules come from the qemu-guest profile
+  # above; the NixOS initrd defaults cover SATA/USB/SCSI, so this host
+  # keeps no hand-written module list.
 
   # Keep the balloon driver disabled: the host reclaiming memory from this
   # VM would starve the router.

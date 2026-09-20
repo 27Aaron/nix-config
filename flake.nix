@@ -30,16 +30,6 @@
     };
 
     preservation.url = "github:nix-community/preservation";
-
-    secrets = {
-      url = "git+ssh://git@github.com/27Aaron/nix-secrets.git?shallow=1";
-      flake = false;
-    };
-
-    nur-aaron = {
-      url = "github:27Aaron/nur-packages";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = inputs: import ./outputs inputs;

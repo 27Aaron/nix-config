@@ -337,26 +337,6 @@
         "type": "github"
       }
     },
-    "nur-aaron": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1789781347,
-        "narHash": "sha256-6r9OC+h5IJLOlBiC6deLy4FyqliL40GyR8mJwnECUVI=",
-        "owner": "27Aaron",
-        "repo": "nur-packages",
-        "rev": "c4b4a7319e4f9745749811e630461826e993a268",
-        "type": "github"
-      },
-      "original": {
-        "owner": "27Aaron",
-        "repo": "nur-packages",
-        "type": "github"
-      }
-    },
     "preservation": {
       "locked": {
         "lastModified": 1757436102,
@@ -381,26 +361,7 @@
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_3",
-        "nur-aaron": "nur-aaron",
-        "preservation": "preservation",
-        "secrets": "secrets"
-      }
-    },
-    "secrets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1786003969,
-        "narHash": "sha256-46DGBOWq0AjoYgqBwOZqGHLRWl/B+AY0No/+vZix0Rw=",
-        "ref": "refs/heads/main",
-        "rev": "a1c09f2e93a2fc81569301956f03f81472b7e56e",
-        "shallow": true,
-        "type": "git",
-        "url": "ssh://git@github.com/27Aaron/nix-secrets.git"
-      },
-      "original": {
-        "shallow": true,
-        "type": "git",
-        "url": "ssh://git@github.com/27Aaron/nix-secrets.git"
+        "preservation": "preservation"
       }
     },
     "systems": {
