@@ -1,20 +1,16 @@
+# Flake checks: formatting, dead code, and host evaluation.
+#
+# `just check` evaluates these locally; the repository has no remote CI.
 {
   self,
   nixpkgs,
   configurations,
-  supportedSystems,
+  evalTestFailures,
+  systemNames,
 }:
 let
   inherit (nixpkgs) lib;
-  forEachSystem = lib.genAttrs supportedSystems;
-
-  # The port registry is platform-independent, so it can be read directly
-  # without evaluating the per-host helpers.
-  port = (import ../helpers/constants/ports.nix { inherit lib; }).port;
-
-  evalTestFailures = import ./eval-tests.nix {
-    inherit lib configurations port;
-  };
+  forEachSystem = lib.genAttrs systemNames;
 in
 forEachSystem (
   system:
@@ -45,8 +41,8 @@ forEachSystem (
       );
     } "touch $out";
 
-    # Frozen per-host invariants (lib/eval-tests.nix): fail the check when
-    # any expectation no longer holds.
+    # Frozen per-host invariants (outputs/<system>/tests/): fail the check
+    # when any expectation no longer holds.
     hosts-eval = pkgs.runCommand "check-hosts-eval" {
       result =
         if evalTestFailures == [ ] then

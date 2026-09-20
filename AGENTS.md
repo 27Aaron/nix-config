@@ -11,14 +11,24 @@
 ## 仓库结构
 
 ```
-flake.nix             Flake 入口：导出所有主机、devShells、formatter 和 checks
+flake.nix             Flake 入口：inputs 与一行 outputs = import ./outputs
+outputs/              Flake 输出组装
+  default.nix         汇总各 system 输出，定义 checks、devShells、formatter
+  checks.nix          format、deadnix、darwin-eval、hosts-eval 检查
+  <system>/           按系统架构组织（aarch64-darwin、x86_64-linux）
+    default.nix       汇总本 system 的主机输出与 eval tests
+    src/<host>.nix    每主机一个文件：显式声明该主机的 flake 输出
+    tests/<host>.nix  每主机一个文件：角色与关键配置断言
 helpers/              共享库
   default.nix         汇聚入口：展开 constants/ 下的注册表
   constants/          共享常量注册表
 lib/                  通用函数与构建器
+  assertions.nix      eval test 断言 helper（checkAttrs）
   default.nix         scanPaths 递归收集模块路径
-hosts/                主机配置
-  default.nix         主机发现：目录名即 flake 里的主机名
+  mkHost.nix          主机构建器
+  mkSystemOutputs.nix 按 system 组装主机输出与 eval tests
+  platforms.nix       平台差异：darwin/nixos 的 builder 与模块目录
+hosts/                主机配置：目录名即 flake 里的主机名
   darwin/             nix-darwin 主机
   nixos/              NixOS 主机
 modules/              系统模块
@@ -38,7 +48,8 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 
 装配与自动发现：
 
-- `hosts/default.nix` 把 `hosts/<平台>/<主机名>/default.nix` 构造成一台主机，目录名即 flake 里的主机名；构建器在 `lib/mkHost.nix`，平台差异集中在 `lib/platforms.nix`。
+- 输出组装集中在 `outputs/`：`flake.nix` 只保留 inputs 和 `outputs = inputs: import ./outputs inputs`。`outputs/default.nix` 合并各 system 的输出并定义 `checks`、`devShells`、`formatter`；每台主机在 `outputs/<system>/src/<主机名>.nix` 显式声明 flake 输出（`<system>Configurations.<主机名> = mkHost "<主机名>"`），角色断言在 `outputs/<system>/tests/<主机名>.nix`。`lib/mkSystemOutputs.nix` 按 system 加载这两组文件（复用 `scanPaths`），构建器在 `lib/mkHost.nix`，平台差异集中在 `lib/platforms.nix`。
+- 新增主机 = 建 `hosts/<平台>/<主机名>/` 主机模块目录（目录名即 flake 里的主机名），并在 `outputs/<system>/src/` 与 `tests/` 各加一个同名文件。
 - 每台主机注入同一组 `specialArgs`：`inputs`、`myvars`、`hostName`、`platformName`、`helpers`；Home Manager 通过 `extraSpecialArgs` 收到同一组，并以 `backupFileExtension = "hm-bak"` 接入主用户。模块和 Home Manager 文件可以直接取用这些参数。
 - `helpers` 由 `lib/mkHost.nix` 从 `helpers/default.nix` 求值注入（求值时带上 `platformName`，`path.nix` 等按平台计算的常量由此而来）；`myvars` 就是其中的 `user` 注册表。模块通过 `helpers.port.openssh`、`helpers.portStr.openssh`、`helpers.nix.substituters`、`helpers.path.nixConfig`、`helpers.btrfs.pool`、`helpers.fonts.monospace` 等路径引用共享常量。
 - `modules/default.nix` 与 `home/default.nix` 共用 `lib/default.nix` 的 `scanPaths` 递归收集：含 `default.nix` 的目录作为单个模块整体导入，否则继续下钻；普通 `.nix` 文件直接导入。前者收集 `modules/common/` 与当前平台模块目录，后者收集 `home/common/` 与当前平台 Home Manager 目录。新增模块放入正确的职责目录即可，无需登记。
@@ -189,7 +200,7 @@ deadnix --fail .
 nix flake check path:. --no-build --all-systems
 ```
 
-flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix`、`darwin-eval` 和 `hosts-eval`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖；`hosts-eval` 按 `lib/eval-tests.nix` 的清单断言各主机的角色与关键配置值（有意改变行为时同步更新清单）。`--no-build` 时 checks 只求值不执行。
+flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix`、`darwin-eval` 和 `hosts-eval`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖；`hosts-eval` 按 `outputs/<system>/tests/` 下各主机的断言检查其角色与关键配置值（有意改变行为时同步更新对应文件）。`--no-build` 时 checks 只求值不执行。
 
 两点注意：
 

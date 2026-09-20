@@ -50,14 +50,16 @@ git clone https://github.com/27Aaron/nix-config.git ~/nix-config
 cd ~/nix-config
 ```
 
-主机目录名必须与 `hostname -s` 的结果一致。仓库默认主机为 `luna`，如果当前主机名不同，请重命名目录：
+主机目录名必须与 `hostname -s` 的结果一致。仓库默认主机为 `luna`，如果当前主机名不同，请重命名目录与输出声明文件：
 
 ```bash
 host_name="$(hostname -s)"
 mv hosts/darwin/luna "hosts/darwin/$host_name"
+mv outputs/aarch64-darwin/src/luna.nix "outputs/aarch64-darwin/src/$host_name.nix"
+mv outputs/aarch64-darwin/tests/luna.nix "outputs/aarch64-darwin/tests/$host_name.nix"
 ```
 
-重命名后，同步更新 `lib/eval-tests.nix` 中 `darwinConfigurations` 下的主机名（默认 `luna`），否则 `just check` 会因找不到该主机而失败。
+再把两个输出文件内容里的 `luna` 改为新主机名（`src/` 的声明与 `tests/` 的断言引用），否则 `just check` 会因找不到该主机而失败。
 
 检查以下配置：
 
