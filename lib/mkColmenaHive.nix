@@ -1,13 +1,6 @@
-# Build the `colmenaHive` flake output (colmena 0.5 schema) from the
-# evaluated nixosConfigurations.
-#
-# Colmena's own `lib.makeHive` re-evaluates every node from scratch, which
-# would evaluate the whole NixOS configuration a second time. Mapping the
-# existing nixosConfigurations instead reuses the evaluation that
-# `nix flake check` and the build commands already perform, so hosts are
-# never evaluated twice. The schema is what `colmena.lib.makeHive` emits
-# (see colmena's src/nix/hive/eval.nix); update this file when colmena
-# bumps __schema.
+# Build the `colmenaHive` flake output (colmena 0.5 schema) from the evaluated
+# nixosConfigurations instead of `lib.makeHive`, which would re-evaluate every
+# host. Schema mirrors colmena's src/nix/hive/eval.nix; update on __schema bumps.
 {
   lib,
   nixosConfigurations,

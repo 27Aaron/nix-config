@@ -14,20 +14,13 @@ in
   config = {
     services.gnome.gnome-keyring.enable = lib.mkIf cfg.enable true;
 
-    # Seahorse is the keyring's GUI front-end and is useless on its own,
-    # so it follows the same switch.
-    # Pitfall: never create a "Default keyring" in Seahorse — PAM only
-    # unlocks the "login" keyring, so a second default keyring would fork
-    # secrets into a container that never syncs with the login password.
+    # Seahorse (keyring GUI) follows the same switch. Pitfall: never create a "Default keyring";
+    # PAM only unlocks "login", so secrets would never sync with the login password.
     programs.seahorse.enable = lib.mkIf cfg.enable true;
 
-    # Unlock the login keyring at greetd login, and keep it in sync when
-    # the login password changes via passwd — without these, Secret
-    # Service clients (gh, browsers) keep asking for a separate keyring
-    # password. The greetd PAM stack substacks `login`, which carries
-    # pam_gnome_keyring once the keyring service is on, so it needs no
-    # entry of its own; follow the keyring service state so hosts without
-    # it do not get keyring PAM rules.
+    # Unlock the login keyring at greetd login and resync it on passwd, else Secret Service
+    # clients (gh, browsers) keep prompting. greetd's PAM stack substacks `login` (carrying
+    # pam_gnome_keyring), so no entry is needed here; gated on the service state.
     security.pam.services.passwd.enableGnomeKeyring = config.services.gnome.gnome-keyring.enable;
 
     # Niri can also enable the native service, so follow its final state.

@@ -1,13 +1,6 @@
-###################################################################################
-#
-#  macOS's System configuration
-#
-#  All the configuration options are documented here:
-#    https://daiderd.com/nix-darwin/manual/index.html#sec-options
-#  Incomplete list of macOS `defaults` commands :
-#    https://github.com/yannbertrand/macos-defaults
-#
-###################################################################################
+# macOS system defaults.
+# Options: https://daiderd.com/nix-darwin/manual/index.html#sec-options
+# `defaults` reference: https://github.com/yannbertrand/macos-defaults
 {
   ...
 }:
@@ -89,12 +82,8 @@
         NSNavPanelExpandedStateForSaveMode2 = true; # 保存文件时的路径选择/文件名输入页
       };
 
-      # 以下设置暂无 nix-darwin 原生选项，通过 defaults 命令直接写入。
-      # 更多未文档化选项可参考 m-cli 源码：
-      #    https://github.com/rgcr/m-cli
-      #
-      # 已写入的条目可用 `defaults read` 查看，
-      # 或用 `defaults read <domain>` 查看单个域。
+      # 暂无 nix-darwin 原生选项，通过 defaults 直接写入；已写入条目可用 `defaults read` 查看。
+      # 未文档化选项参考 m-cli 源码：https://github.com/rgcr/m-cli
       CustomUserPreferences = {
         ".GlobalPreferences" = {
           # 切换应用时自动切换到它所在的空间

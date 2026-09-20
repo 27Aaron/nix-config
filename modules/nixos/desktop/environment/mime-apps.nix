@@ -56,8 +56,7 @@ in
         "x-scheme-handler/http" = browser;
         "x-scheme-handler/https" = browser;
 
-        # VS Code is preferred for text files; GNOME Text Editor is the
-        # fallback.
+        # VS Code is preferred for text files; GNOME Text Editor is the fallback.
         "text/plain" = editor;
         "application/x-zerosize" = editor;
         "application/x-wine-extension-ini" = editor;
@@ -68,9 +67,8 @@ in
         # Telegram URL links use the tg:// scheme.
         "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
 
-        # These applications are installed by applications.nix. Their
-        # associations are listed explicitly so package metadata cannot
-        # silently change the user's defaults.
+        # Listed explicitly so package metadata cannot silently change the
+        # user's defaults; the apps themselves come from applications.nix.
         "audio/*" = mediaPlayer;
         "video/*" = mediaPlayer;
         "image/*" = imageViewer;

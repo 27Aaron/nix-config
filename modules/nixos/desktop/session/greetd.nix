@@ -60,7 +60,6 @@ in
     };
 
     preservation'.os.directories = [
-      # Tuigreet
       {
         directory = "/var/cache/tuigreet";
         user = "greeter";

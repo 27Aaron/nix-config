@@ -1,9 +1,4 @@
-#####################################################
-#
-# Router - A NixOS VM running on Proxmox
-#   (4 vCPU, 1 GB RAM, 32 GB disk)
-#
-#####################################################
+# Router - NixOS VM on Proxmox (4 vCPU, 1 GB RAM, 32 GB disk)
 { lib, ... }:
 {
   imports = [
@@ -14,8 +9,8 @@
   # Avoid concurrent local builds exhausting the VM's 1 GB memory limit.
   nix.settings.max-jobs = 1;
 
-  # Replace the default journald bounds entirely; the 1 GB VM should not
-  # keep the 256M in-RAM journal.
+  # Replace the default journald bounds entirely; the 1 GB VM should
+  # not keep the 256M in-RAM journal.
   services.journald.settings.Journal = lib.mkForce {
     SystemMaxUse = "128M";
   };

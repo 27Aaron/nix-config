@@ -1,6 +1,5 @@
-# Bridge for pure Home Manager tools: they cannot write NixOS-side
-# preservation options directly, so they report their state here and the
-# storage persistence module splices it into preservation'.
+# Bridge for pure Home Manager tools: they cannot write NixOS-side preservation
+# options, so they report their state here and the persistence module splices it in.
 { lib, ... }:
 {
   options.persist' = {

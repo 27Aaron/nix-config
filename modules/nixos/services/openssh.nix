@@ -17,8 +17,7 @@ in
       enable = true;
       ports = [ helpers.port.openssh ];
 
-      # Only the Ed25519 host identity is needed; upstream also generates
-      # an RSA key by default.
+      # Only the Ed25519 host identity is needed; upstream also generates an RSA key by default.
       hostKeys = lib.mkDefault [
         {
           path = "/etc/ssh/ssh_host_ed25519_key";
@@ -30,10 +29,8 @@ in
         # root user is used for remote deployment, so we need to allow it
         PermitRootLogin = lib.mkDefault "prohibit-password";
         PasswordAuthentication = lib.mkDefault false;
-        # Closing the keyboard-interactive channel leaves publickey as the
-        # only authentication method, no matter how the PAM stack is
-        # composed (older nixpkgs let the unix password through here, and
-        # any future PAM module like OTP would also ride this channel).
+        # Closing this channel leaves publickey as the only method regardless of
+        # the PAM stack (older nixpkgs let the unix password through here).
         KbdInteractiveAuthentication = lib.mkDefault false;
         # Pure Wayland hosts gain nothing from X11 forwarding.
         X11Forwarding = lib.mkDefault false;

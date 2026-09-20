@@ -9,9 +9,8 @@
   ];
 
   boot = {
-    # Classic interface naming: the NIC shows up as eth0 instead of a
-    # predictable name like ens18. audit=0 turns off the kernel audit
-    # subsystem, whose event log is noise on a home router VM.
+    # net.ifnames=0 gives the NIC a classic eth0 name; audit=0 silences the
+    # kernel audit log, which is pure noise on a home router VM.
     kernelParams = [
       "audit=0"
       "net.ifnames=0"
@@ -23,12 +22,11 @@
   # not fill up with LTO kernels (~50M per generation).
   boot.loader.systemd-boot.configurationLimit = 4;
 
-  # Guest storage and virtio modules come from the qemu-guest profile
-  # above; the NixOS initrd defaults cover SATA/USB/SCSI, so this host
-  # keeps no hand-written module list.
+  # No hand-written initrd module list: virtio comes from the qemu-guest
+  # profile above, and the NixOS defaults cover SATA/USB/SCSI.
 
-  # Keep the balloon driver disabled: the host reclaiming memory from this
-  # VM would starve the router.
+  # Keep the balloon driver disabled: the host reclaiming memory from
+  # this VM would starve the router.
   hardware'.disable-balloon.enable = true;
 
   # PVE uses the guest agent for clean shutdown and IP reporting.

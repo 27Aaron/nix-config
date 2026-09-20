@@ -25,16 +25,13 @@ in
     boot.loader.grub = {
       enable = true;
       efiSupport = lib.mkDefault true;
-      # Removable install boots via the fallback \EFI\BOOT path, so firmware
-      # never needs an NVRAM entry — and upstream forbids pairing this with
-      # boot.loader.efi.canTouchEfiVariables anyway.
+      # Removable install boots via \EFI\BOOT, needing no NVRAM entry; upstream
+      # also forbids pairing this with boot.loader.efi.canTouchEfiVariables.
       efiInstallAsRemovable = lib.mkDefault true;
       configurationLimit = lib.mkDefault 8;
 
-      # With a BIOS boot partition (hardware'.disko.bios.enable) GRUB also
-      # installs onto the disk itself, with the ESP staying populated as a
-      # fallback; pure UEFI hosts install nothing but the removable EFI
-      # binary, which upstream expresses as the special device "nodev".
+      # With a BIOS boot partition GRUB also installs onto the disk itself (ESP
+      # kept as fallback); pure UEFI hosts use upstream's special "nodev" device.
       device = lib.mkDefault (if diskoCfg.bios.enable then diskoCfg.device else "nodev");
 
       # Kernels live in the Nix store on the encrypted btrfs root, so GRUB

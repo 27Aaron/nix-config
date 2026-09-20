@@ -1,9 +1,6 @@
-# Remote deployment metadata for colmena (see the `deploy` recipes).
-#
-# The deployment.* options come from colmena's NixOS module; hosts only
-# declare their own tags, everything else is derived from the shared
-# registries. allowLocalDeployment lets a host deploy itself from its own
-# checkout with `colmena apply-local`.
+# Remote deployment metadata for colmena (see the `deploy` recipes). The colmena
+# module provides deployment.*; hosts only set their own tags, and
+# allowLocalDeployment enables `colmena apply-local` from the host's checkout.
 {
   helpers,
   hostName,

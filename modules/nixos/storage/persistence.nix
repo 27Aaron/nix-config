@@ -42,9 +42,8 @@ in
       ];
     };
 
-    # Baseline user state shared by every host. State owned by a feature is
-    # declared in that feature's module; Home Manager tools report theirs via
-    # persist' and get spliced in here.
+    # Baseline user state for every host; feature-owned state is declared in the
+    # owning module and Home Manager tools report theirs via persist'.
     preservation'.user.directories = [
       # Keep caches off the tmpfs root to avoid excessive RAM usage.
       {

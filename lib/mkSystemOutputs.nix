@@ -1,9 +1,6 @@
-# Build the flake outputs for one system: host configurations are derived
-# from the directories under hosts/<platform>/, and the eval tests under
-# outputs/<system>/tests/ assert the frozen invariants of a host.
-#
-# Adding a host means creating hosts/<platform>/<name>/default.nix; the
-# flake output (and its eval test, if any) are picked up automatically.
+# Flake outputs for one system: host configurations from hosts/<platform>/ and
+# the eval tests under outputs/<system>/tests/. Adding hosts/<platform>/<name>/
+# default.nix is enough — the output and its eval test are picked up automatically.
 {
   inputs,
   lib,
@@ -31,7 +28,6 @@ let
         ;
     };
 
-  # A host is a directory under hosts/<platform>/ that has a default.nix.
   hostNames = builtins.attrNames (
     lib.filterAttrs (
       name: type: type == "directory" && builtins.pathExists (hostsDir + "/${name}/default.nix")

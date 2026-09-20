@@ -1,8 +1,5 @@
-# Assemble all flake outputs.
-#
-# Per-system outputs (host configurations and their eval tests) come from
-# lib/mkSystemOutputs.nix; this file merges them and adds the flake-level
-# outputs (checks, devShells, formatter).
+# Assemble all flake outputs: per-system ones (host configurations and eval tests)
+# from lib/mkSystemOutputs.nix, plus flake-level ones (checks, devShells, formatter).
 inputs@{
   self,
   nixpkgs,

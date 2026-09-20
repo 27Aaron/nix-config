@@ -28,8 +28,8 @@ in
       uv
     ];
 
-    # Runtime state of the toolset above: direnv .envrc allow-list and
-    # uv-managed interpreters and tools.
+    # Runtime state of the toolset above: the direnv .envrc allow-list
+    # and uv-managed interpreters and tools.
     hm'.persist'.directories = [
       ".local/share/direnv"
       ".local/share/uv"

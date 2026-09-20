@@ -17,7 +17,6 @@ in
     # Upstream consumers may enable this service on their own, so persistence
     # follows the final service state, whoever turned it on.
     preservation'.os.directories = lib.optionals config.hardware.bluetooth.enable [
-      # Bluetooth
       {
         directory = "/var/lib/bluetooth";
         mode = "0700";

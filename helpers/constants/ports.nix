@@ -1,9 +1,6 @@
-# Service port registry. Modules and hosts reference these constants
-# instead of bare numbers, so a port lives in exactly one place.
-#
-# Ports fixed by protocol or upstream (resolved, avahi) have no port
-# option to rebind; their modules assert the registered value stays in
-# sync.
+# Service port registry: modules and hosts reference these constants instead of
+# bare numbers. Ports fixed by protocol or upstream (resolved, avahi) have no
+# port option to rebind, so their modules assert the registered value stays in sync.
 {
   port = {
     initrdSsh = 22; # SSH inside initrd, used for remote LUKS unlock.

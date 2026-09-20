@@ -35,9 +35,6 @@ in
     desktop'.greetd.sessionCommand = lib.mkIf config.desktop'.greetd.enable niriSession;
     desktop'.greetd.autoLogin = lib.mkIf config.desktop'.greetd.enable cfg.autoLogin;
 
-    preservation'.user.directories = [
-      # Niri
-      ".config/niri"
-    ];
+    preservation'.user.directories = [ ".config/niri" ];
   };
 }

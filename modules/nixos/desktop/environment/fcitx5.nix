@@ -120,9 +120,8 @@ in
       };
     };
 
-    # Keep the input method group declarative. Fcitx5 rewrites this file when
-    # input methods are changed at runtime, so force the desired profile back
-    # during every Home Manager activation.
+    # Fcitx5 rewrites this file when input methods change at runtime, so force
+    # the declarative profile back on every Home Manager activation.
     hm'.xdg.configFile."fcitx5/profile" = {
       source = ./fcitx5/profile;
       force = true;
@@ -150,7 +149,6 @@ in
     };
 
     preservation'.user.directories = [
-      # Fcitx5
       ".config/fcitx5"
       ".local/share/fcitx5"
     ];

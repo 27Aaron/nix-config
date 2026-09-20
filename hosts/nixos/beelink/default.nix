@@ -1,11 +1,5 @@
-#####################################################
-#
-# Beelink SER6 Pro VEST - homelab server
-#   (Ryzen 7 7735HS, 64 GB DDR5, 4 TB NVMe SSD)
-#
-#####################################################
-{ ... }:
-{
+# beelink - Beelink SER6 Pro VEST (Ryzen 7 7735HS, 64 GB DDR5, 4 TB NVMe SSD)
+{ ... }: {
   imports = [
     ./hardware.nix
   ];

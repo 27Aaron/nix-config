@@ -37,9 +37,8 @@ in
       };
     };
 
-    # Show the LUKS passphrase prompt inside the SSH session instead of a
-    # plain shell. Set directly on the systemd initrd root user to avoid
-    # the legacy boot.initrd.network.ssh.shell warning.
+    # Prompt for the LUKS passphrase in the SSH session; set on the systemd
+    # initrd root user to avoid the legacy boot.initrd.network.ssh.shell warning.
     boot.initrd.systemd.users.root.shell = "/bin/systemd-tty-ask-password-agent";
 
     preservation'.os.directories = [ "/etc/secrets/initrd" ];

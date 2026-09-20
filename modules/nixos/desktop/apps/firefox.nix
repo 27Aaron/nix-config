@@ -15,7 +15,6 @@ in
     hm'.programs.firefox.enable = true;
 
     preservation'.user.directories = [
-      # Firefox
       ".config/mozilla"
       ".mozilla"
     ];

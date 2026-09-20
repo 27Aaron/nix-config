@@ -1,5 +1,4 @@
-# Shared helper library for modules and hosts. Extend here as more
-# constants or functions are added under helpers/.
+# Shared helper library for modules and hosts.
 { platformName }:
 let
   nix = import ./constants/nix.nix;

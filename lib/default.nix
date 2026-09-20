@@ -1,11 +1,8 @@
 { lib }:
 rec {
-  # Recursively collect importable module paths under a directory.
-  #
-  # A subdirectory that contains a default.nix is imported as a single module;
-  # any other subdirectory is scanned recursively. Plain .nix files are
-  # collected directly. A missing directory contributes nothing, so a
-  # platform can have no platform-specific home modules.
+  # Recursively collect importable module paths under a directory: a subdirectory
+  # with a default.nix is one module, others are scanned recursively; a missing
+  # directory contributes nothing.
   scanPaths =
     directory:
     lib.pipe (if builtins.pathExists directory then builtins.readDir directory else { }) [

@@ -13,9 +13,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # systemd-boot is UEFI-only, so a BIOS boot partition would be dead
-    # weight; BIOS hosts should use hardware'.grub instead. The mutual
-    # exclusion with hardware'.grub is asserted in grub.nix.
+    # systemd-boot is UEFI-only, so BIOS hosts must use hardware'.grub instead
+    # (mutual exclusion with it is asserted in grub.nix).
     assertions = [
       {
         assertion = !diskoCfg.bios.enable;
