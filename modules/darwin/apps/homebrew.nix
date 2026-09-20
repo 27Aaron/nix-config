@@ -9,85 +9,42 @@ in
 {
   options.programs'.homebrew = {
     enable = lib.mkEnableOption "Homebrew package management";
+  };
 
-    enableFishIntegration = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable Homebrew integration for Fish";
-    };
+  config = lib.mkIf cfg.enable {
+    homebrew = {
+      enable = true;
 
-    enableZshIntegration = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable Homebrew integration for Zsh";
-    };
+      enableFishIntegration = config.programs.fish.enable;
+      enableZshIntegration = config.programs.zsh.enable;
 
-    onActivation = {
-      upgrade = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Upgrade outdated Homebrew packages on activation";
+      onActivation = {
+        upgrade = false;
+        autoUpdate = false;
+        cleanup = "zap";
       };
 
-      autoUpdate = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Fetch the newest stable Homebrew branch on activation";
-      };
+      taps = [ ];
 
-      cleanup = lib.mkOption {
-        type = lib.types.enum [
-          "none"
-          "uninstall"
-          "zap"
-        ];
-        default = "zap";
-        description = "How aggressively to remove packages not in the configuration";
-      };
-    };
-
-    taps = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [
-        "anomalyco/tap"
-        "steipete/tap"
-      ];
-      description = "Homebrew taps to install";
-    };
-
-    masApps = lib.mkOption {
-      type = lib.types.attrsOf lib.types.int;
-      default = {
+      masApps = {
         "Bob" = 1630034110;
         "WPS" = 1443749478;
       };
-      description = "Applications to install from the Mac App Store";
-    };
 
-    brews = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [
+      brews = [
         # Disk & Cleanup
         "mole"
-
-        # AI Agents
-        "anomalyco/tap/opencode"
-        "pi-coding-agent"
 
         # Code Statistics
         "tokei"
       ];
-      description = "Homebrew formulae to install";
-    };
 
-    casks = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [
+      casks = [
         # AI Development
         "chatgpt"
         "cc-switch"
         "grok-build"
-        "steipete/tap/codexbar"
+        "codexbar"
         "zcode"
 
         # Browser
@@ -105,6 +62,7 @@ in
 
         # Editor
         "visual-studio-code"
+        "zed"
 
         # Font
         "font-lxgw-wenkai"
@@ -153,22 +111,6 @@ in
         "ghostty"
         "kitty"
       ];
-      description = "Homebrew casks to install";
-    };
-  };
-
-  config = lib.mkIf cfg.enable {
-    homebrew = {
-      enable = true;
-      inherit (cfg)
-        enableFishIntegration
-        enableZshIntegration
-        masApps
-        brews
-        casks
-        ;
-      onActivation = cfg.onActivation;
-      taps = cfg.taps;
     };
   };
 }

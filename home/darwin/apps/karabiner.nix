@@ -6,8 +6,8 @@
   ...
 }:
 let
-  brewCfg = osConfig.programs'.homebrew;
-  enabled = brewCfg.enable && lib.elem "karabiner-elements" brewCfg.casks;
+  # Only manage the Karabiner configuration when the cask list installs it.
+  enabled = lib.elem "karabiner-elements" osConfig.homebrew.casks;
   generatedConfig = builtins.toFile "karabiner.json" (
     builtins.toJSON {
       profiles = [
@@ -88,23 +88,18 @@ let
 in
 {
   config = lib.mkIf enabled {
-    # Keep one backup, then install a writable file on every activation.
+    # Install a writable copy on every activation so the GUI can keep editing it.
     home.activation.initializeKarabiner =
       lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
         ''
           (
             set -eu
-            export PATH="${
-              lib.makeBinPath [
-                pkgs.coreutils
-                pkgs.jq
-              ]
-            }:$PATH"
+            export PATH="${lib.makeBinPath [ pkgs.coreutils ]}:$PATH"
             dir=${lib.escapeShellArg "${config.xdg.configHome}/karabiner"}
             gen=${lib.escapeShellArg generatedConfig}
 
             if [[ -v DRY_RUN ]]; then
-              echo "Would back up and install editable Karabiner configuration in $dir"
+              echo "Would install editable Karabiner configuration in $dir"
               exit 0
             fi
             if [[ -L "$dir" ]]; then
@@ -114,21 +109,9 @@ in
 
             umask 077
             mkdir -p -- "$dir"
-            target="$dir/karabiner.json"
-            work=$(mktemp -d -- "$dir/.activation.XXXXXX")
-            trap 'if [[ -v work ]]; then rm -rf -- "$work"; fi' EXIT
-            trap 'exit 1' HUP INT TERM
-
-            jq -e . "$gen" > "$work/karabiner.json"
-            if [[ -f "$target" ]]; then
-              cp -L -- "$target" "$work/backup"
-              chmod 600 -- "$work/backup"
-              mv -fT -- "$work/backup" "$target.hm-bak"
-              # Remove timestamped backups left by the earlier implementation.
-              rm -f -- "$dir"/karabiner.json.bak.*
-            fi
-            mv -fT -- "$work/karabiner.json" "$target"
-            rm -f -- "$dir/.nix-generated-karabiner.json"
+            tmp="$dir/.karabiner.json.tmp"
+            install -m 600 -- "$gen" "$tmp"
+            mv -fT -- "$tmp" "$dir/karabiner.json"
           )
         '';
   };
