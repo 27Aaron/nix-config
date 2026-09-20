@@ -7,7 +7,6 @@
 }:
 let
   helpers = import ../helpers {
-    inherit (inputs.nixpkgs) lib;
     inherit platformName;
   };
 

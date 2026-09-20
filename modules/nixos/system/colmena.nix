@@ -8,16 +8,15 @@
   helpers,
   hostName,
   inputs,
-  lib,
   ...
 }:
 {
   imports = [ inputs.colmena.nixosModules.deploymentOptions ];
 
   deployment = {
-    allowLocalDeployment = lib.mkDefault true;
-    targetHost = lib.mkDefault hostName;
-    targetPort = lib.mkDefault helpers.port.openssh;
-    targetUser = lib.mkDefault "root";
+    allowLocalDeployment = true;
+    targetHost = hostName;
+    targetPort = helpers.port.openssh;
+    targetUser = "root";
   };
 }

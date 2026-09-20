@@ -4,13 +4,10 @@
   myvars,
   ...
 }:
-let
-  user = myvars.username;
-in
 {
   nix = {
     settings = {
-      trusted-users = [ user ];
+      trusted-users = [ myvars.username ];
     };
   };
 

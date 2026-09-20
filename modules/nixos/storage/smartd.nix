@@ -27,10 +27,7 @@ in
         "--interval=21600"
         "--savestates=/var/lib/smartmontools/smartd."
       ];
-      notifications = {
-        systembus-notify.enable = true;
-        wall.enable = true;
-      };
+      notifications.systembus-notify.enable = true;
     };
 
     systemd.services.smartd.serviceConfig = {

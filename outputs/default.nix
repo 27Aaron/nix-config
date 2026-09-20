@@ -13,7 +13,7 @@ let
   inherit (nixpkgs) lib;
 
   myvars = import ../helpers/constants/user.nix;
-  port = (import ../helpers/constants/ports.nix { inherit lib; }).port;
+  port = (import ../helpers/constants/ports.nix).port;
 
   args = {
     inherit

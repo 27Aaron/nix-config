@@ -102,10 +102,6 @@ in
         "application/zstd" = archive;
         "application/x-zstd-compressed-tar" = archive;
       };
-
-      # Keep the association section explicit and leave unrelated desktop
-      # entries untouched.
-      associations.removed = { };
     };
   };
 }

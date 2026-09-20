@@ -4,16 +4,11 @@
 # Ports fixed by protocol or upstream (resolved, avahi) have no port
 # option to rebind; their modules assert the registered value stays in
 # sync.
-{ lib, ... }:
-rec {
+{
   port = {
     initrdSsh = 22; # SSH inside initrd, used for remote LUKS unlock.
     resolved = 53; # systemd-resolved stub listener (loopback, router).
     openssh = 233; # OpenSSH daemon.
     avahi = 5353; # Avahi mDNS: LAN hostname discovery.
   };
-
-  # String form for config templates and string interpolation, since Nix
-  # refuses to coerce an integer inside a string.
-  portStr = lib.mapAttrsRecursive (_: builtins.toString) port;
 }

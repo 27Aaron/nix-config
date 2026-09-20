@@ -12,11 +12,11 @@
     channel.enable = false;
 
     gc = {
-      automatic = lib.mkDefault true;
-      options = lib.mkDefault "--delete-older-than 7d";
+      automatic = true;
+      options = "--delete-older-than 7d";
       # NixOS would otherwise run daily at 03:15; nix-darwin has no gc.dates
       # and runs weekly through its own gc.interval default.
-      dates = lib.mkIf (platformName == "nixos") (lib.mkDefault "weekly");
+      dates = lib.mkIf (platformName == "nixos") "weekly";
     };
 
     optimise.automatic = true;

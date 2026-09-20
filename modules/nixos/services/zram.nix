@@ -19,7 +19,6 @@ in
       kernelParams = [ "zswap.enabled=0" ];
       kernel.sysctl."vm.swappiness" = 100;
       kernel.sysfs.module.zswap.parameters.enabled = false;
-      zswap.enable = false;
     };
 
     zramSwap = {

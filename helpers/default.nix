@@ -1,9 +1,9 @@
 # Shared helper library for modules and hosts. Extend here as more
 # constants or functions are added under helpers/.
-{ lib, platformName }:
+{ platformName }:
 let
   nix = import ./constants/nix.nix;
-  ports = import ./constants/ports.nix { inherit lib; };
+  ports = import ./constants/ports.nix;
   user = import ./constants/user.nix;
   path = import ./constants/path.nix { inherit platformName user; };
 in
@@ -13,5 +13,5 @@ in
     path
     user
     ;
-  inherit (ports) port portStr;
+  inherit (ports) port;
 }
