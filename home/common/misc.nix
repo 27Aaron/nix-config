@@ -18,9 +18,6 @@
     ripgrep
     wget
 
-    # Media
-    ffmpeg
-
     # Network
     iperf3
     nmap
@@ -28,8 +25,10 @@
 
     # System Monitor
     btop
-    fastfetch
     nload
+
+    # System Info
+    pfetch-rs
   ];
 
   # btop rewrites its config when settings change from the UI.

@@ -37,6 +37,9 @@ in
 
         # Code Statistics
         "tokei"
+
+        # Media
+        "ffmpeg"
       ];
 
       casks = [
