@@ -2,10 +2,11 @@
   inputs,
   myvars,
   platformName,
-  platform,
   hostName,
 }:
 let
+  platform = (import ./platforms.nix { inherit inputs; }).${platformName};
+
   helpers = import ../helpers {
     inherit platformName;
   };

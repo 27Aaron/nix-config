@@ -10,18 +10,14 @@ in
 {
   options.core'.kernel-hardening = {
     enable = lib.mkEnableOption ''
-      kernel module blacklist mitigating the Dirty Frag LPE (esp4, esp6,
+      kernel module blocking mitigating the Dirty Frag LPE (esp4, esp6,
       rxrpc). Harmless unless IPsec ESP or AF_RXRPC is actually used.
     '';
   };
 
   config = lib.mkIf cfg.enable {
-    boot.blacklistedKernelModules = [
-      "esp4"
-      "esp6"
-      "rxrpc"
-    ];
-
+    # `install ... false` rejects every load request, including explicit
+    # `modprobe` calls, which subsumes a blacklist (auto-loading only).
     boot.extraModprobeConfig = ''
       install esp4 ${pkgs.coreutils}/bin/false
       install esp6 ${pkgs.coreutils}/bin/false

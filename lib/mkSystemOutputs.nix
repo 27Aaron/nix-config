@@ -1,25 +1,26 @@
-# Build the flake outputs for one system: host declarations under src/ and
-# the eval tests under tests/.
+# Build the flake outputs for one system: host configurations are derived
+# from the directories under hosts/<platform>/, and the eval tests under
+# outputs/<system>/tests/ assert the frozen invariants of a host.
 #
-# Each file in src/ declares the flake outputs of one host (e.g.
-# `nixosConfigurations.<name> = mkHost "<name>"`), and each file in tests/
-# asserts the frozen invariants of one host. Both directories are loaded
-# with scanPaths, so adding a host means adding one file to each.
+# Adding a host means creating hosts/<platform>/<name>/default.nix; the
+# flake output (and its eval test, if any) are picked up automatically.
 {
   inputs,
   lib,
   myvars,
   port,
   system,
-  platformName,
-  configurationsAttr,
-  srcDir,
-  testsDir,
 }:
 let
-  platform = (import ./platforms.nix { inherit inputs; }).${platformName};
+  isDarwin = lib.hasSuffix "-darwin" system;
+  platformName = if isDarwin then "darwin" else "nixos";
+  configurationsAttr = if isDarwin then "darwinConfigurations" else "nixosConfigurations";
+
   scanPaths = (import ./default.nix { inherit lib; }).scanPaths;
   assertions = import ./assertions.nix { inherit lib; };
+
+  hostsDir = ../hosts + "/${platformName}";
+  testsDir = ../outputs + "/${system}/tests";
 
   mkHost =
     hostName:
@@ -28,45 +29,37 @@ let
         inputs
         myvars
         platformName
-        platform
         hostName
         ;
     };
 
-  # Host output declarations: one file per host under src/.
-  hostData = map (
-    file:
-    import file {
-      inherit
-        inputs
-        lib
-        myvars
-        system
-        mkHost
-        ;
-    }
-  ) (scanPaths srcDir);
+  # A host is a directory under hosts/<platform>/ that has a default.nix.
+  hostNames = builtins.attrNames (
+    lib.filterAttrs (
+      name: type: type == "directory" && builtins.pathExists (hostsDir + "/${name}/default.nix")
+    ) (builtins.readDir hostsDir)
+  );
 
   outputs = {
-    ${configurationsAttr} = lib.attrsets.mergeAttrsList (
-      map (it: it.${configurationsAttr} or { }) hostData
-    );
+    ${configurationsAttr} = lib.genAttrs hostNames mkHost;
   };
 
-  # Eval tests: one file per host under tests/; each returns failure messages.
+  # Eval tests: one file per host under tests/; each returns failure
+  # messages. A platform without a tests directory simply has none.
   evalTests = lib.flatten (
-    map (
-      file:
-      import file {
-        inherit
-          lib
-          assertions
-          port
-          system
-          ;
-        configurations = outputs;
-      }
-    ) (scanPaths testsDir)
+    lib.optionals (builtins.pathExists testsDir) (
+      map (
+        file:
+        import file {
+          inherit
+            lib
+            assertions
+            port
+            ;
+          configurations = outputs;
+        }
+      ) (scanPaths testsDir)
+    )
   );
 in
 outputs

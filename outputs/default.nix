@@ -1,9 +1,8 @@
 # Assemble all flake outputs.
 #
-# Host outputs live under outputs/<system>/: one file per host in src/,
-# with the host's eval tests next to it in tests/. This file merges the
-# per-system outputs and adds the flake-level outputs (checks, devShells,
-# formatter).
+# Per-system outputs (host configurations and their eval tests) come from
+# lib/mkSystemOutputs.nix; this file merges them and adds the flake-level
+# outputs (checks, devShells, formatter).
 inputs@{
   self,
   nixpkgs,
@@ -15,30 +14,33 @@ let
   myvars = import ../helpers/constants/user.nix;
   port = (import ../helpers/constants/ports.nix).port;
 
-  args = {
-    inherit
-      inputs
-      lib
-      myvars
-      port
-      ;
-  };
-
   systems = {
-    aarch64-darwin = import ./aarch64-darwin (args // { system = "aarch64-darwin"; });
-    x86_64-linux = import ./x86_64-linux (args // { system = "x86_64-linux"; });
+    aarch64-darwin = import ../lib/mkSystemOutputs.nix {
+      inherit
+        inputs
+        lib
+        myvars
+        port
+        ;
+      system = "aarch64-darwin";
+    };
+    x86_64-linux = import ../lib/mkSystemOutputs.nix {
+      inherit
+        inputs
+        lib
+        myvars
+        port
+        ;
+      system = "x86_64-linux";
+    };
   };
 
   systemNames = builtins.attrNames systems;
   systemValues = builtins.attrValues systems;
 
   configurations = {
-    darwinConfigurations = lib.attrsets.mergeAttrsList (
-      map (it: it.darwinConfigurations or { }) systemValues
-    );
-    nixosConfigurations = lib.attrsets.mergeAttrsList (
-      map (it: it.nixosConfigurations or { }) systemValues
-    );
+    inherit (systems.aarch64-darwin) darwinConfigurations;
+    inherit (systems.x86_64-linux) nixosConfigurations;
   };
 
   forEachSystem = lib.genAttrs systemNames;
@@ -62,7 +64,7 @@ configurations
       colmenaHive
       systemNames
       ;
-    evalTestFailures = lib.flatten (map (it: it.evalTests or [ ]) systemValues);
+    evalTestFailures = lib.flatten (map (it: it.evalTests) systemValues);
   };
 
   devShells = forEachSystem (

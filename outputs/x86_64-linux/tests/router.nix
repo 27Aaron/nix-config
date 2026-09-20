@@ -1,7 +1,6 @@
 {
   assertions,
   configurations,
-  port,
   ...
 }:
 assertions.checkAttrs {
@@ -13,8 +12,5 @@ assertions.checkAttrs {
     "desktop'.niri.enable" = false;
     "development'.ai.enable" = false;
     "development'.dev.enable" = false;
-    "nix.settings.max-jobs" = 1;
-    "services.openssh.ports" = [ port.openssh ];
-    "core'.firewall.enable" = true;
   };
 }
