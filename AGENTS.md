@@ -28,9 +28,9 @@
 ├── Justfile
 ├── lib/
 ├── modules/
-│   ├── common/
-│   ├── darwin/
-│   └── nixos/
+│   ├── common/          # 跨平台模块（别名、Nix、development'）
+│   ├── darwin/          # nix-darwin 模块（core'、programs'）
+│   └── nixos/           # NixOS 模块（core'、desktop'、hardware'、services'）
 └── outputs/
     ├── aarch64-darwin/
     └── x86_64-linux/
@@ -52,6 +52,8 @@
 
 另有 `preservation'`（Preservation 别名）与 `persist'`（Home Manager 持久化上报）两个机制层选项；`user'`、`hm'` 是 `lib.mkAliasOptionModule` 别名，指向 `users.users.<username>` 和 `home-manager.users.<username>`。
 
+`modules/` 下的目录与上表对齐：NixOS 专属模块按选项前缀归入 `nixos/<namespace>/`（`core/`、`desktop/`、`hardware/`、`services/` 等），跨平台模块放 `common/`（如 `common/development/`），darwin 专属模块放 `darwin/`。新增模块时先按前缀选目录。
+
 ## 多设备配置
 
 `helpers/constants/user.nix` 中的 `myvars.username` 是所有主机的唯一用户名来源：
@@ -64,11 +66,11 @@
 
 `system.stateVersion` 放在主机配置中；`home.stateVersion` 统一放在 `home/default.nix`。
 
-NixOS 上 `nh` 的 flake 路径固定为 `/home/<username>/nix-config`（`modules/nixos/system/nix.nix`）。
+NixOS 上 `nh` 的 flake 路径固定为 `/home/<username>/nix-config`（`modules/nixos/core/nix.nix`）。
 
 ## 持久化规则
 
-`hardware'.persistence.enable` 是 Preservation 的总开关，只在 `modules/nixos/storage/persistence.nix` 中启用持久化机制。持久化条目跟随所有权：功能开关定义在哪个模块，条目就声明在哪个模块内部。
+`hardware'.persistence.enable` 是 Preservation 的总开关，只在 `modules/nixos/hardware/persistence.nix` 中启用持久化机制。持久化条目跟随所有权：功能开关定义在哪个模块，条目就声明在哪个模块内部。
 
 - `persistence.nix` 只放启动所需、所有设备共用的基线（缓存、无归属模块的凭据等），并汇入 Home Manager 通过 `persist'` 上报的条目
 - 纯 Home Manager 工具通过 `home/common/persist.nix` 的 `persist'` 选项上报状态目录和文件（Atuin、Zoxide 等）

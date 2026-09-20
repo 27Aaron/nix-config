@@ -59,7 +59,7 @@ mv hosts/darwin/luna "hosts/darwin/$host_name"
 
 - `helpers/constants/user.nix`：用户名、Git 姓名、邮箱、时区
 - `hosts/darwin/<主机名>/default.nix`：目标平台
-- `modules/darwin/apps/homebrew.nix`：Homebrew 软件清单
+- `modules/darwin/programs/homebrew.nix`：Homebrew 软件清单
 
 > [!CAUTION]
 > 当前配置启用了 `homebrew.onActivation.cleanup = "zap"`：首次激活会卸载所有未在清单中声明的 Homebrew 软件，并删除 Cask 的关联文件。
@@ -70,7 +70,7 @@ mv hosts/darwin/luna "hosts/darwin/$host_name"
 brew bundle dump --describe --force --file="$HOME/Desktop/Brewfile"
 ```
 
-对照导出的 Brewfile 补全 `modules/darwin/apps/homebrew.nix` 后再继续。
+对照导出的 Brewfile 补全 `modules/darwin/programs/homebrew.nix` 后再继续。
 
 ## 初始化 nix-darwin
 
