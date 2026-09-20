@@ -18,6 +18,9 @@
     ripgrep
     wget
 
+    # Media
+    ffmpeg
+
     # Network
     iperf3
     nmap

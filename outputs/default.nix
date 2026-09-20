@@ -12,7 +12,6 @@ let
   inherit (nixpkgs) lib;
 
   myvars = import ../helpers/constants/user.nix;
-  port = (import ../helpers/constants/ports.nix).port;
 
   systems = {
     aarch64-darwin = import ../lib/mkSystemOutputs.nix {
@@ -20,7 +19,6 @@ let
         inputs
         lib
         myvars
-        port
         ;
       system = "aarch64-darwin";
     };
@@ -29,7 +27,6 @@ let
         inputs
         lib
         myvars
-        port
         ;
       system = "x86_64-linux";
     };

@@ -74,10 +74,6 @@ in
         "audio/*" = mediaPlayer;
         "video/*" = mediaPlayer;
         "image/*" = imageViewer;
-        "image/gif" = imageViewer;
-        "image/jpeg" = imageViewer;
-        "image/png" = imageViewer;
-        "image/webp" = imageViewer;
         "inode/directory" = fileManager;
 
         # File Roller handles common archive formats.

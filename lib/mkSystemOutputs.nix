@@ -8,7 +8,6 @@
   inputs,
   lib,
   myvars,
-  port,
   system,
 }:
 let
@@ -17,7 +16,6 @@ let
   configurationsAttr = if isDarwin then "darwinConfigurations" else "nixosConfigurations";
 
   scanPaths = (import ./default.nix { inherit lib; }).scanPaths;
-  assertions = import ./assertions.nix { inherit lib; };
 
   hostsDir = ../hosts + "/${platformName}";
   testsDir = ../outputs + "/${system}/tests";
@@ -51,11 +49,7 @@ let
       map (
         file:
         import file {
-          inherit
-            lib
-            assertions
-            port
-            ;
+          inherit lib;
           configurations = outputs;
         }
       ) (scanPaths testsDir)

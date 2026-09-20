@@ -4,10 +4,11 @@ rec {
   #
   # A subdirectory that contains a default.nix is imported as a single module;
   # any other subdirectory is scanned recursively. Plain .nix files are
-  # collected directly.
+  # collected directly. A missing directory contributes nothing, so a
+  # platform can have no platform-specific home modules.
   scanPaths =
     directory:
-    lib.pipe (builtins.readDir directory) [
+    lib.pipe (if builtins.pathExists directory then builtins.readDir directory else { }) [
       (lib.mapAttrsToList (
         name: type:
         let
