@@ -2,7 +2,6 @@
 # constants or functions are added under helpers/.
 { lib, platformName }:
 let
-  btrfs = import ./constants/btrfs.nix;
   nix = import ./constants/nix.nix;
   ports = import ./constants/ports.nix { inherit lib; };
   user = import ./constants/user.nix;
@@ -10,7 +9,6 @@ let
 in
 {
   inherit
-    btrfs
     nix
     path
     user

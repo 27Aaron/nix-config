@@ -1,13 +1,11 @@
 {
   config,
-  helpers,
   inputs,
   lib,
   ...
 }:
 let
   cfg = config.hardware'.disko;
-  btrfs = helpers.btrfs;
 
   btrfsSubvolumes = {
     "@nix" = {
@@ -19,8 +17,8 @@ let
       ];
     };
 
-    "${btrfs.persistent.subvolume}" = {
-      mountpoint = btrfs.persistent.mountpoint;
+    "@persistent" = {
+      mountpoint = "/persistent";
       mountOptions = [
         "compress=zstd:1"
         "discard=async"
@@ -29,7 +27,7 @@ let
     };
 
     "@snapshots" = {
-      mountpoint = btrfs.snapshots;
+      mountpoint = "/snapshots";
       mountOptions = [
         "compress=zstd:1"
         "discard=async"
@@ -53,7 +51,7 @@ let
       "--label"
       "NixOS"
     ];
-    mountpoint = btrfs.pool;
+    mountpoint = "/btr_pool";
     mountOptions = [
       "noatime"
       "subvolid=5"
