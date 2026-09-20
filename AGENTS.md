@@ -1,51 +1,32 @@
 # AGENTS.md
 
-本文件记录本仓库的实现约定，供参与修改配置的开发者和自动化代理使用。安装和日常使用说明放在 `docs/`，不要把内部模块设计写进安装指南。
+本仓库是用 Nix flake 管理 macOS（nix-darwin）与 NixOS 主机的声明式配置。本文件记录实现约定，供参与修改配置的开发者和自动化代理使用；安装和日常使用说明放在 `docs/`，不要把内部模块设计写进安装指南。
 
 ## 工作边界
 
 - 修改前先检查相关主机、模块和文档的现状，保留与当前任务无关的本地改动。
 - 除非用户明确要求，不要执行 `git add`、提交、推送、创建或修改 PR。
-- 配置改动完成后，至少运行格式检查和 `deadnix`（见「验证」）。
+- 不要执行会改变系统状态或历史的命令（`switch`、`update`、`gc`、`install`，见「命令与危险操作」）；验证只用求值、构建和检查类命令。
 
 ## 仓库结构
 
 ```
 flake.nix             Flake 入口：导出所有主机、devShells、formatter 和 checks
-helpers/              共享库：作为 specialArgs 注入所有主机与 Home Manager
+helpers/              共享库
   default.nix         汇聚入口：展开 constants/ 下的注册表
   constants/          共享常量注册表
-    btrfs.nix         磁盘布局：Btrfs 池、持久化与快照路径
-    fonts.nix         字体族名：等宽与 emoji
-    nix.nix           二进制缓存：substituters 与 trustedPublicKeys
-    path.nix          路径：主目录与仓库克隆路径（按平台计算）
-    ports.nix         服务端口：port 数字与 portStr 字符串
-    user.nix          用户元数据：用户名、姓名、邮箱、时区、密码哈希、SSH 公钥
-lib/
-  default.nix         通用函数：scanPaths 递归收集模块路径
-  platforms.nix       平台差异表：构建器、Home Manager 模块、模块目录
-  mkHost.nix          主机构建器：specialArgs、Home Manager 接线与主机目录组装
-  checks.nix          flake checks：格式、deadnix、darwin 求值与主机断言
-  eval-tests.nix      主机关键值断言：冻结主机角色与关键配置
-hosts/
+lib/                  通用函数与构建器
+  default.nix         scanPaths 递归收集模块路径
+hosts/                主机配置
   default.nix         主机发现：目录名即 flake 里的主机名
-  darwin/<host>/      nix-darwin 主机（default.nix）
-  nixos/<host>/       NixOS 主机（default.nix + hardware.nix，可含 network.nix 等附加文件）
-modules/
+  darwin/             nix-darwin 主机
+  nixos/              NixOS 主机
+modules/              系统模块
   default.nix         模块装配：按平台递归导入 common/ 与平台目录
   common/             跨平台系统模块
-  nixos/system/       系统基线：core、i18n、shell、nix 设置
-  nixos/boot/         引导：GRUB、systemd-boot、initrd SSH
-  nixos/hardware/     可选硬件支持
-  nixos/security/     安全功能（firewall）
-  nixos/services/     与桌面无关的系统服务（远程访问、网络、内存）
-  nixos/apps/         应用级系统服务（如 PostgreSQL）与用户工具集（如 AI 开发工具）
-  nixos/desktop/      桌面：session/ 会话栈、apps/ 应用、environment/ 外观与输入
-  nixos/storage/      Disko、Preservation 与存储维护（btrbk、scrub、smartd）
-  darwin/system/      nix-darwin 系统配置
-  darwin/apps/        nix-darwin 应用配置（Homebrew）
-  darwin/security/    nix-darwin 安全配置
-home/
+  nixos/              NixOS 模块，按职责域组织
+  darwin/             nix-darwin 系统、应用与安全配置
+home/                 Home Manager 配置
   default.nix         用户配置装配：递归导入 common/ 与平台目录
   common/             跨平台 Home Manager 配置
   nixos/  darwin/     平台专属用户配置
@@ -64,6 +45,22 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 - NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`tools'`、`system.stateVersion` 的顺序组织。
 - NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`、`bios.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
 - Flake inputs 中的 `secrets`（私有仓库 `27Aaron/nix-secrets`，sops 密钥库）和 `nur-aaron`（个人 NUR 包）为服务器主机预留；更新 lock 文件需要能访问前者的 SSH。
+
+## 命令与危险操作
+
+常用命令都在 `Justfile`。用 `just --list` 查看全部命令，用 `just --show <recipe>` 查看具体行为。
+
+安全、只读的命令：
+
+- `just check`：格式检查、deadnix 与全部主机求值（见「验证」）
+- `just fmt`：格式化所有 Nix 文件
+
+会改变系统状态或历史的命令，只在用户明确要求时执行：
+
+- `just switch`：构建并激活当前主机配置（macOS 用 `darwin-rebuild`，NixOS 用 `nh os switch`）
+- `just update`：更新全部 flake inputs 并写入 `flake.lock`；需要能访问 `secrets` 私有仓库的 SSH
+- `just gc`：删除旧 generation 与不可达的 store 路径，不可逆
+- `just install`：仅 macOS，在全新系统上安装 nix-darwin
 
 ## 模块和命名约定
 
@@ -106,13 +103,29 @@ config = lib.mkIf cfg.enable {
 
 PostgreSQL 文件按仓库约定放在 `modules/nixos/apps/`，但它是系统服务，所以选项仍使用 `services'.postgresql`。
 
-NixOS 模块目录按职责域组织：`system/` 只放无独立开关的系统基线；引导、硬件、安全分别归 `boot/`、`hardware/`、`security/`；桌面的会话栈与底层会话服务归 `desktop/session/`，桌面应用归 `desktop/apps/`，外观与输入环境归 `desktop/environment/`；存储域服务（btrbk、btrfs-scrub、smartd）归 `storage/`。目录与命名空间不要求一一对应（`apps/`、`desktop/session/`、`storage/` 下都有 `services'.*` 模块），主机只通过选项开关使用模块，不感知文件位置。
+NixOS 模块目录按职责域组织：
 
-Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生效，Homebrew 声明列表是唯一来源。激活在 Home Manager 的 `writeBoundary` 之后、`linkGeneration` 之前执行（`dry-run` 不写文件）：先把已有 JSON 备份为 `karabiner.json.hm-bak`（覆盖上一份的独立副本），再把 Nix 生成的内容写到 `${xdg.configHome}/karabiner/karabiner.json`，两者均为 `0600` 普通文件。配置可直接手改，但会在下次激活时被 Nix 配置替换，原内容留在备份中；模块不做旧目录链接的自动迁移。
+- `system/` 只放无独立开关的系统基线；引导、硬件、安全分别归 `boot/`、`hardware/`、`security/`
+- 与桌面无关的系统服务归 `services/`；应用级系统服务（如 PostgreSQL）与用户工具集（如 AI 开发工具）归 `apps/`
+- 桌面的会话栈与底层会话服务归 `desktop/session/`，桌面应用归 `desktop/apps/`，外观与输入环境归 `desktop/environment/`
+- 存储域服务（btrbk、btrfs-scrub、smartd）归 `storage/`
+
+目录与命名空间不要求一一对应（`apps/`、`desktop/session/`、`storage/` 下都有 `services'.*` 模块），主机只通过选项开关使用模块，不感知文件位置。
+
+Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生效，Homebrew 声明列表是唯一来源。
+
+激活在 Home Manager 的 `writeBoundary` 之后、`linkGeneration` 之前执行（`dry-run` 不写文件）：先把已有 JSON 备份为 `karabiner.json.hm-bak`（覆盖上一份的独立副本），再把 Nix 生成的内容写到 `${xdg.configHome}/karabiner/karabiner.json`，两者均为 `0600` 普通文件。配置可直接手改，但会在下次激活时被 Nix 配置替换，原内容留在备份中；模块不做旧目录链接的自动迁移。
 
 桌面应用（Firefox、Kitty 等）的启用开关统一放在 `desktop'.apps.<app>.enable`，由 `modules/nixos/desktop/apps/` 下的应用模块定义，模块内部通过 `hm'` 设置 Home Manager 的原生选项。不要为单个用户应用在 Home Manager 里新建自定义命名空间。
 
-跨平台的开发 CLI 工具集（uv、direnv、Nix 工具链）由 `tools'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`；gh、lazygit 与 git-trim 是 git 工作流基线，随 git 和 delta 放在 `home/common/git.nix`；Shell 专属的 `uv` / `uvx` 补全分别放在 `home/common/fish.nix` 和 `home/common/zsh.nix`，并按命令是否存在加载。NixOS 的 AI 开发工具集（ChatGPT 桌面端、Claude Code、Codex、DeepSeek CLI 和 ZCode）由 `tools'.ai.enable` 控制，配置收敛在 `modules/nixos/apps/ai-tools.nix`；其中 ChatGPT（`chatgpt`）、DeepSeek CLI（`dsh`）和 ZCode 使用 `llm-agents` input 提供的包，持久化直接声明在 `preservation'.user` 下。其他带开关的内容不放入 `home/common/` 基线。`just` 属于所有主机共用的基线工具，放在 `home/common/misc.nix`。XDG 用户目录是桌面能力，由 `desktop'.xdg-user-dirs.enable` 控制，不放进 `home/nixos/` 基线。
+工具与基线的归属：
+
+- 跨平台的开发 CLI 工具集（uv、direnv、Nix 工具链）由 `tools'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`
+- gh、lazygit 与 git-trim 是 git 工作流基线，随 git 和 delta 放在 `home/common/git.nix`；Shell 专属的 `uv` / `uvx` 补全分别放在 `home/common/fish.nix` 和 `home/common/zsh.nix`，并按命令是否存在加载
+- NixOS 的 AI 开发工具集（ChatGPT 桌面端、Claude Code、Codex、DeepSeek CLI 和 ZCode）由 `tools'.ai.enable` 控制，配置收敛在 `modules/nixos/apps/ai-tools.nix`；其中 ChatGPT（`chatgpt`）、DeepSeek CLI（`dsh`）和 ZCode 使用 `llm-agents` input 提供的包，持久化直接声明在 `preservation'.user` 下
+- `just` 属于所有主机共用的基线工具，放在 `home/common/misc.nix`
+- XDG 用户目录是桌面能力，由 `desktop'.xdg-user-dirs.enable` 控制，不放进 `home/nixos/` 基线
+- 其他带开关的内容不放入 `home/common/` 基线
 
 ## 多设备配置
 
@@ -163,23 +176,26 @@ config = lib.mkIf cfg.enable {
 
 ## 验证
 
-格式化用 `just fmt` 或 `nix fmt`（nixfmt-rs）。
+格式化用 `just fmt` 或 `nix fmt`（nixfmt-rs）。按改动范围选择检查：
 
-常规检查：
+- 仅文档变更（`docs/`、`README.md`、本文件）：运行 `git diff --check` 检查空白错误，可跳过 Nix 求值
+- Nix 配置变更：运行 `just check`，或至少运行 `nix fmt . -- --check` 和 `deadnix --fail .`
+
+`just check` 等价于：
 
 ```bash
 nix fmt . -- --check
 deadnix --fail .
+nix flake check path:. --no-build --all-systems
 ```
 
-完整检查（含所有主机求值）：
+flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix`、`darwin-eval` 和 `hosts-eval`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖；`hosts-eval` 按 `lib/eval-tests.nix` 的清单断言各主机的角色与关键配置值（有意改变行为时同步更新清单）。`--no-build` 时 checks 只求值不执行。
 
-```bash
-nix flake check --all-systems --no-build
-```
+两点注意：
 
-flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix`、`darwin-eval` 和 `hosts-eval`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖；`hosts-eval` 按 `lib/eval-tests.nix` 的清单断言各主机的角色与关键配置值（有意改变行为时同步更新清单）。`--no-build` 时 checks 只求值不执行，本地检查用 `just check`。
+- 手动运行 `nix flake check` 时用 `path:.` 而不是 `.`：Git flake 读取器只读取 Git 跟踪的文件，`path:` 直接读取工作区，未纳入 Git 的新文件也会参与求值。
+- 不带 `--all-systems` 时，flake check 只求值与本机架构相同的主机（例如在 Apple Silicon 上会跳过全部 NixOS 主机）。
 
-不带 `--all-systems` 时，flake check 只求值与本机架构相同的主机（例如在 Apple Silicon 上会跳过全部 NixOS 主机）。如果工作区包含尚未纳入 Git 的新文件，应在包含完整工作区内容的临时非 Git 副本中运行 flake 检查，避免 Nix 的 Git flake 读取器遗漏这些文件。
+需要超出求值的验证时，可构建单个主机：NixOS 用 `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`，darwin 用 `nix build .#darwinConfigurations.<host>.system`。
 
-检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值。仓库不设远程 CI 检查，GitHub 上仅保留 issue/PR 的标签和依赖更新自动化。
+检查全部在本地运行：`just check` 包含格式检查、未使用声明和所有主机求值。仓库不设远程 CI 检查，GitHub 上仅保留 issue/PR 的标签和依赖更新自动化。结束前报告运行了哪些检查、跳过了哪些及原因；失败时给出命令与原因。
