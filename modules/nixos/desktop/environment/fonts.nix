@@ -1,6 +1,5 @@
 {
   config,
-  helpers,
   lib,
   pkgs,
   ...
@@ -39,17 +38,17 @@ in
 
       fontconfig.defaultFonts = {
         serif = [
-          helpers.fonts.cjk
+          "LXGW WenKai"
           "Source Han Serif SC"
           "Source Han Serif TC"
         ];
         sansSerif = [
-          helpers.fonts.cjk
+          "LXGW WenKai"
           "Source Han Sans SC"
           "Source Han Sans TC"
         ];
-        monospace = [ helpers.fonts.monospace ];
-        emoji = [ helpers.fonts.emoji ];
+        monospace = [ "Maple Mono NF CN" ];
+        emoji = [ "Noto Color Emoji" ];
       };
     };
   };

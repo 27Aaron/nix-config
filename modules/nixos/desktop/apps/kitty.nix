@@ -1,6 +1,5 @@
 {
   config,
-  helpers,
   lib,
   ...
 }:
@@ -17,7 +16,7 @@ in
       enable = true;
 
       font = {
-        name = helpers.fonts.monospace;
+        name = "Maple Mono NF CN";
         size = 12;
       };
 

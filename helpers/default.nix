@@ -3,7 +3,6 @@
 { lib, platformName }:
 let
   btrfs = import ./constants/btrfs.nix;
-  fonts = import ./constants/fonts.nix;
   nix = import ./constants/nix.nix;
   ports = import ./constants/ports.nix { inherit lib; };
   user = import ./constants/user.nix;
@@ -12,7 +11,6 @@ in
 {
   inherit
     btrfs
-    fonts
     nix
     path
     user
