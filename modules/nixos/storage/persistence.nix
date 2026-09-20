@@ -7,7 +7,7 @@
   ...
 }:
 let
-  cfg = config.storage'.persistence;
+  cfg = config.hardware'.persistence;
   btrfs = helpers.btrfs;
   user = myvars.username;
   hm = config.home-manager.users.${user};
@@ -26,7 +26,7 @@ in
     )
   ];
 
-  options.storage'.persistence = {
+  options.hardware'.persistence = {
     enable = lib.mkEnableOption "Preservation for an ephemeral NixOS root";
   };
 

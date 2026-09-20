@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.boot'.initrd-ssh;
+  cfg = config.hardware'.initrd-ssh;
 in
 {
-  options.boot'.initrd-ssh = {
+  options.hardware'.initrd-ssh = {
     enable = lib.mkEnableOption ''
       SSH in initrd for remote LUKS unlock. The host must ensure its NIC
       driver (e.g. r8169, igc, virtio_net) is present in

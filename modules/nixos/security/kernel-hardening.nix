@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.security'.kernel-hardening;
+  cfg = config.core'.kernel-hardening;
 in
 {
-  options.security'.kernel-hardening = {
+  options.core'.kernel-hardening = {
     enable = lib.mkEnableOption ''
       kernel module blacklist mitigating the Dirty Frag LPE (esp4, esp6,
       rxrpc). Harmless unless IPsec ESP or AF_RXRPC is actually used.

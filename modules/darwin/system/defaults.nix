@@ -14,10 +14,10 @@
   ...
 }:
 let
-  cfg = config.system'.defaults;
+  cfg = config.core'.defaults;
 in
 {
-  options.system'.defaults = {
+  options.core'.defaults = {
     enable = lib.mkEnableOption "macOS system defaults";
   };
 

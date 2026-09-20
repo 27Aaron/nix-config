@@ -6,11 +6,11 @@
   ...
 }:
 let
-  cfg = config.tools'.ai;
+  cfg = config.development'.ai;
   agentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 in
 {
-  options.tools'.ai = {
+  options.development'.ai = {
     enable = lib.mkEnableOption "AI development tools";
   };
 

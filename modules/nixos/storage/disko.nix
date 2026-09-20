@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.storage'.disko;
+  cfg = config.hardware'.disko;
   btrfs = helpers.btrfs;
 
   btrfsSubvolumes = {
@@ -64,7 +64,7 @@ in
 {
   imports = [ inputs.disko.nixosModules.disko ];
 
-  options.storage'.disko = {
+  options.hardware'.disko = {
     enable = lib.mkEnableOption "Disko disk management";
 
     device = lib.mkOption {

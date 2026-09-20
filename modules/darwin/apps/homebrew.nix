@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.apps'.homebrew;
+  cfg = config.programs'.homebrew;
 in
 {
-  options.apps'.homebrew = {
+  options.programs'.homebrew = {
     enable = lib.mkEnableOption "Homebrew package management";
 
     enableFishIntegration = lib.mkOption {

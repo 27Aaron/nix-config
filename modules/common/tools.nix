@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.tools'.dev;
+  cfg = config.development'.dev;
 in
 {
-  options.tools'.dev = {
+  options.development'.dev = {
     enable = lib.mkEnableOption "development CLI toolset for interactive hosts";
   };
 

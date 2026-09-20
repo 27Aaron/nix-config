@@ -6,7 +6,7 @@
   ...
 }:
 let
-  brewCfg = osConfig.apps'.homebrew;
+  brewCfg = osConfig.programs'.homebrew;
   enabled = brewCfg.enable && lib.elem "karabiner-elements" brewCfg.casks;
   generatedConfig = builtins.toFile "karabiner.json" (
     builtins.toJSON {

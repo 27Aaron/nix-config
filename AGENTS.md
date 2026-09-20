@@ -55,8 +55,8 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 - 每台主机注入同一组 `specialArgs`：`inputs`、`myvars`、`hostName`、`platformName`、`helpers`；Home Manager 通过 `extraSpecialArgs` 收到同一组，并以 `backupFileExtension = "hm-bak"` 接入主用户。模块和 Home Manager 文件可以直接取用这些参数。
 - `helpers` 由 `lib/mkHost.nix` 从 `helpers/default.nix` 求值注入（求值时带上 `platformName`，`path.nix` 等按平台计算的常量由此而来）；`myvars` 就是其中的 `user` 注册表。模块通过 `helpers.port.openssh`、`helpers.portStr.openssh`、`helpers.nix.substituters`、`helpers.path.nixConfig`、`helpers.btrfs.pool`、`helpers.fonts.monospace` 等路径引用共享常量。
 - `modules/default.nix` 与 `home/default.nix` 共用 `lib/default.nix` 的 `scanPaths` 递归收集：含 `default.nix` 的目录作为单个模块整体导入，否则继续下钻；普通 `.nix` 文件直接导入。前者收集 `modules/common/` 与当前平台模块目录，后者收集 `home/common/` 与当前平台 Home Manager 目录。新增模块放入正确的职责目录即可，无需登记。
-- NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（`security` / `security'`）、`tools'`、`system.stateVersion` 的顺序组织。
-- NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`storage'.disko` 磁盘参数（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`、`bios.enable`）和 `storage'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
+- NixOS 主机的 `default.nix` 按 `imports`、`services'`、`desktop'`、安全配置（原生 `security.*` 与 `core'.*` 的安全开关）、`development'`、`system.stateVersion` 的顺序组织。
+- NixOS 主机的 `hardware.nix` 持有硬件探测结果、`hardware'` 硬件支持开关、内核、引导与主机级存储配置：`hardware'.disko` 磁盘参数（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`、`bios.enable`）和 `hardware'.persistence.enable`。功能所属的持久化文件和目录清单仍由各自模块声明。
 - Flake inputs 中的 `secrets`（私有仓库 `27Aaron/nix-secrets`，sops 密钥库）和 `nur-aaron`（个人 NUR 包）为服务器主机预留；更新 lock 文件需要能访问前者的 SSH。
 
 ## 命令与危险操作
@@ -82,16 +82,12 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 
 | 命名空间 | 职责 | 定义位置 |
 | --- | --- | --- |
-| `core'` | 主机与主用户元数据：hostName、timeZone、hashedPassword、sshAuthorizedKeys | `modules/*/system/core.nix` |
-| `boot'` | 引导：GRUB、systemd-boot、initrd SSH | `modules/nixos/boot/` |
-| `system'` | 系统级杂项（darwin 系统偏好 `system'.defaults`） | `modules/darwin/system/` |
-| `apps'` | 应用级系统配置（darwin Homebrew `apps'.homebrew`） | `modules/darwin/apps/` |
-| `tools'` | 用户工具分组：跨平台开发 CLI（`tools'.dev`）、NixOS AI 开发工具（`tools'.ai`） | `modules/common/`、`modules/nixos/apps/` |
+| `core'` | 主机与主用户元数据（hostName、timeZone、hashedPassword、sshAuthorizedKeys）、安全功能（firewall、kernel-hardening、arp-filter、touch-id）、darwin 系统偏好（`core'.defaults`） | `modules/*/system/`、`modules/nixos/security/`、`modules/darwin/security/` |
+| `hardware'` | 可选硬件支持、引导（GRUB、systemd-boot、initrd SSH）、磁盘与持久化（disko、persistence） | `modules/nixos/hardware/`、`modules/nixos/boot/`、`modules/nixos/storage/` |
 | `services'` | 主机级系统服务（含 PostgreSQL） | `modules/nixos/services/`、`modules/nixos/apps/`、`modules/nixos/desktop/session/`、`modules/nixos/storage/` |
 | `desktop'` | 桌面功能与应用开关 | `modules/nixos/desktop/` |
-| `hardware'` | 可选硬件支持 | `modules/nixos/hardware/` |
-| `security'` | 安全功能（firewall、kernel-hardening、arp-filter、touch-id） | `modules/nixos/security/`、`modules/darwin/security/` |
-| `storage'` | 磁盘与持久化（disko、persistence） | `modules/nixos/storage/` |
+| `development'` | 用户工具分组：跨平台开发 CLI（`development'.dev`）、NixOS AI 开发工具（`development'.ai`） | `modules/common/`、`modules/nixos/apps/` |
+| `programs'` | 应用级系统配置（darwin Homebrew `programs'.homebrew`） | `modules/darwin/apps/` |
 | `preservation'` | Preservation 选项别名，`os` / `user` 对应 `/persistent` 下的系统与用户条目 | `modules/nixos/storage/persistence.nix` |
 | `persist'` | 纯 Home Manager 工具上报的持久化条目 | `home/common/persist.nix` |
 
@@ -109,7 +105,7 @@ config = lib.mkIf cfg.enable {
 };
 ```
 
-选项声明风格：模块入口的总开关用 `lib.mkEnableOption`；其余选项（含子命名空间的布尔开关，如 `storage'.disko.luks.enable`）统一写成显式的 `lib.mkOption`，带 `type`、`default` 和 `description`。
+选项声明风格：模块入口的总开关用 `lib.mkEnableOption`；其余选项（含子命名空间的布尔开关，如 `hardware'.disko.luks.enable`）统一写成显式的 `lib.mkOption`，带 `type`、`default` 和 `description`。
 
 模块的自定义 `enable` 是功能边界。若它负责启用底层服务，底层 `enable` 应直接设置为 `true`，避免自定义开关和原生开关产生分叉。`lib.mkDefault` 只用于确实需要让主机覆盖的默认值。
 
@@ -124,7 +120,7 @@ NixOS 模块目录按职责域组织：
 - 桌面的会话栈与底层会话服务归 `desktop/session/`，桌面应用归 `desktop/apps/`，外观与输入环境归 `desktop/environment/`
 - 存储域服务（btrbk、btrfs-scrub、smartd）归 `storage/`
 
-目录与命名空间不要求一一对应（`apps/`、`desktop/session/`、`storage/` 下都有 `services'.*` 模块），主机只通过选项开关使用模块，不感知文件位置。
+目录与命名空间不要求一一对应（`boot/` 下的引导模块属于 `hardware'`，`apps/`、`desktop/session/`、`storage/` 下都有 `services'.*` 模块），主机只通过选项开关使用模块，不感知文件位置。
 
 Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：Homebrew 启用且 `casks` 包含 `karabiner-elements` 时才生效，Homebrew 声明列表是唯一来源。
 
@@ -134,9 +130,9 @@ Karabiner 配置位于 `home/darwin/apps/karabiner.nix`，不设独立开关：H
 
 工具与基线的归属：
 
-- 跨平台的开发 CLI 工具集（uv、direnv、Nix 工具链）由 `tools'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`
+- 跨平台的开发 CLI 工具集（uv、direnv、Nix 工具链）由 `development'.dev.enable` 控制，安装、集成和持久化配置收敛在 `modules/common/tools.nix`
 - gh、lazygit 与 git-trim 是 git 工作流基线，随 git 和 delta 放在 `home/common/git.nix`；Shell 专属的 `uv` / `uvx` 补全分别放在 `home/common/fish.nix` 和 `home/common/zsh.nix`，并按命令是否存在加载
-- NixOS 的 AI 开发工具集（ChatGPT 桌面端、Claude Code、Codex、DeepSeek CLI 和 ZCode）由 `tools'.ai.enable` 控制，配置收敛在 `modules/nixos/apps/ai-tools.nix`；其中 ChatGPT（`chatgpt`）、DeepSeek CLI（`dsh`）和 ZCode 使用 `llm-agents` input 提供的包，持久化直接声明在 `preservation'.user` 下
+- NixOS 的 AI 开发工具集（ChatGPT 桌面端、Claude Code、Codex、DeepSeek CLI 和 ZCode）由 `development'.ai.enable` 控制，配置收敛在 `modules/nixos/apps/ai-tools.nix`；其中 ChatGPT（`chatgpt`）、DeepSeek CLI（`dsh`）和 ZCode 使用 `llm-agents` input 提供的包，持久化直接声明在 `preservation'.user` 下
 - `just` 属于所有主机共用的基线工具，放在 `home/common/misc.nix`
 - XDG 用户目录是桌面能力，由 `desktop'.xdg-user-dirs.enable` 控制，不放进 `home/nixos/` 基线
 - 其他带开关的内容不放入 `home/common/` 基线
@@ -157,7 +153,7 @@ NixOS 上 `nh` 的 flake 路径固定为 `/home/<username>/nix-config`（`module
 
 ## 持久化规则
 
-`storage'.persistence.enable` 是 Preservation 的总开关，只在 `modules/nixos/storage/persistence.nix` 中负责启用持久化机制。
+`hardware'.persistence.enable` 是 Preservation 的总开关，只在 `modules/nixos/storage/persistence.nix` 中负责启用持久化机制。
 
 持久化条目跟随所有权：功能开关定义在哪个模块，对应条目就声明在哪个模块内部。
 
@@ -165,7 +161,7 @@ NixOS 上 `nh` 的 flake 路径固定为 `/home/<username>/nix-config`（`module
 - 纯 Home Manager 工具无法直接写 NixOS 选项，通过 `home/common/persist.nix` 定义的 `persist'` 选项上报自己的状态目录和文件（例如 Atuin、Zoxide）
 - 桌面共用状态（GTK、dconf、密钥环等）跟随生成或消费它们的桌面功能声明，例如 GTK/dconf 放在 `desktop/environment/themes.nix`；由上游模块间接触发的系统服务（如 GNOME Keyring 会被 niri 生态开启、GVfs 会被桌面基线应用开启）也拥有自己的服务模块和 `services'.<name>.enable` 开关，持久化按最终服务状态判定
 - 服务自己的状态由服务模块声明，例如 VNStat 放在 `services/vnstat.nix`；桌面功能和应用由 `desktop/` 下定义各自开关的模块声明，例如 Firefox 放在 `desktop/apps/firefox.nix`
-- 功能模块不要重复判断 `storage'.persistence.enable`；Preservation 自身会根据总开关决定是否生成实际挂载
+- 功能模块不要重复判断 `hardware'.persistence.enable`；Preservation 自身会根据总开关决定是否生成实际挂载
 - 没有启用的服务、桌面功能或应用，不得加入它们专属的持久化目录
 
 推荐的服务模块形态：

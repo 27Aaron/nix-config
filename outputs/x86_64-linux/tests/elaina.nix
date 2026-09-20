@@ -11,7 +11,7 @@ assertions.checkAttrs {
     "desktop'.niri.enable" = true;
     "desktop'.niri.autoLogin" = true;
     "services'.openssh.port" = port.openssh;
-    "security'.firewall.enable" = true;
-    "tools'.ai.enable" = true;
+    "core'.firewall.enable" = true;
+    "development'.ai.enable" = true;
   };
 }

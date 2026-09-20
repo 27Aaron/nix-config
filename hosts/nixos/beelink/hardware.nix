@@ -32,9 +32,9 @@
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
   };
 
-  boot'.systemd-boot.enable = true;
+  hardware'.systemd-boot.enable = true;
 
-  storage' = {
+  hardware' = {
     disko = {
       enable = true;
       device = "/dev/nvme0n1";

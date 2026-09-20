@@ -31,7 +31,7 @@
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-zen4;
   };
 
-  boot'.systemd-boot.enable = true;
+  hardware'.systemd-boot.enable = true;
 
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
@@ -40,7 +40,7 @@
     bluetooth.enable = true;
   };
 
-  storage' = {
+  hardware' = {
     disko = {
       enable = true;
       device = "/dev/nvme0n1";

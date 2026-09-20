@@ -45,11 +45,11 @@
     xdg-user-dirs.enable = true;
   };
 
-  security'.firewall.enable = true;
-  security'.kernel-hardening.enable = true;
+  core'.firewall.enable = true;
+  core'.kernel-hardening.enable = true;
 
-  tools'.ai.enable = true;
-  tools'.dev.enable = true;
+  development'.ai.enable = true;
+  development'.dev.enable = true;
 
   # Remote deployment via colmena.
   deployment.tags = [ "laptop" ];

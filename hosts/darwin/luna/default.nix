@@ -6,11 +6,11 @@
 #####################################################
 { ... }:
 {
-  apps'.homebrew.enable = true;
-  security'.touch-id.enable = true;
-  system'.defaults.enable = true;
+  programs'.homebrew.enable = true;
+  core'.touch-id.enable = true;
+  core'.defaults.enable = true;
 
-  tools'.dev.enable = true;
+  development'.dev.enable = true;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 6;

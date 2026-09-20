@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.security'.firewall;
+  cfg = config.core'.firewall;
 in
 {
-  options.security'.firewall = {
+  options.core'.firewall = {
     enable = lib.mkEnableOption "Firewall with nftables";
   };
 

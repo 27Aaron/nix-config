@@ -4,22 +4,22 @@
   ...
 }:
 let
-  cfg = config.boot'.systemd-boot;
-  diskoCfg = config.storage'.disko;
+  cfg = config.hardware'.systemd-boot;
+  diskoCfg = config.hardware'.disko;
 in
 {
-  options.boot'.systemd-boot = {
+  options.hardware'.systemd-boot = {
     enable = lib.mkEnableOption "systemd-boot bootloader with EFI variable management";
   };
 
   config = lib.mkIf cfg.enable {
     # systemd-boot is UEFI-only, so a BIOS boot partition would be dead
-    # weight; BIOS hosts should use boot'.grub instead. The mutual
-    # exclusion with boot'.grub is asserted in grub.nix.
+    # weight; BIOS hosts should use hardware'.grub instead. The mutual
+    # exclusion with hardware'.grub is asserted in grub.nix.
     assertions = [
       {
         assertion = !diskoCfg.bios.enable;
-        message = "boot'.systemd-boot cannot be combined with storage'.disko.bios.enable; use boot'.grub for BIOS boot.";
+        message = "hardware'.systemd-boot cannot be combined with hardware'.disko.bios.enable; use hardware'.grub for BIOS boot.";
       }
     ];
 

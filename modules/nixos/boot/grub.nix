@@ -4,11 +4,11 @@
   ...
 }:
 let
-  cfg = config.boot'.grub;
-  diskoCfg = config.storage'.disko;
+  cfg = config.hardware'.grub;
+  diskoCfg = config.hardware'.disko;
 in
 {
-  options.boot'.grub = {
+  options.hardware'.grub = {
     enable = lib.mkEnableOption "GRUB bootloader";
   };
 
@@ -17,8 +17,8 @@ in
     # this, so the repo-level switches have to.
     assertions = [
       {
-        assertion = !config.boot'.systemd-boot.enable;
-        message = "boot'.grub and boot'.systemd-boot are mutually exclusive; enable only one.";
+        assertion = !config.hardware'.systemd-boot.enable;
+        message = "hardware'.grub and hardware'.systemd-boot are mutually exclusive; enable only one.";
       }
     ];
 
@@ -31,7 +31,7 @@ in
       efiInstallAsRemovable = lib.mkDefault true;
       configurationLimit = lib.mkDefault 8;
 
-      # With a BIOS boot partition (storage'.disko.bios.enable) GRUB also
+      # With a BIOS boot partition (hardware'.disko.bios.enable) GRUB also
       # installs onto the disk itself, with the ESP staying populated as a
       # fallback; pure UEFI hosts install nothing but the removable EFI
       # binary, which upstream expresses as the special device "nodev".

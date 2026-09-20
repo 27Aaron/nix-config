@@ -27,8 +27,8 @@
     zram.enable = true;
   };
 
-  security'.firewall.enable = true;
-  security'.kernel-hardening.enable = true;
+  core'.firewall.enable = true;
+  core'.kernel-hardening.enable = true;
 
   # Remote deployment via colmena.
   deployment.tags = [

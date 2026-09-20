@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.security'.arp-filter;
+  cfg = config.core'.arp-filter;
 in
 {
-  options.security'.arp-filter = {
+  options.core'.arp-filter = {
     enable = lib.mkEnableOption ''
       nftables ARP anti-spoofing: on the selected interfaces, ARP packets
       advertising a source address outside the allowed prefixes are dropped.
