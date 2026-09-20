@@ -7,7 +7,6 @@
 { ... }:
 {
   programs'.homebrew.enable = true;
-  core'.touch-id.enable = true;
   core'.defaults.enable = true;
 
   development'.dev.enable = true;

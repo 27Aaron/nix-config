@@ -6,6 +6,8 @@
 }:
 {
   nix = {
+    enable = true;
+
     # remove nix-channel related tools & configs, we use flakes instead.
     channel.enable = false;
 

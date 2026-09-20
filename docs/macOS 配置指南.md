@@ -1,6 +1,6 @@
 # macOS 配置指南
 
-本文档介绍如何在全新的 macOS 上安装 Homebrew 和 Lix，并使用本仓库的 Flake 初始化 nix-darwin。
+本文档介绍如何在全新的 macOS 上安装 Homebrew 和 Nix，并使用本仓库的 Flake 初始化 nix-darwin。
 
 > [!WARNING]
 > **Intel Mac（`x86_64-darwin`）即将失去上游支持**
@@ -25,13 +25,13 @@ nix-darwin 的 Homebrew 模块只负责管理软件清单，不会安装 Homebre
 brew --version
 ```
 
-### 安装 Lix
+### 安装 Nix
 
 ```bash
-curl -sSf -L https://install.lix.systems/lix | sh -s -- install
+sh <(curl -L https://nixos.org/nix/install)
 ```
 
-重新打开终端，确认 Lix 已生效：
+重新打开终端，确认 Nix 已生效：
 
 ```bash
 nix --version
@@ -107,7 +107,7 @@ just gc      # 清理 7 天前的旧 generation 及无引用 Store 路径
 
 - [Homebrew 安装文档](https://docs.brew.sh/Installation)
 - [Homebrew 支持等级](https://docs.brew.sh/Support-Tiers)
-- [Lix 安装文档](https://lix.systems/install/)
+- [Nix 安装文档](https://nix.dev/manual/nix/latest/installation)
 - [Nixpkgs 26.05 发布说明](https://nixos.org/manual/nixpkgs/unstable/release-notes#x86_64-darwin-26.05)
 - [Nixpkgs 停止构建 `x86_64-darwin`](https://github.com/NixOS/nixpkgs/pull/493096)
 - [nix-darwin 使用说明](https://github.com/nix-darwin/nix-darwin)
