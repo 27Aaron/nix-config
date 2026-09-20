@@ -1,15 +1,15 @@
-<!-- 标题请使用约定式提交格式：feat(nixos): ... / fix(darwin): ... / refactor: ... / docs: ... -->
+<!-- Use conventional commit format for the title: feat(nixos): ... / fix(darwin): ... / refactor: ... / docs: ... -->
 
-## 变更说明
+## Summary
 
-<!-- 为什么改、改了什么？涉及哪些主机、模块或 home 配置 -->
+<!-- Why and what changed? Which hosts, modules, or home configs are affected -->
 
 -
 
-## 验证方式
+## Verification
 
-- [ ] `just check` 通过（格式、未使用声明、所有主机求值）
+- [ ] `just check` passes (formatting, unused declarations, all-host evaluation)
 
-## 自查清单
+## Checklist
 
-- [ ] 遵循 AGENTS.md 的模块归属、命名空间和持久化约定
+- [ ] Follows the module ownership, namespace, and persistence conventions in AGENTS.md
