@@ -5,11 +5,7 @@
 > [!WARNING]
 > **Intel Mac（`x86_64-darwin`）即将失去上游支持**
 >
-> 受上游开发精力和构建资源限制，Nixpkgs 26.05 将是最后一个支持 Intel Mac（`x86_64-darwin`）的版本。随着 [`release: stop building for x86_64-darwin`](https://github.com/NixOS/nixpkgs/pull/493096) 合入，Nixpkgs 26.11 和 unstable 将不再为该平台构建二进制包，也不再支持从源码构建。
->
-> Intel Mac 用户应暂时固定在 Nixpkgs 26.05，并尽快迁移到 Apple Silicon 或其他受支持的平台。`allowDeprecatedx86_64Darwin` 只能隐藏弃用警告，无法恢复 unstable 的平台支持，长期自行维护整套软件包构建也不可取。
->
-> Homebrew 预计不早于 2026 年 9 月将 Intel Mac 降为 Tier 3，并在 2027 年 9 月后完全停止支持。按照 Nixpkgs 26.05 发布说明采用的时间线，macOS 26 的安全更新预计也将在 2028 年结束。
+> Nixpkgs 26.05 是最后一个支持 Intel Mac 的版本；26.11 与 unstable 不再为该平台构建二进制包（[PR #493096](https://github.com/NixOS/nixpkgs/pull/493096)）。Intel Mac 用户应固定在 26.05 并尽快迁移到 Apple Silicon。
 
 本仓库的 Darwin 主机为 `aarch64-darwin`（Apple Silicon），不受上述变更影响。
 
@@ -100,22 +96,12 @@ just update  # 更新 flake.lock
 just gc      # 清理 7 天前的旧 generation 及无引用 Store 路径
 ```
 
-仓库不设远程 CI 检查，GitHub 上仅有 issue/PR 的标签和依赖更新自动化。修改配置或依赖后，先在本地运行 `just check`，通过后再执行 `just switch`。
-
 新增的 `.nix` 文件会被自动导入，无需手动登记。常用的配置目录：
 
 - `home/common/`：跨平台 Home Manager 配置
 - `home/darwin/`：macOS 专用 Home Manager 配置
 - `modules/common/`：跨平台系统模块
 - `modules/darwin/`：nix-darwin 系统模块
-
-### 编辑 Karabiner 配置
-
-Homebrew 启用且清单中包含 `karabiner-elements` 时，每次激活都会在 `~/.config/karabiner/karabiner.json` 写入由 Nix 生成的键位配置。这是一个排版过的普通 JSON 文件（权限 `0600`），不链接到 Nix store，可以在编辑器或 Karabiner 设置界面中直接修改；Karabiner 检测到文件变化后会自动重载。
-
-每次 `just switch` 会先把现有 JSON 备份为同目录的 `karabiner.json.hm-bak`（覆盖上一份备份），再写入 Nix 配置；更早的时间戳备份会被清理，始终只保留一份。备份是独立文件，不依赖 Nix store。
-
-手动编辑随时可行，但下次 `just switch` 会用 Nix 配置覆盖这些修改，被覆盖前的内容会留在备份里。需要长期保留的键位，请修改仓库中的 Nix 配置。如果旧的 Karabiner 配置目录还是软链接，先把内容复制出来、换成普通目录，再执行 `just switch`。
 
 ## 参考资料
 
