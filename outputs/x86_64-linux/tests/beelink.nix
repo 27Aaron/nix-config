@@ -10,7 +10,7 @@ assertions.checkAttrs {
   expectations = {
     "desktop'.apps.zed.enable" = true;
     "desktop'.niri.enable" = true;
-    "services'.openssh.port" = port.openssh;
+    "services.openssh.ports" = [ port.openssh ];
     "core'.firewall.enable" = true;
     "development'.ai.enable" = true;
   };

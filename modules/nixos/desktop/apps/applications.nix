@@ -35,7 +35,7 @@ in
     # GVfs provides trash, network locations, MTP, and removable-media
     # integration for Nautilus; udisks2 backs removable-media mounting.
     services'.gvfs.enable = true;
-    services'.udisks2.enable = true;
+    services.udisks2.enable = true;
 
     preservation'.user.directories = [
       # Desktop application launchers and trash

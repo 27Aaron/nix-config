@@ -10,24 +10,12 @@ in
 {
   options.services'.openssh = {
     enable = lib.mkEnableOption "OpenSSH daemon";
-
-    port = lib.mkOption {
-      type = lib.types.port;
-      default = helpers.port.openssh;
-      description = "TCP port on which OpenSSH listens";
-    };
-
-    openFirewall = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Whether to open the SSH port in the firewall";
-    };
   };
 
   config = lib.mkIf cfg.enable {
     services.openssh = {
       enable = true;
-      ports = [ cfg.port ];
+      ports = [ helpers.port.openssh ];
 
       # Only the Ed25519 host identity is needed; upstream also generates
       # an RSA key by default.
@@ -50,7 +38,6 @@ in
         # Pure Wayland hosts gain nothing from X11 forwarding.
         X11Forwarding = lib.mkDefault false;
       };
-      openFirewall = cfg.openFirewall;
     };
 
     preservation'.os.directories = [ "/etc/ssh" ];
