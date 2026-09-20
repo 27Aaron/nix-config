@@ -9,23 +9,14 @@
 #
 ###################################################################################
 {
-  config,
-  lib,
   ...
 }:
-let
-  cfg = config.core'.defaults;
-in
 {
-  options.core'.defaults = {
-    enable = lib.mkEnableOption "macOS system defaults";
-  };
-
   config = {
     # sudo 的 Touch ID 认证默认启用
     security.pam.services.sudo_local.touchIdAuth = true;
 
-    system.defaults = lib.mkIf cfg.enable {
+    system.defaults = {
       menuExtraClock.Show24Hour = true; # 使用 24 小时制
       menuExtraClock.ShowSeconds = true;
 

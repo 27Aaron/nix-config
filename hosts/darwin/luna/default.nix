@@ -7,8 +7,6 @@
 { ... }:
 {
   programs'.homebrew.enable = true;
-  core'.defaults.enable = true;
-
   development'.dev.enable = true;
 
   nixpkgs.hostPlatform = "aarch64-darwin";

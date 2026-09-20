@@ -14,7 +14,7 @@ assertions.checkAttrs {
     "development'.ai.enable" = false;
     "development'.dev.enable" = false;
     "nix.settings.max-jobs" = 1;
-    "services'.openssh.port" = port.openssh;
+    "services.openssh.ports" = [ port.openssh ];
     "core'.firewall.enable" = true;
   };
 }
