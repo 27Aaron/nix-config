@@ -5,6 +5,7 @@
   self,
   nixpkgs,
   configurations,
+  colmenaHive,
   evalTestFailures,
   systemNames,
 }:
@@ -49,6 +50,15 @@ forEachSystem (
           "ok"
         else
           throw "host assertion failures:\n${lib.concatStringsSep "\n" evalTestFailures}";
+    } "touch $out";
+
+    # colmenaHive is not a standard flake output, so `nix flake check` only
+    # warns about it; force-evaluate the hive (schema + per-host deployment
+    # config) so a broken colmena integration fails the check.
+    colmena-hive = pkgs.runCommand "check-colmena-hive" {
+      hive = builtins.toJSON {
+        inherit (colmenaHive) __schema deploymentConfig;
+      };
     } "touch $out";
   }
 )

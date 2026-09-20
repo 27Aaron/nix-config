@@ -30,5 +30,11 @@
   security'.firewall.enable = true;
   security'.kernel-hardening.enable = true;
 
+  # Remote deployment via colmena.
+  deployment.tags = [
+    "homelab"
+    "router"
+  ];
+
   system.stateVersion = "26.05";
 }

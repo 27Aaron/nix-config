@@ -13,8 +13,8 @@
 ```
 flake.nix             Flake 入口：inputs 与一行 outputs = import ./outputs
 outputs/              Flake 输出组装
-  default.nix         汇总各 system 输出，定义 checks、devShells、formatter
-  checks.nix          format、deadnix、darwin-eval、hosts-eval 检查
+  default.nix         汇总各 system 输出，定义 colmenaHive、checks、devShells、formatter
+  checks.nix          format、deadnix、darwin-eval、hosts-eval、colmena-hive 检查
   <system>/           按系统架构组织（aarch64-darwin、x86_64-linux）
     default.nix       汇总本 system 的主机输出与 eval tests
     src/<host>.nix    每主机一个文件：显式声明该主机的 flake 输出
@@ -25,6 +25,7 @@ helpers/              共享库
 lib/                  通用函数与构建器
   assertions.nix      eval test 断言 helper（checkAttrs）
   default.nix         scanPaths 递归收集模块路径
+  mkColmenaHive.nix   由 nixosConfigurations 生成 colmenaHive（远程部署）
   mkHost.nix          主机构建器
   mkSystemOutputs.nix 按 system 组装主机输出与 eval tests
   platforms.nix       平台差异：darwin/nixos 的 builder 与模块目录
@@ -50,6 +51,7 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 
 - 输出组装集中在 `outputs/`：`flake.nix` 只保留 inputs 和 `outputs = inputs: import ./outputs inputs`。`outputs/default.nix` 合并各 system 的输出并定义 `checks`、`devShells`、`formatter`；每台主机在 `outputs/<system>/src/<主机名>.nix` 显式声明 flake 输出（`<system>Configurations.<主机名> = mkHost "<主机名>"`），角色断言在 `outputs/<system>/tests/<主机名>.nix`。`lib/mkSystemOutputs.nix` 按 system 加载这两组文件（复用 `scanPaths`），构建器在 `lib/mkHost.nix`，平台差异集中在 `lib/platforms.nix`。
 - 新增主机 = 建 `hosts/<平台>/<主机名>/` 主机模块目录（目录名即 flake 里的主机名），并在 `outputs/<system>/src/` 与 `tests/` 各加一个同名文件。
+- 远程部署用 colmena：`lib/mkColmenaHive.nix` 把已求值的 `nixosConfigurations` 映射成 `colmenaHive` 输出（0.5 schema，零重复求值），每台 NixOS 主机经 `modules/nixos/system/colmena.nix` 获得 `deployment.*` 选项与默认值（targetHost 为主机名、targetPort 为 SSH 端口、targetUser 为 root，allowLocalDeployment 允许主机从自己的 checkout 本地自部署），主机配置只声明自己的 `deployment.tags`。在 Linux 主机上用 `just deploy`（本地构建），从 macOS 用 `just deploy-mac`（构建发生在目标机）。
 - 每台主机注入同一组 `specialArgs`：`inputs`、`myvars`、`hostName`、`platformName`、`helpers`；Home Manager 通过 `extraSpecialArgs` 收到同一组，并以 `backupFileExtension = "hm-bak"` 接入主用户。模块和 Home Manager 文件可以直接取用这些参数。
 - `helpers` 由 `lib/mkHost.nix` 从 `helpers/default.nix` 求值注入（求值时带上 `platformName`，`path.nix` 等按平台计算的常量由此而来）；`myvars` 就是其中的 `user` 注册表。模块通过 `helpers.port.openssh`、`helpers.portStr.openssh`、`helpers.nix.substituters`、`helpers.path.nixConfig`、`helpers.btrfs.pool`、`helpers.fonts.monospace` 等路径引用共享常量。
 - `modules/default.nix` 与 `home/default.nix` 共用 `lib/default.nix` 的 `scanPaths` 递归收集：含 `default.nix` 的目录作为单个模块整体导入，否则继续下钻；普通 `.nix` 文件直接导入。前者收集 `modules/common/` 与当前平台模块目录，后者收集 `home/common/` 与当前平台 Home Manager 目录。新增模块放入正确的职责目录即可，无需登记。
@@ -69,6 +71,7 @@ Justfile              switch / check / update / gc / fmt 等常用命令
 会改变系统状态或历史的命令，只在用户明确要求时执行：
 
 - `just switch`：构建并激活当前主机配置（macOS 用 `darwin-rebuild`，NixOS 用 `nh os switch`）
+- `just deploy` / `just deploy-mac`：通过 colmena 远程部署 NixOS 主机（默认 `@homelab`；可传 tag 或主机名与 goal，如 `just deploy @server dry-activate`）。前者在发起机构建（在 Linux 上运行），后者在目标机构建（供 macOS 发起）
 - `just update`：更新全部 flake inputs 并写入 `flake.lock`；需要能访问 `secrets` 私有仓库的 SSH
 - `just gc`：删除旧 generation 与不可达的 store 路径，不可逆
 - `just install`：仅 macOS，在全新系统上安装 nix-darwin
@@ -200,7 +203,7 @@ deadnix --fail .
 nix flake check path:. --no-build --all-systems
 ```
 
-flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix`、`darwin-eval` 和 `hosts-eval`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖；`hosts-eval` 按 `outputs/<system>/tests/` 下各主机的断言检查其角色与关键配置值（有意改变行为时同步更新对应文件）。`--no-build` 时 checks 只求值不执行。
+flake 的 `checks` 输出包含 `format`（nixfmt-rs）、`deadnix`、`darwin-eval`、`hosts-eval` 和 `colmena-hive`：`nix flake check` 会深度求值 `nixosConfigurations`，但不会求值 `darwinConfigurations`，后者由 `darwin-eval` 强制覆盖；`hosts-eval` 按 `outputs/<system>/tests/` 下各主机的断言检查其角色与关键配置值（有意改变行为时同步更新对应文件）；`colmena-hive` 强制求值 `colmenaHive`——它不是标准 flake output，`nix flake check` 只会对其告警。`--no-build` 时 checks 只求值不执行。
 
 两点注意：
 

@@ -42,14 +42,24 @@ let
   };
 
   forEachSystem = lib.genAttrs systemNames;
+
+  # Remote deployment via colmena (see the `deploy` recipe). Built from the
+  # evaluated nixosConfigurations so hosts are never evaluated twice.
+  colmenaHive = import ../lib/mkColmenaHive.nix {
+    inherit lib;
+    inherit (configurations) nixosConfigurations;
+  };
 in
 configurations
 // {
+  inherit colmenaHive;
+
   checks = import ./checks.nix {
     inherit
       self
       nixpkgs
       configurations
+      colmenaHive
       systemNames
       ;
     evalTestFailures = lib.flatten (map (it: it.evalTests or [ ]) systemValues);
@@ -62,10 +72,11 @@ configurations
     in
     {
       default = pkgs.mkShellNoCC {
-        packages = with pkgs; [
-          deadnix
-          just
-          nixfmt-rs
+        packages = [
+          inputs.colmena.packages.${system}.colmena
+          pkgs.deadnix
+          pkgs.just
+          pkgs.nixfmt-rs
         ];
       };
     }

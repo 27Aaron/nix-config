@@ -51,5 +51,8 @@
   tools'.ai.enable = true;
   tools'.dev.enable = true;
 
+  # Remote deployment via colmena.
+  deployment.tags = [ "laptop" ];
+
   system.stateVersion = "26.05";
 }

@@ -23,6 +23,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    colmena = {
+      url = "github:nix-community/colmena";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.stable.follows = "nixpkgs";
+    };
+
     preservation.url = "github:nix-community/preservation";
 
     secrets = {

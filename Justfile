@@ -20,6 +20,14 @@ switch:
 switch:
     @nh os switch path:. -H {{ hostname }}
 
+# Deploy NixOS hosts via colmena, building locally (run this on a Linux host)
+deploy on="@homelab" mode="switch":
+    @colmena apply {{mode}} --on '{{on}}'
+
+# Same as deploy, but builds on the target hosts (for running from macOS)
+deploy-mac on="@homelab" mode="switch":
+    @colmena apply {{mode}} --build-on-target --on '{{on}}'
+
 # Update the flake inputs (nixpkgs, nix-darwin, etc.)
 update:
     @nix flake update
