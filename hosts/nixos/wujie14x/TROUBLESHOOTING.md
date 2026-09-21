@@ -19,7 +19,7 @@
 - **开盖即可唤醒**，不需要按电源键（键盘唤不醒：内核为规避固件 bug 执行了 `atkbd serio0: Disabling IRQ1 wakeup source`）
 - 恢复后设备全部正常：amdgpu SMU、`dwmac-motorcomm enp1s0`、nvme 队列、Wi-Fi 重连
 
-待机耗电：电池供电睡 23 分钟后 `charge_now` 仍等于满电值，而 BMS 的电量分辨率是 1%（0.052 Ah ≈ 0.85 Wh），所以**待机功耗 < 2.2 W**。要精确值需要睡 1–2 小时，见 [TODO.md](./TODO.md)。
+待机耗电：2026-09-21 拔电合盖 74 分钟（13:46→15:00，一次 s2idle 到底、无中间唤醒），电量从 92% 掉到 90%（睡前/唤醒两个采样点），2% × 80.08 Wh ≈ 1.6 Wh，折合**约 1.25 W**；扣掉合盖前约 3 分钟亮屏段后，纯 s2idle 约 **0.9 W**。BMS 的 1% 分辨率（≈0.8 Wh）仍是精度瓶颈。
 
 ### 排障
 
@@ -119,9 +119,9 @@ mt7921e 0000:02:00.0: PM: failed to restore async: error -110
 | `dbus-broker-launch: Ignoring duplicate name '...' in service file '...'`（启动时一批）                    | NixOS 的 system-path 与各包路径各有一份同名 D-Bus service 文件，dbus-broker 取其一并忽略重复；桌面主机上常见，不影响功能 |
 | `dbus-broker-launch: Activation request for 'org.freedesktop.resolve1' failed ...`                         | 有程序探测 systemd-resolved，本机未启用（DNS 走 NetworkManager），探测失败无害                                           |
 
-## USB-C 外接显示时的 amdgpu 报错（待排查）
+## USB-C 外接显示时的 amdgpu 报错（上游已知问题）
 
-实测 C 口一线通能正常出图，但插上显示器时 amdgpu 会打出一批报错。下面三条都是上游已知问题，不是本机特有，后续逐个排查。
+实测 C 口一线通能正常出图，但插上显示器时 amdgpu 会打出一批报错。下面两条都是上游已知问题，不是本机特有。
 
 ### LTTPR 链路训练报错
 
