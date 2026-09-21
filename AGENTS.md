@@ -66,7 +66,7 @@
 
 `system.stateVersion` 放在主机配置中；`home.stateVersion` 统一放在 `home/default.nix`。
 
-NixOS 上 `nh` 的 flake 路径固定为 `/home/<username>/nix-config`（`modules/nixos/core/nix.nix`）。
+`nh` 的 flake 路径固定为 `<homeDirectory>/nix-config`：NixOS 在 `modules/nixos/core/nix.nix` 启用，darwin 通过 Home Manager 在 `home/darwin/nh.nix` 启用。
 
 ## 持久化规则
 

@@ -13,7 +13,7 @@ check:
 # Build and activate the nix-darwin configuration
 [macos]
 switch:
-    @sudo darwin-rebuild --flake path:.#{{ hostname }} switch
+    @nh darwin switch path:. -H {{ hostname }}
 
 # Build and activate the NixOS configuration
 [linux]
@@ -32,13 +32,7 @@ deploy-mac on="@homelab" mode="switch":
 update:
     @nix flake update
 
-# Delete macOS generations and collect unreachable store paths older than 7 days
-[macos]
-gc:
-    @sudo nix-collect-garbage --delete-older-than 7d
-
-# Review and clean NixOS generations, GC roots, and unreachable store paths
-[linux]
+# Review and clean generations, GC roots, and unreachable store paths
 gc:
     @nh clean all --keep 8 --keep-since 14d --ask
 
