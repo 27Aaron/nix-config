@@ -42,6 +42,13 @@
 
     kernelModules = [ "kvm-amd" ];
 
+    # The XDNA NPU driver fails to power the NPU down on hibernate
+    # (`amdxdna 0000:65:00.1: Power off failed, ret -110`), which aborts the
+    # S4 transition and brings the system straight back up. Nothing here uses
+    # the NPU, so keep the driver out of the way; drop this line to get the
+    # NPU back.
+    blacklistedKernelModules = [ "amdxdna" ];
+
     # The in-tree `dwmac-motorcomm` glue driver handles the YT6801 Ethernet
     # controller from Linux 7.0 onwards, so the out-of-tree `yt6801` module is
     # not needed here. On an older kernel this would have to become
