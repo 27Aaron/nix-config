@@ -102,20 +102,22 @@ mt7921e 0000:02:00.0: PM: failed to restore async: error -110
 
 ## 已知警告（都无需处理）
 
-| 日志                                                                                                       | 判断                                                                              |
-| ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `ACPI BIOS Error: Failure creating named object [\_SB.PCI0.GPP6.WLAN._DSM]`（连同 `_S0W`、`_PRW` 共 4 条） | BIOS 自身的 bug，GPP6 是 Wi-Fi 总线；TUXEDO FAQ 确认不影响运行                    |
-| `i8042: PNP: PS/2 appears to have AUX port disabled ... boot with i8042.nopnp`                             | **误报**，触摸板走 I2C 不经过 PS/2；因此不需要 `i8042.nopnp`/`nomux`/`noloop`     |
-| `atkbd serio0: Disabling IRQ1 wakeup source to avoid platform firmware bug`                                | 内核规避固件 bug，键盘不能唤醒，开盖可以                                          |
-| `kvm_amd: Cannot enable x2AVIC, AVIC is unsupported`                                                       | BIOS 未开 AVIC，只影响嵌套虚拟化性能                                              |
-| `asus_wmi: ASUS Management GUID not found`                                                                 | 通用 WMI 探测噪音                                                                 |
-| `Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection ... not supported`                             | MT7922 固件的小瑕疵                                                               |
-| `workqueue: name exceeds WQ_NAME_LEN`                                                                      | amdgpu 的 HDMI FRL 工作队列名过长                                                 |
-| `Failed to adjust io pressure threshold: Device or resource busy`                                          | systemd 用户实例设置 IO 压力阈值的噪音                                            |
-| `ucsi_acpi USBC000:00: failed to re-enable notifications (-110)`                                           | USB-C 通知超时（ETIMEDOUT），插拔 C 口设备与睡眠恢复都会触发，见下一节            |
-| `ACPI BIOS Error: Could not resolve symbol [\_SB.ACDC.RTAC]`（连带 `Aborting method \_SB.PEP._DSM`）       | 只在**电池供电**睡眠唤醒时出现，插电时不出现；BIOS 的电源管理方法失败，不影响恢复 |
-| `pcieport 0000:00:08.1: PME: Spurious native interrupt!`                                                   | PCIe 电源管理事件的虚假中断，s2idle 唤醒时常见                                    |
-| `NetworkManager: device (p2p-dev-wlp2s0): error setting IPv4 forwarding to '0'`                            | NetworkManager 常见噪音                                                           |
+| 日志                                                                                                       | 判断                                                                                                                     |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `ACPI BIOS Error: Failure creating named object [\_SB.PCI0.GPP6.WLAN._DSM]`（连同 `_S0W`、`_PRW` 共 4 条） | BIOS 自身的 bug，GPP6 是 Wi-Fi 总线；TUXEDO FAQ 确认不影响运行                                                           |
+| `i8042: PNP: PS/2 appears to have AUX port disabled ... boot with i8042.nopnp`                             | **误报**，触摸板走 I2C 不经过 PS/2；因此不需要 `i8042.nopnp`/`nomux`/`noloop`                                            |
+| `atkbd serio0: Disabling IRQ1 wakeup source to avoid platform firmware bug`                                | 内核规避固件 bug，键盘不能唤醒，开盖可以                                                                                 |
+| `kvm_amd: Cannot enable x2AVIC, AVIC is unsupported`                                                       | BIOS 未开 AVIC，只影响嵌套虚拟化性能                                                                                     |
+| `asus_wmi: ASUS Management GUID not found`                                                                 | 通用 WMI 探测噪音                                                                                                        |
+| `Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection ... not supported`                             | MT7922 固件的小瑕疵                                                                                                      |
+| `workqueue: name exceeds WQ_NAME_LEN`                                                                      | amdgpu 的 HDMI FRL 工作队列名过长                                                                                        |
+| `Failed to adjust io pressure threshold: Device or resource busy`                                          | systemd 用户实例设置 IO 压力阈值的噪音                                                                                   |
+| `ucsi_acpi USBC000:00: failed to re-enable notifications (-110)`                                           | USB-C 通知超时（ETIMEDOUT），插拔 C 口设备与睡眠恢复都会触发，见下一节                                                   |
+| `ACPI BIOS Error: Could not resolve symbol [\_SB.ACDC.RTAC]`（连带 `Aborting method \_SB.PEP._DSM`）       | 只在**电池供电**睡眠唤醒时出现，插电时不出现；BIOS 的电源管理方法失败，不影响恢复                                        |
+| `pcieport 0000:00:08.1: PME: Spurious native interrupt!`                                                   | PCIe 电源管理事件的虚假中断，s2idle 唤醒时常见                                                                           |
+| `NetworkManager: device (p2p-dev-wlp2s0): error setting IPv4 forwarding to '0'`                            | NetworkManager 常见噪音                                                                                                  |
+| `dbus-broker-launch: Ignoring duplicate name '...' in service file '...'`（启动时一批）                    | NixOS 的 system-path 与各包路径各有一份同名 D-Bus service 文件，dbus-broker 取其一并忽略重复；桌面主机上常见，不影响功能 |
+| `dbus-broker-launch: Activation request for 'org.freedesktop.resolve1' failed ...`                         | 有程序探测 systemd-resolved，本机未启用（DNS 走 NetworkManager），探测失败无害                                           |
 
 ## USB-C 外接显示时的 amdgpu 报错（待排查）
 
