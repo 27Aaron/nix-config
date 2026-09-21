@@ -22,6 +22,7 @@
           email = myvars.email;
         };
 
+        fetch.prune = true;
         init.defaultBranch = "main";
         log.date = "iso";
         pull.rebase = true;
