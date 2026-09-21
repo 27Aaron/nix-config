@@ -10,9 +10,11 @@
   ];
 
   services' = {
+    btrfs-scrub.enable = true;
     networkmanager.enable = true;
     openssh.enable = true;
     power-profiles-daemon.enable = true;
+    smartd.enable = true;
     upower.enable = true;
     zram.enable = true;
   };
