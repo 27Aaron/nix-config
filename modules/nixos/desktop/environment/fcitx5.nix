@@ -92,13 +92,6 @@ let
     comment = "#f0a6aa";
     selectedComment = "#1e1e1e";
   };
-  wanxiangModel = pkgs.fetchurl {
-    url = "https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram";
-    # Upstream replaces this asset in place; verify its contents on updates.
-    # 2026-09 refresh: the LTS asset moved from the 200M to the 400M model
-    # (~419 MB) in June 2026, so the old hash stopped matching.
-    hash = "sha256-muS3vo5FWBGBJKf7BQl9tqNBPVFamLFKvQK4ogddBUI=";
-  };
 in
 {
   options.desktop'.fcitx5 = {
@@ -115,7 +108,9 @@ in
         addons = with pkgs; [
           fcitx5-gtk
           (fcitx5-rime.override {
-            rimeDataPkgs = [ rime-wanxiang ];
+            # rime-ice ships the schema and dictionaries as a reproducible
+            # package; unlike wanxiang it needs no separately pinned model.
+            rimeDataPkgs = [ rime-ice ];
           })
           (qt6Packages.fcitx5-configtool.override { kcmSupport = false; })
         ];
@@ -143,11 +138,10 @@ in
       "fcitx5/themes/ayaya-night".source = ayayaNight;
       "fcitx5/rime/default.custom.yaml".text = ''
         patch:
-          __include: wanxiang_suggested_default:/
+          __include: rime_ice_suggestion:/
           schema_list:
-            - schema: wanxiang
+            - schema: rime_ice
       '';
-      "fcitx5/rime/wanxiang-lts-zh-hans.gram".source = wanxiangModel;
     };
 
     preservation'.user.directories = [

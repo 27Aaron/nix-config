@@ -73,7 +73,7 @@ services.logind.settings.Login = {
 
 ## 5. 桌面环境
 
-greetd 自动登录进 Niri，配 Noctalia 外壳、PipeWire 音频、fcitx5 输入法（万象拼音）、字体、主题与光标；应用有 kitty、Firefox、Zed，另加 nautilus / mpv 等桌面基础应用。开关都在 [default.nix](./default.nix) 里，模块在 `modules/nixos/desktop/` 下。
+greetd 自动登录进 Niri，配 Noctalia 外壳、PipeWire 音频、fcitx5 输入法（雾凇拼音）、字体、主题与光标；应用有 kitty、Firefox、Zed，另加 nautilus / mpv 等桌面基础应用。开关都在 [default.nix](./default.nix) 里，模块在 `modules/nixos/desktop/` 下。
 
 niri 的键位与输出缩放不在此仓库（`~/.config/niri/config.kdl` 手工维护），首次进桌面用上游默认键位。
 
