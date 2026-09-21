@@ -17,6 +17,8 @@
 
 无线、有线、触摸板、传感器等完整清单在 [hardware.nix](./hardware.nix) 的文件头。
 
+BIOS 更新工具官方只提供 Windows 版（`.EXE`）：[下载 N.1.14MRO50](https://driver.mechrevo.com/d.mechrevo.com/driver/MECHREVO2024/WJ14X8845HS/GXxHXxxN114MRO50_CAP.EXE)（来源：[w568w 的 gist 讨论](https://gist.github.com/w568w/b2fc5f9d1f4dff13efe751abec27b396?permalink_comment_id=6147538#gistcomment-6147538)）。
+
 同方 GX4HRXL 公模，与 TUXEDO InfinityBook Pro 14 Gen9 AMD、Slimbook EVO 14 同模具，TUXEDO 的驱动与 FAQ 基本适用。
 
 ## 2. 内核参数
