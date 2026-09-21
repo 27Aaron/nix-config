@@ -95,7 +95,9 @@ let
   wanxiangModel = pkgs.fetchurl {
     url = "https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram";
     # Upstream replaces this asset in place; verify its contents on updates.
-    hash = "sha256-ZU1/H+Sxvz1CX4wKRKxhQj3tWMeEJntN8DJWAw1yIz8=";
+    # 2026-09 refresh: the LTS asset moved from the 200M to the 400M model
+    # (~419 MB) in June 2026, so the old hash stopped matching.
+    hash = "sha256-muS3vo5FWBGBJKf7BQl9tqNBPVFamLFKvQK4ogddBUI=";
   };
 in
 {
