@@ -15,8 +15,10 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       deadnix
+      nil
       nixd
       nixfmt-rs
+      prettier
     ];
 
     hm'.programs.direnv = {
