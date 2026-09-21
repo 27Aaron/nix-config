@@ -71,14 +71,20 @@ services.logind.settings.Login = {
 
 两种状态都已实测通过：suspend 能睡住、开盖秒醒；hibernate 会写盘断电，按电源键后经引导 + LUKS 解锁恢复内存。实测数据、验证方法，以及一个已知限制（NPU 驱动会让休眠失败）见 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)。
 
-## 5. 磁盘与持久化
+## 5. 桌面环境
+
+greetd 自动登录进 Niri，配 Noctalia 外壳、PipeWire 音频、fcitx5 输入法（万象拼音）、字体、主题与光标；应用有 kitty、Firefox、Zed，另加 nautilus / mpv 等桌面基础应用。开关都在 [default.nix](./default.nix) 里，模块在 `modules/nixos/desktop/` 下。
+
+niri 的键位与输出缩放不在此仓库（`~/.config/niri/config.kdl` 手工维护），首次进桌面用上游默认键位。
+
+## 6. 磁盘与持久化
 
 - 磁盘用 by-id 路径引用：`/dev/disk/by-id/nvme-CT1000P3PSSD8_24364AD5D8E0`
 - 布局：1 GiB ESP + LUKS（`crypted`）+ Btrfs 池，根分区是 tmpfs
 - 根分区重启即清空，要保留的数据由 Preservation 放进 `/persistent`，各功能模块自己声明条目
 - 重装会清空磁盘上的现有分区，**先备份**
 
-## 6. 装机步骤
+## 7. 装机步骤
 
 1. BIOS：连按 `Esc` 关掉 Secure Boot，`Del` 选启动设备
 2. 用 NixOS unstable 介质启动，`nmtui` 连 Wi-Fi
@@ -96,7 +102,7 @@ sudo nixos-install --root /mnt --flake .#wujie14x --no-root-password
 
 完整说明见 [docs/NixOS 安装指南.md](../../../docs/NixOS%20安装指南.md)。
 
-## 7. 参考来源
+## 8. 参考来源
 
 **官方与上游**
 

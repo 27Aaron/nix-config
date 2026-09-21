@@ -1,8 +1,8 @@
 # Wujie14x - MECHREVO WUJIE14XA laptop (Ryzen 7 8845HS, 32 GB DDR5, 1 TB NVMe)
 #
-# A headless-but-interactive laptop base: networking, power management and
-# remote administration only. The desktop stack (greetd, niri, Noctalia,
-# PipeWire, fonts, ...) is intentionally left off until it is actually wanted.
+# A full desktop laptop: greetd autologin into Niri with the Noctalia shell,
+# plus PipeWire, fcitx5, fonts and themes, on top of the networking, power
+# management and remote administration base.
 { ... }:
 {
   imports = [
@@ -11,12 +11,33 @@
 
   services' = {
     btrfs-scrub.enable = true;
+    gnome-keyring.enable = true;
     networkmanager.enable = true;
     openssh.enable = true;
+    pipewire.enable = true;
     power-profiles-daemon.enable = true;
     smartd.enable = true;
     upower.enable = true;
     zram.enable = true;
+  };
+
+  desktop' = {
+    applications.enable = true;
+    mime-apps.enable = true;
+    apps = {
+      firefox.enable = true;
+      kitty.enable = true;
+      zed.enable = true;
+    };
+    cursors.enable = true;
+    fcitx5.enable = true;
+    fonts.enable = true;
+    greetd.enable = true;
+    niri.autoLogin = true;
+    niri.enable = true;
+    noctalia.enable = true;
+    themes.enable = true;
+    xdg-user-dirs.enable = true;
   };
 
   core'.firewall.enable = true;

@@ -6,7 +6,6 @@
 
 - [ ] 测量长时待机耗电：拔电合盖放 1–2 小时
 - [ ] 接入 Gaze 人脸解锁
-- [ ] 接入桌面环境（greetd / niri / Noctalia / PipeWire / 字体 / 输入法）
 - [ ] 硬件控制之一：TUXEDO 驱动（风扇曲线、性能档位）
 - [ ] 硬件控制之二：EC 寄存器（键盘背光、充电上限）
 - [ ] 排查 USB-C 外接显示时的 amdgpu 报错
@@ -37,7 +36,7 @@ services.gaze = {
 - 要求 CPU 支持 **AVX2**（8845HS 满足）；缺 AVX2 时 `gazed` 会直接退出，没有降级模式
 - 装完 `sudo reboot` 一次，再用 `systemctl status gazed`、`gaze doctor` 验证
 - 注册人脸 `gaze add-face default`，测试 `gaze auth --verbose`
-- 官方只为 GNOME / KDE / Hyprland 提供桌面集成（扩展、`gaze-kde`、`gaze-hyprlock`）；niri 属于"其他 PAM 桌面"，只能用基础 PAM 模块，**锁屏集成要自己接**，而且依赖下面的桌面环境先落地
+- 官方只为 GNOME / KDE / Hyprland 提供桌面集成（扩展、`gaze-kde`、`gaze-hyprlock`）；niri 属于"其他 PAM 桌面"，只能用基础 PAM 模块，**锁屏集成要自己接**（桌面环境已启用，接入时一并处理）
 - 模块选项与 home-manager 用法见 [Nix & NixOS 指南](https://gaze.gundulabs.com/guide/nixos.html)
 
 ## 硬件控制
@@ -64,7 +63,3 @@ Linux 下这些功能都没有官方支持，按实现路径分两条线。
 ### BIOS/EC 更新
 
 官方只提供 Windows 刷写工具，可能要临时装 Windows 或双系统。上一条的 EC 寄存器操作要求先完成这一步。
-
-## 桌面环境
-
-当前有意未启用（greetd / niri / Noctalia / PipeWire / 字体 / 输入法），需要时逐项打开 `desktop'` 下的模块。人脸解锁的锁屏集成依赖它先落地。
