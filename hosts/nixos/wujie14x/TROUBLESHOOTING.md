@@ -34,6 +34,72 @@ sudo rtcwake -m mem -s 30                         # 定时唤醒的安全测法
 - 唤醒后键盘或触摸板失灵 → 本机不需要 `i8042.*`，先查别的原因
 - 唤醒后黑屏 → 可尝试 `amdgpu.gpu_recovery=1`（来自 15X Pro 的记录，本机未遇到）
 
+## hibernate：验证记录与 NPU 限制
+
+S4 休眠和 resume 都已实测通过，但有一个前置条件。
+
+### 验证方法：内存探针
+
+`/dev/shm` 是纯内存文件系统，用它判断 resume 是否真的把内存装回来了：
+
+```bash
+# 休眠前
+echo "probe $(date)" > /dev/shm/probe
+uptime > /dev/shm/before
+
+sudo systemctl hibernate
+
+# 唤醒后
+cat /dev/shm/probe     # 还在 → 内存被装回来了
+uptime                 # 延续（不重置）
+```
+
+| 现象 | 结论 |
+| --- | --- |
+| `/dev/shm` 文件还在、uptime 延续、boot_id 不变 | **resume 成功** |
+| 文件没了、uptime 重置 | 全新启动，resume 失败 |
+| 文件没了、uptime 延续 | 回滚，休眠没进 S4 |
+
+**注意**：resume 时也会走完整引导（systemd-boot 菜单 → 输 LUKS 密码），这不是"重启"，而是加载内存镜像的必经步骤。判断依据是 boot_id 和 uptime 是否延续。
+
+### resume 链路
+
+1. hibernate 时 systemd 把 swapfile 的位置写进 EFI 变量 `HibernateLocation`
+2. 重启后 initrd 解锁 LUKS（swapfile 在加密卷里，不解锁读不到）
+3. 内核按该位置（设备 + offset）读回内存镜像
+4. 恢复内存状态——boot_id、uptime、`/dev/shm` 内容全部延续
+
+`/sys/power/resume` 显示 `254:0`（`crypted` 映射），`resume_offset` 由 systemd 自动算出，不需要手写 `boot.resumeDevice`。
+
+### NPU 驱动会破坏休眠
+
+对照实验（同样的探针测试）：
+
+| `amdxdna` 状态 | 结果 |
+| --- | --- |
+| 屏蔽 | ✅ 进入 S4、断电、按电源键后 resume 成功 |
+| 加载 | ❌ 2 分 39 秒后回滚；日志停在 `Disabling non-boot CPUs` 之后，**没有** `Preparing to enter system sleep state S4` |
+
+所以 [hardware.nix](./hardware.nix) 里黑名单了它。要用 NPU 时临时加载：
+
+```bash
+sudo modprobe amdxdna      # 黑名单只拦自动加载，手动 modprobe 有效
+ls /dev/accel/accel0       # 确认设备出现
+
+sudo modprobe -r amdxdna   # 用完卸掉，否则下次休眠会失败
+```
+
+### Wi-Fi 的 resume 失败计数
+
+`/sys/power/suspend_stats` 里 `failed_resume` 不为零，`last_failed_dev` 指向 `0000:02:00.0`（`mt7921e`），对应日志：
+
+```
+mt7921e 0000:02:00.0: PM: dpm_run_callback(): pci_pm_restore returns -110
+mt7921e 0000:02:00.0: PM: failed to restore async: error -110
+```
+
+`-110` 是 ETIMEDOUT。这是**设备级**失败，不阻止系统整体恢复（NetworkManager 会重连），但如果唤醒后 Wi-Fi 偶尔要等一会儿才可用，根源在这里。
+
 ## 已知警告（都无需处理）
 
 | 日志                                                                                                       | 判断                                                                             |

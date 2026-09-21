@@ -51,24 +51,25 @@ EC（`PNP0C09` / `INOU0000`）会发出虚假唤醒信号，不加这条时合�
 
 ## 4. 盒盖睡眠
 
-平台只有 s2idle（无 S3），systemd 默认就是合盖 suspend，真正要修的是 `acpi.ec_no_wakeup=1`。`default.nix` 里显式写出意图：
+平台只有 s2idle（无 S3）。合盖走 suspend-then-hibernate：先 s2idle（开盖秒醒），睡满 `HibernateDelaySec` 后自动转 hibernate；**插电时倒计时不启动**，一直保持 suspend。前提是 `acpi.ec_no_wakeup=1`，否则合盖会立刻醒。
+
+`default.nix` 里的配置：
 
 ```nix
+systemd.sleep.settings.Sleep = {
+  AllowSuspendThenHibernate = "yes";
+  HibernateDelaySec = "1h";
+  HibernateOnACPower = "no";          # 插电时不倒计时
+};
+
 services.logind.settings.Login = {
-  HandleLidSwitch = "suspend";
-  HandleLidSwitchExternalPower = "suspend";
+  HandleLidSwitch = "suspend-then-hibernate";
+  HandleLidSwitchExternalPower = "suspend-then-hibernate";
   HandleLidSwitchDocked = "ignore";   # 插外接屏时合盖不睡
 };
 ```
 
-插电与电池供电下均已验证：合盖能正常睡住，开盖即唤醒，唤醒后设备全部正常。实测数据与验证命令见 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)。
-
-**想加 hibernate**：配置留了 32 GB swap 但没有启用 suspend-then-hibernate，需要时加
-
-```nix
-systemd.sleep.settings.Sleep.AllowSuspendThenHibernate = "yes";
-# 再把 HandleLidSwitch 改成 "suspend-then-hibernate"
-```
+两种状态都已实测通过：suspend 能睡住、开盖秒醒；hibernate 会写盘断电，按电源键后经引导 + LUKS 解锁恢复内存。实测数据、验证方法，以及一个已知限制（NPU 驱动会让休眠失败）见 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)。
 
 ## 5. 磁盘与持久化
 

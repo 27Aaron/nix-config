@@ -23,16 +23,21 @@
   core'.kernel-hardening.enable = true;
 
   # Lid behaviour. s2idle is the only suspend mode this platform has (the BIOS
-  # exposes no S3), and systemd already defaults to "suspend" for the lid, so
-  # these are written out to make the intent explicit:
-  #   - suspend when the lid closes, on battery and on AC alike;
-  #   - stay awake while docked, so the internal panel can be shut on a desk
-  #     with an external display attached.
+  # exposes no S3), so the lid suspends first and, after an hour, hands over to
+  # hibernate. On AC power the countdown never starts, so the machine simply
+  # stays suspended; staying awake while docked keeps the internal panel usable
+  # when an external display is attached.
   # The spurious-wakeup fix that makes this actually hold is the
   # `acpi.ec_no_wakeup=1` kernel parameter in hardware.nix.
+  systemd.sleep.settings.Sleep = {
+    AllowSuspendThenHibernate = "yes";
+    HibernateDelaySec = "1h";
+    HibernateOnACPower = "no";
+  };
+
   services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "suspend";
+    HandleLidSwitch = "suspend-then-hibernate";
+    HandleLidSwitchExternalPower = "suspend-then-hibernate";
     HandleLidSwitchDocked = "ignore";
   };
 
