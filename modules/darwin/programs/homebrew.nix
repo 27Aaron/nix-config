@@ -45,7 +45,6 @@ in
       casks = [
         # AI Development
         "cc-switch"
-        "grok-build"
         "codexbar"
         "zcode"
 
