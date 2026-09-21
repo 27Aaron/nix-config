@@ -54,11 +54,11 @@ cat /dev/shm/probe     # 还在 → 内存被装回来了
 uptime                 # 延续（不重置）
 ```
 
-| 现象 | 结论 |
-| --- | --- |
-| `/dev/shm` 文件还在、uptime 延续、boot_id 不变 | **resume 成功** |
-| 文件没了、uptime 重置 | 全新启动，resume 失败 |
-| 文件没了、uptime 延续 | 回滚，休眠没进 S4 |
+| 现象                                           | 结论                  |
+| ---------------------------------------------- | --------------------- |
+| `/dev/shm` 文件还在、uptime 延续、boot_id 不变 | **resume 成功**       |
+| 文件没了、uptime 重置                          | 全新启动，resume 失败 |
+| 文件没了、uptime 延续                          | 回滚，休眠没进 S4     |
 
 **注意**：resume 时也会走完整引导（systemd-boot 菜单 → 输 LUKS 密码），这不是"重启"，而是加载内存镜像的必经步骤。判断依据是 boot_id 和 uptime 是否延续。
 
@@ -75,10 +75,10 @@ uptime                 # 延续（不重置）
 
 对照实验（同样的探针测试）：
 
-| `amdxdna` 状态 | 结果 |
-| --- | --- |
-| 屏蔽 | ✅ 进入 S4、断电、按电源键后 resume 成功 |
-| 加载 | ❌ 2 分 39 秒后回滚；日志停在 `Disabling non-boot CPUs` 之后，**没有** `Preparing to enter system sleep state S4` |
+| `amdxdna` 状态 | 结果                                                                                                              |
+| -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| 屏蔽           | ✅ 进入 S4、断电、按电源键后 resume 成功                                                                          |
+| 加载           | ❌ 2 分 39 秒后回滚；日志停在 `Disabling non-boot CPUs` 之后，**没有** `Preparing to enter system sleep state S4` |
 
 所以 [hardware.nix](./hardware.nix) 里黑名单了它。要用 NPU 时临时加载：
 
@@ -102,20 +102,20 @@ mt7921e 0000:02:00.0: PM: failed to restore async: error -110
 
 ## 已知警告（都无需处理）
 
-| 日志                                                                                                       | 判断                                                                             |
-| ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `ACPI BIOS Error: Failure creating named object [\_SB.PCI0.GPP6.WLAN._DSM]`（连同 `_S0W`、`_PRW` 共 4 条） | BIOS 自身的 bug，GPP6 是 Wi-Fi 总线；TUXEDO FAQ 确认不影响运行                   |
-| `i8042: PNP: PS/2 appears to have AUX port disabled ... boot with i8042.nopnp`                             | **误报**，触摸板走 I2C 不经过 PS/2；因此不需要 `i8042.nopnp`/`nomux`/`noloop`    |
-| `atkbd serio0: Disabling IRQ1 wakeup source to avoid platform firmware bug`                                | 内核规避固件 bug，键盘不能唤醒，开盖可以                                         |
-| `kvm_amd: Cannot enable x2AVIC, AVIC is unsupported`                                                       | BIOS 未开 AVIC，只影响嵌套虚拟化性能                                             |
-| `asus_wmi: ASUS Management GUID not found`                                                                 | 通用 WMI 探测噪音                                                                |
-| `Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection ... not supported`                             | MT7922 固件的小瑕疵                                                              |
-| `workqueue: name exceeds WQ_NAME_LEN`                                                                      | amdgpu 的 HDMI FRL 工作队列名过长                                                |
-| `Failed to adjust io pressure threshold: Device or resource busy`                                          | systemd 用户实例设置 IO 压力阈值的噪音                                           |
-| `ucsi_acpi USBC000:00: failed to re-enable notifications (-110)`                                           | USB-C 通知超时（ETIMEDOUT），插拔 C 口设备与睡眠恢复都会触发，见下一节                                     |
+| 日志                                                                                                       | 判断                                                                              |
+| ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `ACPI BIOS Error: Failure creating named object [\_SB.PCI0.GPP6.WLAN._DSM]`（连同 `_S0W`、`_PRW` 共 4 条） | BIOS 自身的 bug，GPP6 是 Wi-Fi 总线；TUXEDO FAQ 确认不影响运行                    |
+| `i8042: PNP: PS/2 appears to have AUX port disabled ... boot with i8042.nopnp`                             | **误报**，触摸板走 I2C 不经过 PS/2；因此不需要 `i8042.nopnp`/`nomux`/`noloop`     |
+| `atkbd serio0: Disabling IRQ1 wakeup source to avoid platform firmware bug`                                | 内核规避固件 bug，键盘不能唤醒，开盖可以                                          |
+| `kvm_amd: Cannot enable x2AVIC, AVIC is unsupported`                                                       | BIOS 未开 AVIC，只影响嵌套虚拟化性能                                              |
+| `asus_wmi: ASUS Management GUID not found`                                                                 | 通用 WMI 探测噪音                                                                 |
+| `Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection ... not supported`                             | MT7922 固件的小瑕疵                                                               |
+| `workqueue: name exceeds WQ_NAME_LEN`                                                                      | amdgpu 的 HDMI FRL 工作队列名过长                                                 |
+| `Failed to adjust io pressure threshold: Device or resource busy`                                          | systemd 用户实例设置 IO 压力阈值的噪音                                            |
+| `ucsi_acpi USBC000:00: failed to re-enable notifications (-110)`                                           | USB-C 通知超时（ETIMEDOUT），插拔 C 口设备与睡眠恢复都会触发，见下一节            |
 | `ACPI BIOS Error: Could not resolve symbol [\_SB.ACDC.RTAC]`（连带 `Aborting method \_SB.PEP._DSM`）       | 只在**电池供电**睡眠唤醒时出现，插电时不出现；BIOS 的电源管理方法失败，不影响恢复 |
-| `pcieport 0000:00:08.1: PME: Spurious native interrupt!`                                                   | PCIe 电源管理事件的虚假中断，s2idle 唤醒时常见                                   |
-| `NetworkManager: device (p2p-dev-wlp2s0): error setting IPv4 forwarding to '0'`                            | NetworkManager 常见噪音                                                          |
+| `pcieport 0000:00:08.1: PME: Spurious native interrupt!`                                                   | PCIe 电源管理事件的虚假中断，s2idle 唤醒时常见                                    |
+| `NetworkManager: device (p2p-dev-wlp2s0): error setting IPv4 forwarding to '0'`                            | NetworkManager 常见噪音                                                           |
 
 ## USB-C 外接显示时的 amdgpu 报错（待排查）
 
@@ -151,4 +151,3 @@ Workqueue: events_highpri dm_irq_work_func [amdgpu]
 
 - LTTPR：换一根 USB-IF 认证的 C 线或雷电 3/4 线，这是社区里唯一被证实有效的办法
 - compbuf：暂时没有已知的内核参数能消除
-
