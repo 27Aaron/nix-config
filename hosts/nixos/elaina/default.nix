@@ -8,6 +8,9 @@
   core'.firewall.enable = true;
   core'.kernel-hardening.enable = true;
 
+  development'.ai.enable = true;
+  development'.dev.enable = true;
+
   desktop' = {
     applications.enable = true;
     mime-apps.enable = true;
