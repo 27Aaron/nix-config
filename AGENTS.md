@@ -40,15 +40,15 @@
 
 自定义选项使用带撇号的命名空间，避免与 NixOS、nix-darwin 或 Home Manager 的原生选项混淆：
 
-| 命名空间       | 职责                                       |
-| -------------- | ---------------------------------------- |
+| 命名空间       | 职责                                        |
+| -------------- | ------------------------------------------- |
 | `accounts'`    | 邮件账户与相关凭据                          |
-| `core'`        | 主机与用户元数据、安全功能、darwin 系统偏好    |
+| `core'`        | 主机与用户元数据、安全功能、darwin 系统偏好 |
 | `desktop'`     | 桌面功能与应用开关                          |
-| `development'` | 用户工具分组（跨平台开发 CLI、AI 开发工具）    |
-| `hardware'`    | 硬件支持、引导、磁盘与持久化                  |
+| `development'` | 用户工具分组（跨平台开发 CLI、AI 开发工具） |
+| `hardware'`    | 硬件支持、引导、磁盘与持久化                |
 | `programs'`    | 应用级系统配置（darwin Homebrew）           |
-| `services'`    | 主机级系统服务                             |
+| `services'`    | 主机级系统服务                              |
 
 另有 `preservation'`（Preservation 别名）与 `persist'`（Home Manager 持久化上报）两个机制层选项；`user'`、`hm'` 是 `lib.mkAliasOptionModule` 别名，指向 `users.users.<username>` 和 `home-manager.users.<username>`。
 
@@ -93,12 +93,14 @@ config = lib.mkIf cfg.enable {
 
 ## 验证
 
-格式化用 `just fmt` 或 `nix fmt`（nixfmt-rs）。按改动范围选择检查：
+格式化用 `just fmt` 或 `nix fmt`（nixfmt-rs）；Markdown 用 Prettier，选项在仓库根目录的
+`.prettierrc.yaml`（Zed 打开本项目时自动读取，见 `.zed/settings.json`）。按改动范围选择检查：
 
 `just check` 等价于：
 
 ```bash
 nix fmt . -- --check
+prettier --check '**/*.md'
 deadnix --fail .
 nix flake check path:. --no-build --all-systems
 ```

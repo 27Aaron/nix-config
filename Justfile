@@ -7,6 +7,7 @@ default:
 # Check formatting, unused declarations, and all host configurations locally
 check:
     @nix fmt . -- --check
+    @prettier --check '**/*.md'
     @deadnix --fail .
     @nix flake check path:. --no-build --all-systems
 
