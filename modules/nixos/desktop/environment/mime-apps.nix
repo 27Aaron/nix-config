@@ -10,8 +10,8 @@ let
     "google-chrome.desktop"
   ];
   editor = [
-    "dev.zed.Zed.desktop"
     "code.desktop"
+    "dev.zed.Zed.desktop"
     "org.gnome.TextEditor.desktop"
   ];
   archive = [ "org.gnome.FileRoller.desktop" ];

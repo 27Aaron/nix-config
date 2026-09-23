@@ -28,7 +28,6 @@ in
     preservation'.user.directories = [
       ".config/Code"
       ".vscode"
-      ".vscode-shared"
     ];
   };
 }
