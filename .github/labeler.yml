@@ -1,24 +1,41 @@
-nixos:
+area:nixos:
   - changed-files:
       - any-glob-to-any-file:
           - "modules/nixos/**"
           - "hosts/nixos/**"
-          - "modules/common/**"
 
-darwin:
+area:darwin:
   - changed-files:
       - any-glob-to-any-file:
           - "modules/darwin/**"
           - "hosts/darwin/**"
+
+area:common:
+  - changed-files:
+      - any-glob-to-any-file:
           - "modules/common/**"
 
-home-manager:
+area:home-manager:
   - changed-files:
       - any-glob-to-any-file:
           - "home/**"
 
-docs:
+area:docs:
   - changed-files:
       - any-glob-to-any-file:
-          - "docs/**"
-          - "*.md"
+          - "**/*.md"
+
+area:ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+          - "Justfile"
+
+area:flake:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "flake.nix"
+          - "flake.lock"
+          - "helpers/**"
+          - "lib/**"
+          - "outputs/**"
