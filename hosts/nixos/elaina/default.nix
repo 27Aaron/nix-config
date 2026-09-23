@@ -18,6 +18,7 @@
       firefox.enable = true;
       kitty.enable = true;
       zed.enable = true;
+      vscode.enable = true;
     };
     cursors.enable = true;
     fcitx5.enable = true;
