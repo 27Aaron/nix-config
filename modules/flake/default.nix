@@ -2,10 +2,9 @@
 # lives in this tree, so flake.nix itself stays a thin shell.
 { ... }:
 {
-  systems = [
-    "aarch64-darwin"
-    "x86_64-linux"
+  imports = [
+    ./inventory.nix
+    ./hosts.nix
+    ./treefmt.nix
   ];
-
-  imports = [ ./treefmt.nix ];
 }
