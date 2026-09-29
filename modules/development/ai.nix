@@ -29,9 +29,8 @@ in
       cx = "codex --dangerously-bypass-approvals-and-sandbox";
     };
 
-    # Credentials and session state; keep them private to the user. Reported
-    # through persist' so the module stays platform-neutral: the NixOS
-    # The NixOS persistence module splices these entries into the system layout.
+    # Credentials and session state; keep them private to the user. The NixOS
+    # persistence module splices these entries into the system layout.
     hm'.persist'.directories = [
       {
         directory = ".claude";
