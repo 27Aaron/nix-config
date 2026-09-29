@@ -4,10 +4,14 @@
   ...
 }:
 let
-  inherit (import ../lib { inherit lib; }) scanPaths;
+  listModules =
+    directory:
+    builtins.filter (path: lib.hasSuffix ".nix" (toString path)) (
+      lib.filesystem.listFilesRecursive directory
+    );
 in
 {
-  imports = scanPaths ./common;
+  imports = listModules ./common;
 
   home = {
     username = myvars.username;

@@ -1,5 +1,6 @@
-# Assemble all flake outputs: per-system ones (host configurations) from
-# lib/mkSystemOutputs.nix, plus flake-level ones (checks, devShells, formatter).
+# Assemble all flake outputs: per-system ones (host configurations and the
+# colmena hive) from hosts/default.nix, plus flake-level ones (checks,
+# devShells, formatter).
 inputs@{
   self,
   nixpkgs,
@@ -11,7 +12,7 @@ let
   myvars = import ../vars;
 
   systems = {
-    x86_64-linux = import ../lib/mkSystemOutputs.nix {
+    x86_64-linux = import ../hosts {
       inherit
         inputs
         lib
@@ -34,10 +35,7 @@ let
 
   # Remote deployment via colmena (see the `deploy` recipe). Built from the
   # evaluated nixosConfigurations so hosts are never evaluated twice.
-  colmenaHive = import ../lib/mkColmenaHive.nix {
-    inherit lib;
-    inherit (configurations) nixosConfigurations;
-  };
+  colmenaHive = (systems.x86_64-linux).colmenaHive;
 in
 configurations
 // {

@@ -3,8 +3,12 @@
   ...
 }:
 let
-  inherit (import ../lib { inherit lib; }) scanPaths;
+  listModules =
+    directory:
+    builtins.filter (path: lib.hasSuffix ".nix" (toString path)) (
+      lib.filesystem.listFilesRecursive directory
+    );
 in
 {
-  imports = scanPaths ./common ++ scanPaths ./nixos;
+  imports = listModules ./common ++ listModules ./nixos;
 }
