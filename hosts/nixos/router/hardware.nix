@@ -1,6 +1,5 @@
-# QEMU guest setup: virtio drivers come from the qemu-guest profile, and the
-# balloon driver stays disabled so the host cannot starve this VM.
-{ modulesPath, pkgs, ... }:
+# QEMU guest setup: virtio drivers come from the qemu-guest profile.
+{ modulesPath, ... }:
 {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -24,19 +23,11 @@
       };
       efi.canTouchEfiVariables = true;
     };
-
-    extraModprobeConfig = ''
-      blacklist virtio_balloon
-      install virtio_balloon ${pkgs.coreutils}/bin/true
-
-      # Reject modules mitigating the Dirty Frag LPE (esp4, esp6, rxrpc).
-      # Harmless unless IPsec ESP or AF_RXRPC is actually used.
-      install esp4 ${pkgs.coreutils}/bin/false
-      install esp6 ${pkgs.coreutils}/bin/false
-      install rxrpc ${pkgs.coreutils}/bin/false
-    '';
   };
 
   # Proxmox uses the guest agent for clean shutdown and IP reporting.
   services.qemuGuest.enable = true;
+
+  # Keep the balloon driver disabled so the host cannot starve this VM.
+  hardware'.disable-balloon.enable = true;
 }
