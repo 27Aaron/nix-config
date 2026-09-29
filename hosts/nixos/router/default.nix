@@ -8,5 +8,7 @@
     ./storage.nix
     ./network.nix
     ./system.nix
+    ./services.nix
+    ./tuning.nix
   ];
 }

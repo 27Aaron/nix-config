@@ -39,4 +39,12 @@
       X11Forwarding = false;
     };
   };
+
+  # Add the terminfo database of all known terminals to the system profile.
+  environment.enableAllTerminfo = true;
+
+  documentation = {
+    man.cache.enable = false;
+    nixos.enable = false;
+  };
 }
