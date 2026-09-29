@@ -27,5 +27,79 @@
     preservation.url = "github:nix-community/preservation";
   };
 
-  outputs = inputs: import ./outputs inputs;
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      ...
+    }:
+    let
+      inherit (nixpkgs) lib;
+
+      myvars = import ./vars;
+      hostOutputs = import ./hosts { inherit inputs lib myvars; };
+      nixosConfigurations = hostOutputs.nixosConfigurations;
+      systemNames = [ "x86_64-linux" ];
+      formatterSystems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
+
+      checks = lib.genAttrs systemNames (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          format = pkgs.runCommand "check-format" { nativeBuildInputs = [ pkgs.nixfmt-rs ]; } ''
+            nixfmt --check ${self}
+            touch $out
+          '';
+
+          deadnix = pkgs.runCommand "check-deadnix" { nativeBuildInputs = [ pkgs.deadnix ]; } ''
+            deadnix --fail ${self}
+            touch $out
+          '';
+
+          eval = pkgs.runCommand "check-eval" {
+            drvPaths = lib.concatStringsSep " " (
+              lib.mapAttrsToList (
+                _: host: lib.unsafeDiscardStringContext host.config.system.build.toplevel.drvPath
+              ) nixosConfigurations
+            );
+            hive = builtins.toJSON {
+              inherit (hostOutputs.colmenaHive) __schema deploymentConfig;
+            };
+          } "touch $out";
+        }
+      );
+
+      devShells = lib.genAttrs systemNames (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShellNoCC {
+            packages = [
+              inputs.colmena.packages.${system}.colmena
+              pkgs.deadnix
+              pkgs.just
+              pkgs.nixfmt-rs
+            ];
+          };
+        }
+      );
+
+      formatter = lib.genAttrs formatterSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rs);
+    in
+    {
+      inherit
+        checks
+        devShells
+        formatter
+        nixosConfigurations
+        ;
+      inherit (hostOutputs) colmenaHive;
+    };
 }
