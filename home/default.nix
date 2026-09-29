@@ -1,17 +1,12 @@
 {
-  lib,
   myvars,
   ...
 }:
-let
-  listModules =
-    directory:
-    builtins.filter (path: lib.hasSuffix ".nix" (toString path)) (
-      lib.filesystem.listFilesRecursive directory
-    );
-in
 {
-  imports = listModules ./common;
+  imports = [
+    ./programs
+    ./shell
+  ];
 
   home = {
     username = myvars.username;
