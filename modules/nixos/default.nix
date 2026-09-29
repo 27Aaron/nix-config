@@ -1,4 +1,3 @@
-# NixOS system modules shared by every host.
 { ... }:
 {
   imports = [
