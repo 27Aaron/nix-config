@@ -1,4 +1,4 @@
-# Option aliases for the primary user, shared by both platforms.
+# Option aliases for the primary user.
 { lib, myvars, ... }:
 {
   imports = [

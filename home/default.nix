@@ -1,18 +1,14 @@
 {
   lib,
-  inputs,
   myvars,
-  platformName,
   helpers,
   ...
 }:
 let
   inherit (import ../lib { inherit lib; }) scanPaths;
-  platforms = import ../lib/platforms.nix { inherit inputs; };
-  platform = platforms.${platformName};
 in
 {
-  imports = scanPaths ./common ++ scanPaths platform.homeModulesPath;
+  imports = scanPaths ./common;
 
   home = {
     username = myvars.username;

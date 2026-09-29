@@ -28,15 +28,15 @@ forEachSystem (
       touch $out
     '';
   }
-  // lib.optionalAttrs (lib.hasSuffix "-darwin" system) {
-    # `nix flake check` does not force darwinConfigurations, the per-host
-    # invariants or the colmena hive, so force all three. drvPath context is
-    # discarded: this must only force evaluation, not pull in build closures.
+  # `nix flake check` does not force host configurations, their invariants or
+  # the colmena hive, so force all three. drvPath context is discarded: this
+  # must only force evaluation, not pull in build closures.
+  // {
     eval = pkgs.runCommand "check-eval" {
       drvPaths = lib.concatStringsSep " " (
         lib.mapAttrsToList (
-          _: host: lib.unsafeDiscardStringContext host.system.drvPath
-        ) configurations.darwinConfigurations
+          _: host: lib.unsafeDiscardStringContext host.config.system.build.toplevel.drvPath
+        ) configurations.nixosConfigurations
       );
       hosts =
         if evalTestFailures == [ ] then

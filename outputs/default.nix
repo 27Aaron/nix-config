@@ -11,14 +11,6 @@ let
   myvars = import ../helpers/constants/user.nix;
 
   systems = {
-    aarch64-darwin = import ../lib/mkSystemOutputs.nix {
-      inherit
-        inputs
-        lib
-        myvars
-        ;
-      system = "aarch64-darwin";
-    };
     x86_64-linux = import ../lib/mkSystemOutputs.nix {
       inherit
         inputs
@@ -31,13 +23,16 @@ let
 
   systemNames = builtins.attrNames systems;
   systemValues = builtins.attrValues systems;
+  # The host configurations are Linux-only. Keep the formatter available on
+  # the Darwin workstation used to maintain this repository.
+  formatterSystems = [
+    "x86_64-linux"
+    "aarch64-darwin"
+  ];
 
   configurations = {
-    inherit (systems.aarch64-darwin) darwinConfigurations;
     inherit (systems.x86_64-linux) nixosConfigurations;
   };
-
-  forEachSystem = lib.genAttrs systemNames;
 
   # Remote deployment via colmena (see the `deploy` recipe). Built from the
   # evaluated nixosConfigurations so hosts are never evaluated twice.
@@ -61,7 +56,7 @@ configurations
     evalTestFailures = lib.flatten (map (it: it.evalTests) systemValues);
   };
 
-  devShells = forEachSystem (
+  devShells = lib.genAttrs systemNames (
     system:
     let
       pkgs = nixpkgs.legacyPackages.${system};
@@ -78,5 +73,5 @@ configurations
     }
   );
 
-  formatter = forEachSystem (system: nixpkgs.legacyPackages.${system}.nixfmt-rs);
+  formatter = lib.genAttrs formatterSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rs);
 }

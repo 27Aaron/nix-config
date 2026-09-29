@@ -1,32 +1,26 @@
 {
   inputs,
   myvars,
-  platformName,
   hostName,
 }:
 let
-  platform = (import ./platforms.nix { inherit inputs; }).${platformName};
-
-  helpers = import ../helpers {
-    inherit platformName;
-  };
+  helpers = import ../helpers;
 
   specialArgs = {
     inherit
       inputs
       myvars
       hostName
-      platformName
       helpers
       ;
   };
 in
-platform.builder {
+inputs.nixpkgs.lib.nixosSystem {
   inherit specialArgs;
 
   modules = [
-    (import ../modules platformName)
-    platform.homeManagerModule
+    (import ../modules)
+    inputs.home-manager.nixosModules.home-manager
     {
       home-manager = {
         useGlobalPkgs = true;
@@ -36,6 +30,6 @@ platform.builder {
         users.${myvars.username}.imports = [ ../home ];
       };
     }
-    (../hosts + "/${platformName}/${hostName}")
+    (../hosts + "/nixos/${hostName}")
   ];
 }

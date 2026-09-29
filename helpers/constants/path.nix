@@ -1,8 +1,7 @@
-# Paths derived from the platform and the primary user.
-{ platformName, user }:
+# Paths derived from the primary user.
+{ user }:
 rec {
-  homeDirectory =
-    if platformName == "darwin" then "/Users/${user.username}" else "/home/${user.username}";
+  homeDirectory = "/home/${user.username}";
 
   # Directory name of the repository checkout inside the home directory.
   nixConfigDir = "nix-config";

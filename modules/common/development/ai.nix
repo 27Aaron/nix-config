@@ -31,7 +31,7 @@ in
 
     # Credentials and session state; keep them private to the user. Reported
     # through persist' so the module stays platform-neutral: the NixOS
-    # persistence module splices these entries in, darwin ignores them.
+    # The NixOS persistence module splices these entries into the system layout.
     hm'.persist'.directories = [
       {
         directory = ".claude";

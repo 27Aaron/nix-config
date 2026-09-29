@@ -1,6 +1,6 @@
 # AGENTS.md
 
-本仓库是用 Nix flake 管理 macOS（nix-darwin）与 NixOS 主机的声明式配置。本文件记录实现约定，供参与修改配置的开发者和自动化代理使用；安装与日常使用说明放在 `docs/`。
+本仓库是用 Nix flake 管理 NixOS 主机的声明式配置。本文件记录实现约定，供参与修改配置的开发者和自动化代理使用；安装与日常使用说明放在 `docs/`。
 
 ## 工作边界
 
@@ -19,46 +19,41 @@
 ├── helpers/
 │   └── constants/
 ├── home/
-│   ├── common/
-│   ├── darwin/
-│   └── nixos/
+│   └── common/
 ├── hosts/
-│   ├── darwin/
 │   └── nixos/
 ├── Justfile
 ├── lib/
 ├── modules/
-│   ├── common/          # 跨平台模块（别名、Nix、development'）
-│   ├── darwin/          # nix-darwin 模块（core'、programs'）
+│   ├── common/          # NixOS/Home Manager 共用模块（别名、Nix、development'）
 │   └── nixos/           # NixOS 模块（core'、desktop'、hardware'、services'）
 └── outputs/
-    ├── aarch64-darwin/
     └── x86_64-linux/
 ```
 
 ## 模块和命名约定
 
-自定义选项使用带撇号的命名空间，避免与 NixOS、nix-darwin 或 Home Manager 的原生选项混淆：
+自定义选项使用带撇号的命名空间，避免与 NixOS 或 Home Manager 的原生选项混淆：
 
-| 命名空间       | 职责                                        |
-| -------------- | ------------------------------------------- |
-| `accounts'`    | 邮件账户与相关凭据                          |
-| `core'`        | 主机与用户元数据、安全功能、darwin 系统偏好 |
-| `desktop'`     | 桌面功能与应用开关                          |
-| `development'` | 用户工具分组（跨平台开发 CLI、AI 开发工具） |
-| `hardware'`    | 硬件支持、引导、磁盘与持久化                |
-| `programs'`    | 应用级系统配置（darwin Homebrew）           |
-| `services'`    | 主机级系统服务                              |
+| 命名空间       | 职责                                  |
+| -------------- | ------------------------------------- |
+| `accounts'`    | 邮件账户与相关凭据                    |
+| `core'`        | 主机与用户元数据、安全功能            |
+| `desktop'`     | 桌面功能与应用开关                    |
+| `development'` | 用户工具分组（开发 CLI、AI 开发工具） |
+| `hardware'`    | 硬件支持、引导、磁盘与持久化          |
+| `programs'`    | 应用级系统配置                        |
+| `services'`    | 主机级系统服务                        |
 
 另有 `preservation'`（Preservation 别名）与 `persist'`（Home Manager 持久化上报）两个机制层选项；`user'`、`hm'` 是 `lib.mkAliasOptionModule` 别名，指向 `users.users.<username>` 和 `home-manager.users.<username>`。
 
-`modules/` 下的目录与上表对齐：NixOS 专属模块按选项前缀归入 `nixos/<namespace>/`（`core/`、`desktop/`、`hardware/`、`services/` 等），跨平台模块放 `common/`（如 `common/development/`），darwin 专属模块放 `darwin/`。新增模块时先按前缀选目录。
+`modules/` 下的目录与上表对齐：NixOS 模块按选项前缀归入 `nixos/<namespace>/`（`core/`、`desktop/`、`hardware/`、`services/` 等），NixOS 与 Home Manager 共用模块放 `common/`（如 `common/development/`）。新增模块时先按前缀选目录。
 
 ## 多设备配置
 
 `helpers/constants/user.nix` 中的 `myvars.username` 是所有主机的唯一用户名来源：
 
-- NixOS 和 nix-darwin 模块使用 `user'` 或 `hm'`；需要字符串时用 `myvars.username`
+- NixOS 模块使用 `user'` 或 `hm'`；需要字符串时用 `myvars.username`
 - Home Manager 直接使用 `myvars.username`
 - 不要增加按主机覆盖用户名的第二套配置
 
@@ -66,7 +61,7 @@
 
 `system.stateVersion` 放在主机配置中；`home.stateVersion` 统一放在 `home/default.nix`。
 
-`nh` 的 flake 路径固定为 `<homeDirectory>/nix-config`：NixOS 在 `modules/nixos/core/nix.nix` 启用，darwin 通过 Home Manager 在 `home/darwin/nh.nix` 启用。
+`nh` 的 flake 路径固定为 `<homeDirectory>/nix-config`，由 `modules/nixos/core/nix.nix` 启用。
 
 ## 持久化规则
 
