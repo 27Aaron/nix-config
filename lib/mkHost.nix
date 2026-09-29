@@ -4,14 +4,11 @@
   hostName,
 }:
 let
-  helpers = import ../helpers;
-
   specialArgs = {
     inherit
       inputs
       myvars
       hostName
-      helpers
       ;
   };
 in

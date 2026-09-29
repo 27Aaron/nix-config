@@ -1,4 +1,4 @@
-{ helpers, ... }:
+{ myvars, ... }:
 {
   # Headless VM: systemd-networkd instead of NetworkManager.
   networking = {
@@ -12,8 +12,8 @@
   # option; assert the registry entry matches instead of letting it drift.
   assertions = [
     {
-      assertion = helpers.port.resolved == 53;
-      message = "helpers.port.resolved must stay 53: systemd-resolved cannot rebind its stub listener";
+      assertion = myvars.port.resolved == 53;
+      message = "myvars.port.resolved must stay 53: systemd-resolved cannot rebind its stub listener";
     }
   ];
 

@@ -1,7 +1,6 @@
 {
   lib,
   myvars,
-  helpers,
   ...
 }:
 let
@@ -12,7 +11,7 @@ in
 
   home = {
     username = myvars.username;
-    inherit (helpers.path) homeDirectory;
+    homeDirectory = myvars.path.homeDirectory;
     stateVersion = "26.05";
 
     # better ls sorting

@@ -2,8 +2,8 @@
 # module provides deployment.*; hosts only set their own tags, and
 # allowLocalDeployment enables `colmena apply-local` from the host's checkout.
 {
-  helpers,
   hostName,
+  myvars,
   inputs,
   ...
 }:
@@ -13,7 +13,7 @@
   deployment = {
     allowLocalDeployment = true;
     targetHost = hostName;
-    targetPort = helpers.port.openssh;
+    targetPort = myvars.port.openssh;
     targetUser = "root";
   };
 }

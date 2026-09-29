@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  helpers,
+  myvars,
   ...
 }:
 let
@@ -20,8 +20,8 @@ in
     # assert the registry entry matches instead of letting it drift.
     assertions = [
       {
-        assertion = helpers.port.avahi == 5353;
-        message = "helpers.port.avahi must stay 5353: mDNS is fixed at UDP 5353 and avahi cannot be rebound";
+        assertion = myvars.port.avahi == 5353;
+        message = "myvars.port.avahi must stay 5353: mDNS is fixed at UDP 5353 and avahi cannot be rebound";
       }
     ];
 

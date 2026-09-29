@@ -1,6 +1,6 @@
 {
   config,
-  helpers,
+  myvars,
   lib,
   ...
 }:
@@ -15,7 +15,7 @@ in
   config = lib.mkIf cfg.enable {
     services.openssh = {
       enable = true;
-      ports = [ helpers.port.openssh ];
+      ports = [ myvars.port.openssh ];
 
       # Only the Ed25519 host identity is needed; upstream also generates an RSA key by default.
       hostKeys = lib.mkDefault [

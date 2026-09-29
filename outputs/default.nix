@@ -8,7 +8,7 @@ inputs@{
 let
   inherit (nixpkgs) lib;
 
-  myvars = import ../helpers/constants/user.nix;
+  myvars = import ../vars;
 
   systems = {
     x86_64-linux = import ../lib/mkSystemOutputs.nix {

@@ -1,5 +1,5 @@
 {
-  helpers,
+  myvars,
   ...
 }:
 {
@@ -23,8 +23,8 @@
         "flakes"
       ];
 
-      extra-substituters = helpers.nix.substituters;
-      extra-trusted-public-keys = helpers.nix.trustedPublicKeys;
+      extra-substituters = myvars.nix.substituters;
+      extra-trusted-public-keys = myvars.nix.trustedPublicKeys;
     };
   };
 
