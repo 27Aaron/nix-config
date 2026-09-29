@@ -16,19 +16,17 @@
 ├── .github/
 ├── docs/
 ├── flake.nix
-├── helpers/
-│   └── constants/
 ├── home/
 │   └── common/
 ├── hosts/
-│   └── nixos/
+│   ├── <device>/
+│   └── default.nix
 ├── Justfile
-├── lib/
 ├── modules/
 │   ├── common/          # NixOS/Home Manager 共用模块（别名、Nix、development'）
 │   └── nixos/           # NixOS 模块（core'、desktop'、hardware'、services'）
-└── outputs/
-    └── x86_64-linux/
+└── vars/
+    └── default.nix
 ```
 
 ## 模块和命名约定
@@ -51,7 +49,7 @@
 
 ## 多设备配置
 
-`helpers/constants/user.nix` 中的 `myvars.username` 是所有主机的唯一用户名来源：
+`vars/default.nix` 中的 `myvars.username` 是所有主机的唯一用户名来源：
 
 - NixOS 模块使用 `user'` 或 `hm'`；需要字符串时用 `myvars.username`
 - Home Manager 直接使用 `myvars.username`

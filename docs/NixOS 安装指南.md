@@ -19,7 +19,7 @@
 - [`luks-btrfs-root.nix`](./example/luks-btrfs-root.nix)：LUKS 加密，带 swap
 - [`btrfs-root.nix`](./example/btrfs-root.nix)：无加密，无 swap
 
-仓库的主机配置固定按 tmpfs 根布局生成文件系统定义（见 `modules/nixos/hardware/disko.nix`），推荐选择第一组；主机 `hosts/nixos/elaina/hardware.nix` 中 `hardware'.disko` 的参数（`device`、`luks.enable`、`swapSize` 等）请与所选示例保持一致。第二组（根分区落盘）在仓库模块中没有对应开关，需要自行修改该模块。
+仓库的主机配置固定按 tmpfs 根布局生成文件系统定义（见 `modules/nixos/hardware/disko.nix`），推荐选择第一组；主机 `hosts/elaina/hardware.nix` 中 `hardware'.disko` 的参数（`device`、`luks.enable`、`swapSize` 等）请与所选示例保持一致。第二组（根分区落盘）在仓库模块中没有对应开关，需要自行修改该模块。
 
 选定后下载为 `disko.nix`（下文以 LUKS tmpfs 版为例）：
 
@@ -66,13 +66,13 @@ cd ~/nix-config
 sudo nixos-generate-config --no-filesystems --root /mnt
 ```
 
-查看 `/mnt/etc/nixos/hardware-configuration.nix`，把仍然需要的硬件探测结果合并进 `hosts/nixos/elaina/hardware.nix`，注意不要覆盖仓库中已有的 Disko、持久化和引导配置。
+查看 `/mnt/etc/nixos/hardware-configuration.nix`，把仍然需要的硬件探测结果合并进 `hosts/elaina/hardware.nix`，注意不要覆盖仓库中已有的 Disko、持久化和引导配置。
 
 安装前检查以下配置：
 
-- `helpers/constants/user.nix`：用户名、密码哈希、SSH 公钥、默认时区
-- `hosts/nixos/elaina/hardware.nix`：`hardware'.disko` 的各项参数与所选 Disko 示例一致（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`）
-- `hosts/nixos/elaina/default.nix`：`system.stateVersion`
+- `vars/default.nix`：用户名、密码哈希、SSH 公钥、默认时区
+- `hosts/elaina/hardware.nix`：`hardware'.disko` 的各项参数与所选 Disko 示例一致（`device`、`tmpfsSize`、`espSize`、`swapSize`、`luks.enable`）
+- `hosts/elaina/default.nix`：`system.stateVersion`
 
 然后安装系统：
 
@@ -89,7 +89,7 @@ sudo nixos-install \
 sudo reboot
 ```
 
-使用 LUKS 版本时，开机需要先输入加密密码，再用 `helpers/constants/user.nix` 中配置的账户登录。
+使用 LUKS 版本时，开机需要先输入加密密码，再用 `vars/default.nix` 中配置的账户登录。
 
 > [!IMPORTANT]
 > 根文件系统为 tmpfs，重启即清空；需要保留的数据由持久化机制统一存放在 `/persistent`，未持久化的内容重启后会丢失。
