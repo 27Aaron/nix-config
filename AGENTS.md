@@ -17,14 +17,18 @@
 ├── docs/
 ├── flake.nix
 ├── home/
-│   └── common/
+│   ├── programs/
+│   └── shell/
 ├── hosts/
 │   ├── <device>/
 │   └── default.nix
 ├── Justfile
 ├── modules/
-│   ├── common/          # NixOS/Home Manager 共用模块（别名、Nix、development'）
-│   └── nixos/           # NixOS 模块（core'、desktop'、hardware'、services'）
+│   ├── core/             # 主机基础、安全与 Nix 配置
+│   ├── development/     # 开发工具
+│   ├── desktop/         # 桌面环境与应用
+│   ├── hardware/        # 硬件、引导与持久化
+│   └── services/        # 系统服务
 └── vars/
     └── default.nix
 ```
@@ -45,7 +49,7 @@
 
 另有 `preservation'`（Preservation 别名）与 `persist'`（Home Manager 持久化上报）两个机制层选项；`user'`、`hm'` 是 `lib.mkAliasOptionModule` 别名，指向 `users.users.<username>` 和 `home-manager.users.<username>`。
 
-`modules/` 下的目录与上表对齐：NixOS 模块按选项前缀归入 `nixos/<namespace>/`（`core/`、`desktop/`、`hardware/`、`services/` 等），NixOS 与 Home Manager 共用模块放 `common/`（如 `common/development/`）。新增模块时先按前缀选目录。
+`modules/` 下的目录按职责划分为 `core/`、`development/`、`desktop/`、`hardware/` 和 `services/`。Home Manager 配置按 `home/programs/` 与 `home/shell/` 划分。新增模块时直接放入对应分类目录。
 
 ## 多设备配置
 
@@ -59,14 +63,14 @@
 
 `system.stateVersion` 放在主机配置中；`home.stateVersion` 统一放在 `home/default.nix`。
 
-`nh` 的 flake 路径固定为 `<homeDirectory>/nix-config`，由 `modules/nixos/core/nix.nix` 启用。
+`nh` 的 flake 路径固定为 `<homeDirectory>/nix-config`，由 `modules/core/nix.nix` 启用。
 
 ## 持久化规则
 
-`hardware'.persistence.enable` 是 Preservation 的总开关，只在 `modules/nixos/hardware/persistence.nix` 中启用持久化机制。持久化条目跟随所有权：功能开关定义在哪个模块，条目就声明在哪个模块内部。
+`hardware'.persistence.enable` 是 Preservation 的总开关，只在 `modules/hardware/persistence.nix` 中启用持久化机制。持久化条目跟随所有权：功能开关定义在哪个模块，条目就声明在哪个模块内部。
 
 - `persistence.nix` 只放启动所需、所有设备共用的基线（缓存、无归属模块的凭据等），并汇入 Home Manager 通过 `persist'` 上报的条目
-- 纯 Home Manager 工具通过 `home/common/persist.nix` 的 `persist'` 选项上报状态目录和文件（Atuin、Zoxide 等）
+- 纯 Home Manager 工具通过 `home/programs/persist.nix` 的 `persist'` 选项上报状态目录和文件（Atuin、Zoxide 等）
 - 桌面共用状态（GTK、dconf、密钥环等）跟随生成或消费它们的桌面功能声明；上游模块间接触发的服务（GNOME Keyring、GVfs 等）也有自己的服务模块和开关，持久化按最终服务状态判定
 - 服务自己的状态由服务模块声明（VNStat 在 `services/vnstat.nix`，Firefox 在 `desktop/apps/firefox.nix`）
 - 功能模块不要重复判断 `hardware'.persistence.enable`；Preservation 自身会按总开关决定是否生成挂载
