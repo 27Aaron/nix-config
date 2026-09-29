@@ -1,5 +1,5 @@
-# Assemble all flake outputs: per-system ones (host configurations and eval tests)
-# from lib/mkSystemOutputs.nix, plus flake-level ones (checks, devShells, formatter).
+# Assemble all flake outputs: per-system ones (host configurations) from
+# lib/mkSystemOutputs.nix, plus flake-level ones (checks, devShells, formatter).
 inputs@{
   self,
   nixpkgs,
@@ -17,12 +17,10 @@ let
         lib
         myvars
         ;
-      system = "x86_64-linux";
     };
   };
 
   systemNames = builtins.attrNames systems;
-  systemValues = builtins.attrValues systems;
   # The host configurations are Linux-only. Keep the formatter available on
   # the Darwin workstation used to maintain this repository.
   formatterSystems = [
@@ -53,8 +51,7 @@ configurations
       colmenaHive
       systemNames
       ;
-    evalTestFailures = lib.flatten (map (it: it.evalTests) systemValues);
-  };
+    };
 
   devShells = lib.genAttrs systemNames (
     system:

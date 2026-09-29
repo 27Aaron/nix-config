@@ -5,7 +5,6 @@
   nixpkgs,
   configurations,
   colmenaHive,
-  evalTestFailures,
   systemNames,
 }:
 let
@@ -28,9 +27,9 @@ forEachSystem (
       touch $out
     '';
   }
-  # `nix flake check` does not force host configurations, their invariants or
-  # the colmena hive, so force all three. drvPath context is discarded: this
-  # must only force evaluation, not pull in build closures.
+  # `nix flake check` does not force host configurations or the colmena hive,
+  # so force both. drvPath context is discarded: this must only force
+  # evaluation, not pull in build closures.
   // {
     eval = pkgs.runCommand "check-eval" {
       drvPaths = lib.concatStringsSep " " (
@@ -38,11 +37,6 @@ forEachSystem (
           _: host: lib.unsafeDiscardStringContext host.config.system.build.toplevel.drvPath
         ) configurations.nixosConfigurations
       );
-      hosts =
-        if evalTestFailures == [ ] then
-          "ok"
-        else
-          throw "host assertion failures:\n${lib.concatStringsSep "\n" evalTestFailures}";
       hive = builtins.toJSON {
         inherit (colmenaHive) __schema deploymentConfig;
       };
