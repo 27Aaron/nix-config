@@ -3,6 +3,7 @@
   inputs,
   lib,
   myvars,
+  pkgs,
   ...
 }:
 let
@@ -33,6 +34,11 @@ in
     # Preservation needs the persistent storage in the initrd for machine-id.
     fileSystems."/persistent".neededForBoot = true;
 
+    environment.systemPackages = [
+      # `sudo ncdu -x /`
+      pkgs.ncdu
+    ];
+
     preservation = {
       enable = true;
       preserveAt."/persistent".commonMountOptions = [
@@ -59,12 +65,6 @@ in
         directory = ".gnupg";
         mode = "0700";
       }
-
-      # SSH client material; sshd also reads authorized_keys from here.
-      {
-        directory = ".ssh";
-        mode = "0700";
-      }
     ];
 
     # Common NixOS state required by the base system.
@@ -86,8 +86,6 @@ in
           directory = "/var/tmp";
           mode = "1777";
         }
-        # SSH host keys, so the identity survives reboots.
-        "/etc/ssh"
       ];
 
       files = [
