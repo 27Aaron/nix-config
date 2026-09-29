@@ -10,7 +10,10 @@ let
   mkNixos =
     name: host:
     inputs.nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs myvars; };
+      specialArgs = {
+        inherit inputs myvars;
+        hostName = name;
+      };
       modules = [
         (import ../nixos)
       ]
