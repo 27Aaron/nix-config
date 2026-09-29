@@ -17,6 +17,7 @@
 ├── docs/
 ├── flake.nix
 ├── home/
+│   ├── default.nix
 │   ├── programs/
 │   └── shell/
 ├── hosts/
@@ -24,6 +25,7 @@
 │   └── default.nix
 ├── Justfile
 ├── modules/
+│   ├── default.nix
 │   ├── core/             # 主机基础、安全与 Nix 配置
 │   ├── development/     # 开发工具
 │   ├── desktop/         # 桌面环境与应用
@@ -49,7 +51,7 @@
 
 另有 `preservation'`（Preservation 别名）与 `persist'`（Home Manager 持久化上报）两个机制层选项；`user'`、`hm'` 是 `lib.mkAliasOptionModule` 别名，指向 `users.users.<username>` 和 `home-manager.users.<username>`。
 
-`modules/` 下的目录按职责划分为 `core/`、`development/`、`desktop/`、`hardware/` 和 `services/`。Home Manager 配置按 `home/programs/` 与 `home/shell/` 划分。新增模块时直接放入对应分类目录。
+`modules/` 下的目录按职责划分为 `core/`、`development/`、`desktop/`、`hardware/` 和 `services/`。三个入口文件各自动态收集其下的内容：`modules/default.nix` 收集分类目录中的模块，`home/default.nix` 收集 `home/programs/` 与 `home/shell/` 中的配置，`hosts/default.nix` 自动发现 `hosts/` 下带 `default.nix` 的主机目录。新增模块放入对应分类目录即可；新增分类目录时在对应入口登记。
 
 ## 多设备配置
 

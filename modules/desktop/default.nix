@@ -1,7 +1,0 @@
-{
-  imports = [
-    ./apps
-    ./environment
-    ./session
-  ];
-}

@@ -34,11 +34,13 @@ let
       ];
     };
 
-  nixosConfigurations = {
-    beelink = mkHost "beelink";
-    elaina = mkHost "elaina";
-    router = mkHost "router";
-  };
+  hostNames = builtins.attrNames (
+    lib.filterAttrs (
+      name: type: type == "directory" && builtins.pathExists (./. + "/${name}/default.nix")
+    ) (builtins.readDir ./.)
+  );
+
+  nixosConfigurations = lib.genAttrs hostNames mkHost;
 
   toplevel = lib.mapAttrs (_: host: host.config.system.build.toplevel) nixosConfigurations;
   deploymentConfig = lib.mapAttrs (_: host: host.config.deployment) nixosConfigurations;
