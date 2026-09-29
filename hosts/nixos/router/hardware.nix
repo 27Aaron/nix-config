@@ -28,6 +28,12 @@
     extraModprobeConfig = ''
       blacklist virtio_balloon
       install virtio_balloon ${pkgs.coreutils}/bin/true
+
+      # Reject modules mitigating the Dirty Frag LPE (esp4, esp6, rxrpc).
+      # Harmless unless IPsec ESP or AF_RXRPC is actually used.
+      install esp4 ${pkgs.coreutils}/bin/false
+      install esp6 ${pkgs.coreutils}/bin/false
+      install rxrpc ${pkgs.coreutils}/bin/false
     '';
   };
 

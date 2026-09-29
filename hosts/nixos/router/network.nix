@@ -1,9 +1,12 @@
 { ... }:
 {
-  # Headless VM: systemd-networkd instead of NetworkManager.
+  # Headless VM: systemd-networkd instead of NetworkManager, with the
+  # nftables-backed firewall.
   networking = {
     useNetworkd = true;
     useDHCP = false;
+    firewall.enable = true;
+    nftables.enable = true;
   };
 
   services.resolved.enable = true;
