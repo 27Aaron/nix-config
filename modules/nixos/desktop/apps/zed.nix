@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -12,6 +13,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = [ pkgs.zed-editor ];
+
     preservation'.user.directories = [
       # Zed settings, keymaps, extensions, and language-server state.
       {
