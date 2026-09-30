@@ -17,7 +17,7 @@ let
   hosts = lib.mapAttrs (
     name: dir:
     let
-      host = import (dir + "/default.nix");
+      host = import (dir + "/default.nix") { inherit lib; };
       category = baseNameOf (dirOf dir);
     in
     assert lib.assertMsg (
