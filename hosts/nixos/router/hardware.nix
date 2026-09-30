@@ -1,4 +1,4 @@
-# QEMU guest setup: virtio drivers come from the qemu-guest profile.
+# Router hardware: QEMU guest setup and storage.
 { modulesPath, ... }:
 {
   imports = [
@@ -30,4 +30,14 @@
 
   # Keep the balloon driver disabled so the host cannot starve this VM.
   hardware'.disable-balloon.enable = true;
+
+  # Storage: disko layout and preservation, provided by the shared modules.
+  hardware' = {
+    disko = {
+      enable = true;
+      device = "/dev/sda";
+      tmpfsSize = "512M";
+    };
+    persistence.enable = true;
+  };
 }
