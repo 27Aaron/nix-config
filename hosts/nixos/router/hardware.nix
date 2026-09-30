@@ -13,17 +13,13 @@
       "net.ifnames=0"
     ];
 
-    loader = {
-      systemd-boot = {
-        enable = true;
-        editor = false;
-        # Keep fewer generations: installed kernels are ~50M each and the ESP
-        # is only 256M.
-        configurationLimit = 4;
-      };
-      efi.canTouchEfiVariables = true;
-    };
   };
+
+  hardware'.systemd-boot.enable = true;
+
+  # Keep fewer generations: installed kernels are ~50M each and the ESP
+  # is only 256M.
+  boot.loader.systemd-boot.configurationLimit = 4;
 
   # Proxmox uses the guest agent for clean shutdown and IP reporting.
   services.qemuGuest.enable = true;
