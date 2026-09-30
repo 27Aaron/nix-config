@@ -5,6 +5,9 @@
     ./hardware.nix
 
     {
+      development'.ai.enable = true;
+      development'.dev.enable = true;
+
       desktop'.applications.enable = true;
       desktop'.apps.firefox.enable = true;
       desktop'.apps.kitty.enable = true;

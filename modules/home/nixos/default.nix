@@ -1,6 +1,8 @@
 { ... }:
 {
   imports = [
+    ./ai.nix
+    ./dev.nix
     ./fcitx5.nix
     ./firefox.nix
     ./kitty.nix
