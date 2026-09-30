@@ -1,11 +1,10 @@
 { ... }:
 {
   imports = [
-    ./fcitx5.nix
+    ./applications.nix
     ./firefox.nix
     ./kitty.nix
     ./vscode.nix
-    ./xdg-user-dirs.nix
     ./zed.nix
   ];
 }
