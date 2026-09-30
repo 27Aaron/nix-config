@@ -13,13 +13,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = !config.hardware'.systemd-boot.enable;
-        message = "hardware'.grub and hardware'.systemd-boot are mutually exclusive; enable only one.";
-      }
-    ];
-
     boot.loader.grub = {
       enable = true;
       efiSupport = lib.mkDefault true;
