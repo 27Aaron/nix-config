@@ -11,6 +11,8 @@
       services'.vnstat.enable = true;
       services'.zram.enable = true;
 
+      security'.firewall.enable = true;
+
       # Avoid concurrent local builds exhausting the VM's memory.
       nix.settings.max-jobs = 1;
 
