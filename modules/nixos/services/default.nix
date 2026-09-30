@@ -1,6 +1,8 @@
 { ... }:
 {
   imports = [
+    ./avahi.nix
+    ./btrbk.nix
     ./btrfs-scrub.nix
     ./fail2ban.nix
     ./gnome-keyring.nix
