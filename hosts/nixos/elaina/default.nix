@@ -5,7 +5,14 @@
     ./hardware.nix
 
     {
+      services'.btrfs-scrub.enable = true;
+      services'.gnome-keyring.enable = true;
+      services'.networkmanager.enable = true;
       services'.openssh.enable = true;
+      services'.pipewire.enable = true;
+      services'.power-profiles-daemon.enable = true;
+      services'.smartd.enable = true;
+      services'.upower.enable = true;
       services'.zram.enable = true;
 
       security'.firewall.enable = true;
