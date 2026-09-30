@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./apps
     ./fcitx5.nix
     ./fonts.nix
     ./greetd.nix

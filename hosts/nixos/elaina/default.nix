@@ -5,6 +5,11 @@
     ./hardware.nix
 
     {
+      desktop'.applications.enable = true;
+      desktop'.apps.firefox.enable = true;
+      desktop'.apps.kitty.enable = true;
+      desktop'.apps.vscode.enable = true;
+      desktop'.apps.zed.enable = true;
       desktop'.fcitx5.enable = true;
       desktop'.fonts.enable = true;
       desktop'.greetd.enable = true;
