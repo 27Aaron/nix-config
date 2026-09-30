@@ -13,6 +13,7 @@
       desktop'.apps.kitty.enable = true;
       desktop'.apps.vscode.enable = true;
       desktop'.apps.zed.enable = true;
+      desktop'.cursors.enable = true;
       desktop'.fcitx5.enable = true;
       desktop'.fonts.enable = true;
       desktop'.greetd.enable = true;
@@ -20,6 +21,7 @@
       desktop'.niri.enable = true;
       desktop'.niri.autoLogin = true;
       desktop'.noctalia.enable = true;
+      desktop'.themes.enable = true;
       desktop'.xdg-user-dirs.enable = true;
 
       services'.btrfs-scrub.enable = true;
