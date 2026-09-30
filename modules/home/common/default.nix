@@ -1,5 +1,16 @@
 { myvars, ... }:
 {
+  imports = [
+    ./atuin.nix
+    ./eza.nix
+    ./fish.nix
+    ./git.nix
+    ./misc.nix
+    ./starship.nix
+    ./zoxide.nix
+    ./zsh.nix
+  ];
+
   home = {
     username = myvars.username;
     stateVersion = "26.05";

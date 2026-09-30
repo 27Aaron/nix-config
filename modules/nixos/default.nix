@@ -7,5 +7,6 @@
     ./security
     ./services
     ./system
+    ./user
   ];
 }
