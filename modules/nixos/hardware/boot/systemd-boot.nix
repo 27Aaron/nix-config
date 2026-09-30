@@ -5,7 +5,6 @@
 }:
 let
   cfg = config.hardware'.systemd-boot;
-  diskoCfg = config.hardware'.disko;
 in
 {
   options.hardware'.systemd-boot = {
@@ -13,13 +12,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = !diskoCfg.bios.enable;
-        message = "hardware'.systemd-boot cannot be combined with hardware'.disko.bios.enable; use hardware'.grub for BIOS boot.";
-      }
-    ];
-
     boot.loader = {
       systemd-boot = {
         enable = true;
