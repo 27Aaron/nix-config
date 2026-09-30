@@ -12,11 +12,9 @@
       "audit=0"
       "net.ifnames=0"
     ];
-
   };
 
   hardware'.systemd-boot.enable = true;
-
   # Keep fewer generations: installed kernels are ~50M each and the ESP
   # is only 256M.
   boot.loader.systemd-boot.configurationLimit = 4;
@@ -28,12 +26,9 @@
   hardware'.disable-balloon.enable = true;
 
   # Storage: disko layout and preservation, provided by the shared modules.
-  hardware' = {
-    disko = {
-      enable = true;
-      device = "/dev/sda";
-      tmpfsSize = "512M";
-    };
-    persistence.enable = true;
-  };
+  hardware'.disko.enable = true;
+  hardware'.disko.device = "/dev/sda";
+  hardware'.disko.tmpfsSize = "512M";
+
+  hardware'.persistence.enable = true;
 }
