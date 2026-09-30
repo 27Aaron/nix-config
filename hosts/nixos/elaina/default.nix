@@ -5,6 +5,12 @@
     ./hardware.nix
 
     {
+      desktop'.fonts.enable = true;
+      desktop'.greetd.enable = true;
+      desktop'.niri.enable = true;
+      desktop'.niri.autoLogin = true;
+      desktop'.noctalia.enable = true;
+
       services'.btrfs-scrub.enable = true;
       services'.gnome-keyring.enable = true;
       services'.networkmanager.enable = true;
