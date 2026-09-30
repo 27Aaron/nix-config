@@ -5,11 +5,13 @@
     ./hardware.nix
 
     {
+      desktop'.fcitx5.enable = true;
       desktop'.fonts.enable = true;
       desktop'.greetd.enable = true;
       desktop'.niri.enable = true;
       desktop'.niri.autoLogin = true;
       desktop'.noctalia.enable = true;
+      desktop'.xdg-user-dirs.enable = true;
 
       services'.btrfs-scrub.enable = true;
       services'.gnome-keyring.enable = true;

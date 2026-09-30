@@ -9,13 +9,31 @@
 let
   mkNixos =
     name: host:
-    inputs.nixpkgs.lib.nixosSystem {
+    let
       specialArgs = {
         inherit inputs myvars;
         hostName = name;
       };
+    in
+    inputs.nixpkgs.lib.nixosSystem {
+      inherit specialArgs;
       modules = [
         (import ../nixos)
+        inputs.home-manager.nixosModules.home-manager
+        ({ config, ... }: {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "hm-bak";
+            extraSpecialArgs = specialArgs // {
+              osConfig = config;
+            };
+            users.${myvars.username}.imports = [
+              ../../modules/home/common
+              ../../modules/home/nixos
+            ];
+          };
+        })
       ]
       ++ host.modules
       ++ [
