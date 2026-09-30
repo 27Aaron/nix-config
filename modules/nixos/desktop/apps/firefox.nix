@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -12,6 +13,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = [ pkgs.firefox ];
+
     preservation'.user.directories = [
       ".config/mozilla"
       ".mozilla"

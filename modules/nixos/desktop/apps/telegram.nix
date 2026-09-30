@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -12,6 +13,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = [ pkgs.telegram-desktop ];
+
     preservation'.user.directories = [
       # Telegram Desktop session data and settings, including tdata.
       ".local/share/TelegramDesktop"
