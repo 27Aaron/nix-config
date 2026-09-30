@@ -13,6 +13,7 @@
       desktop'.fcitx5.enable = true;
       desktop'.fonts.enable = true;
       desktop'.greetd.enable = true;
+      desktop'.mime-apps.enable = true;
       desktop'.niri.enable = true;
       desktop'.niri.autoLogin = true;
       desktop'.noctalia.enable = true;
