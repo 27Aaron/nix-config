@@ -6,12 +6,10 @@
     ./network.nix
 
     {
-      services' = {
-        fail2ban.enable = true;
-        openssh.enable = true;
-        vnstat.enable = true;
-        zram.enable = true;
-      };
+      services'.fail2ban.enable = true;
+      services'.openssh.enable = true;
+      services'.vnstat.enable = true;
+      services'.zram.enable = true;
 
       # Avoid concurrent local builds exhausting the VM's memory.
       nix.settings.max-jobs = 1;
