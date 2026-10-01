@@ -1,7 +1,6 @@
-{ username, ... }:
 {
-  home-manager.users.${username}.programs.nh = {
-    enable = true;
-    flake = "/home/${username}/nix-config";
-  };
+  # Load Home Manager modules that require NixOS paths or options.
+  imports = [
+    ./nh.nix
+  ];
 }
