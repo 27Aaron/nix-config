@@ -13,12 +13,13 @@ area:darwin:
 area:common:
   - changed-files:
       - any-glob-to-any-file:
-          - "modules/common/**"
+          - "hosts/nixos/common/**"
+          - "hosts/darwin/common/**"
 
 area:home-manager:
   - changed-files:
       - any-glob-to-any-file:
-          - "home/**"
+          - "modules/home/**"
 
 area:docs:
   - changed-files:
@@ -29,13 +30,10 @@ area:ci:
   - changed-files:
       - any-glob-to-any-file:
           - ".github/**"
-          - "Justfile"
 
 area:flake:
   - changed-files:
       - any-glob-to-any-file:
           - "flake.nix"
           - "flake.lock"
-          - "helpers/**"
           - "lib/**"
-          - "outputs/**"

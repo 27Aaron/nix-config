@@ -19,12 +19,13 @@ hosts/
     └── <hostname>/
 
 lib/
-└── hosts.nix                 # host discovery helpers
+└── hosts.nix                 # host discovery helper
+
+vars/
+└── default.nix               # shared non-secret user values
 
 profiles/
 ├── nixos/
-│   ├── desktop.nix
-│   ├── laptop.nix
 │   └── server.nix
 └── darwin/
     └── default.nix
@@ -41,10 +42,11 @@ modules/
 - `hosts/` contains host entry points and host-specific configuration.
 - `hosts/nixos/server/` contains all NixOS servers, including VPS hosts.
 - `hosts/nixos/common/` and `hosts/darwin/common/` contain platform-wide configuration. They are not hosts themselves.
-- `profiles/` composes reusable roles such as desktop, laptop, and server.
+- `profiles/` composes reusable roles such as server and platform defaults.
 - `modules/` contains reusable feature modules. Home Manager is embedded in the NixOS and nix-darwin configurations, so shared Home Manager modules belong under `modules/home/common/` and platform-specific modules belong under `modules/home/<platform>/`.
 - `modules/home/darwin/` contains Home Manager modules that depend on nix-darwin options or macOS applications, such as Karabiner and nh.
-- `lib/` contains pure helpers used by the Flake, including host discovery.
+- `lib/` contains the host discovery helper used by the Flake.
+- `vars/` contains shared non-secret user values. Keep credentials and other secrets in the separate private repository.
 - Do not add `production`, `staging`, or `lab` directory layers until those environments require different behavior. Host metadata can be added later without changing the layout.
 - Darwin currently targets `aarch64-darwin`; do not create architecture-specific directories or files for unsupported Darwin systems.
 
@@ -55,6 +57,7 @@ modules/
 - Put one reusable capability in each module under `modules/`.
 - Optional features should expose an `enable` option using `lib.mkEnableOption` or an equivalent typed option.
 - Prefer shared modules and profiles over copying the same settings into multiple hosts.
+- Keep platform-specific Home Manager modules under `modules/home/<platform>/`; shared modules belong under `modules/home/common/`.
 
 ## Host discovery
 

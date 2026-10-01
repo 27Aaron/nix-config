@@ -8,7 +8,7 @@
 
 ## Verification
 
-- [ ] `just check` passes (formatting, unused declarations, all-host evaluation)
+- [ ] `nix fmt` and `nix flake check` pass
 
 ## Checklist
 
