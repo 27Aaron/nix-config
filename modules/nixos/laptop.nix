@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  username,
   ...
 }:
 let
@@ -41,4 +42,10 @@ in
     source-han-sans
     source-han-serif
   ];
+
+  home-manager.users.${username} = {
+    programs.firefox.enable = true;
+    programs.vscode.enable = true;
+    programs.zed-editor.enable = true;
+  };
 }
