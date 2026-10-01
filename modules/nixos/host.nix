@@ -8,7 +8,6 @@
 }:
 {
   networking.hostName = hostName;
-  networking.firewall.enable = lib.mkDefault true;
   time.timeZone = lib.mkDefault timeZone;
 
   # Keep terminal support and system documentation predictable across hosts.
