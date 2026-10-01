@@ -12,6 +12,12 @@
     ./hardware/boot/grub.nix
     ./hardware/boot/initrd-ssh.nix
     ./hardware/boot/systemd-boot.nix
+    ./services/btrfs-scrub.nix
+    ./services/openssh.nix
+    ./services/pipewire.nix
+    ./services/power-profiles-daemon.nix
+    ./services/upower.nix
+    ./services/zram.nix
   ];
 
   networking.hostName = hostName;

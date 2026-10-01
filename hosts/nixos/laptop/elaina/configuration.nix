@@ -2,22 +2,14 @@
 {
   networking.networkmanager.enable = true;
 
-  services = {
-    btrfs.autoScrub = {
-      enable = true;
-      interval = "monthly";
-    };
+  services' = {
+    btrfs-scrub.enable = true;
     openssh.enable = true;
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      pulse.enable = true;
-    };
+    pipewire.enable = true;
     power-profiles-daemon.enable = true;
     upower.enable = true;
+    zram.enable = true;
   };
-
-  zramSwap.enable = true;
 
   system.stateVersion = "26.05";
 }
