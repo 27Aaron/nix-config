@@ -5,5 +5,6 @@
     ../../../../profiles/nixos/laptop.nix
     ./configuration.nix
     ./hardware.nix
+    ./storage.nix
   ];
 }
