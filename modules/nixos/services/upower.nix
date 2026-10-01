@@ -10,10 +10,8 @@ in
   config = {
     services.upower.enable = lib.mkIf cfg.enable true;
 
-    preservation.preserveAt."/persistent".directories =
-      lib.mkIf (cfg.enable && config.hardware'.persistence.enable)
-        [
-          "/var/lib/upower"
-        ];
+    preservation'.os.directories = lib.mkIf (cfg.enable && config.hardware'.persistence.enable) [
+      "/var/lib/upower"
+    ];
   };
 }

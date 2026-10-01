@@ -11,7 +11,7 @@ in
     networking.networkmanager.enable = true;
     user'.extraGroups = [ "networkmanager" ];
 
-    preservation.preserveAt."/persistent" = lib.mkIf config.hardware'.persistence.enable {
+    preservation'.os = lib.mkIf config.hardware'.persistence.enable {
       directories = [
         {
           directory = "/etc/NetworkManager/system-connections";

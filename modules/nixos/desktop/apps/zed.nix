@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  username,
   ...
 }:
 let
@@ -14,17 +13,15 @@ in
 
   config = lib.mkIf cfg.enable {
     hm'.programs.zed-editor.enable = true;
-    preservation.preserveAt."/persistent".users.${username}.directories =
-      lib.mkIf (config.hardware'.persistence.enable)
-        [
-          {
-            directory = ".config/zed";
-            mode = "0700";
-          }
-          {
-            directory = ".local/share/zed";
-            mode = "0700";
-          }
-        ];
+    preservation'.user.directories = lib.mkIf (config.hardware'.persistence.enable) [
+      {
+        directory = ".config/zed";
+        mode = "0700";
+      }
+      {
+        directory = ".local/share/zed";
+        mode = "0700";
+      }
+    ];
   };
 }

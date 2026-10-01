@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  username,
   ...
 }:
 let
@@ -30,33 +29,31 @@ in
       configFile."user-dirs.locale".text = "en_US";
     };
 
-    preservation.preserveAt."/persistent".users.${username}.directories =
-      lib.mkIf (config.hardware'.persistence.enable)
-        [
-          {
-            directory = "Desktop";
-            mountOptions = [ "x-gvfs-trash" ];
-          }
-          {
-            directory = "Documents";
-            mountOptions = [ "x-gvfs-trash" ];
-          }
-          {
-            directory = "Downloads";
-            mountOptions = [ "x-gvfs-trash" ];
-          }
-          {
-            directory = "Music";
-            mountOptions = [ "x-gvfs-trash" ];
-          }
-          {
-            directory = "Pictures";
-            mountOptions = [ "x-gvfs-trash" ];
-          }
-          {
-            directory = "Videos";
-            mountOptions = [ "x-gvfs-trash" ];
-          }
-        ];
+    preservation'.user.directories = lib.mkIf (config.hardware'.persistence.enable) [
+      {
+        directory = "Desktop";
+        mountOptions = [ "x-gvfs-trash" ];
+      }
+      {
+        directory = "Documents";
+        mountOptions = [ "x-gvfs-trash" ];
+      }
+      {
+        directory = "Downloads";
+        mountOptions = [ "x-gvfs-trash" ];
+      }
+      {
+        directory = "Music";
+        mountOptions = [ "x-gvfs-trash" ];
+      }
+      {
+        directory = "Pictures";
+        mountOptions = [ "x-gvfs-trash" ];
+      }
+      {
+        directory = "Videos";
+        mountOptions = [ "x-gvfs-trash" ];
+      }
+    ];
   };
 }

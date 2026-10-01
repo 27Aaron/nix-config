@@ -18,7 +18,7 @@ in
       };
     };
 
-    preservation.preserveAt."/persistent".directories = lib.mkIf config.hardware'.persistence.enable [
+    preservation'.os.directories = lib.mkIf config.hardware'.persistence.enable [
       "/var/lib/fail2ban"
     ];
   };

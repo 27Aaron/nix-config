@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  username,
   ...
 }:
 let
@@ -18,21 +17,19 @@ in
       systemd.enable = true;
     };
 
-    preservation.preserveAt."/persistent".users.${username}.directories =
-      lib.mkIf (config.hardware'.persistence.enable)
-        [
-          {
-            directory = ".config/noctalia";
-            mode = "0700";
-          }
-          {
-            directory = ".local/state/noctalia";
-            mode = "0700";
-          }
-          {
-            directory = ".local/share/noctalia";
-            mode = "0700";
-          }
-        ];
+    preservation'.user.directories = lib.mkIf (config.hardware'.persistence.enable) [
+      {
+        directory = ".config/noctalia";
+        mode = "0700";
+      }
+      {
+        directory = ".local/state/noctalia";
+        mode = "0700";
+      }
+      {
+        directory = ".local/share/noctalia";
+        mode = "0700";
+      }
+    ];
   };
 }

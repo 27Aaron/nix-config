@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  username,
   ...
 }:
 let
@@ -17,7 +16,7 @@ in
     programs.seahorse.enable = lib.mkIf cfg.enable true;
     security.pam.services.passwd.enableGnomeKeyring = config.services.gnome.gnome-keyring.enable;
 
-    preservation.preserveAt."/persistent".users.${username}.directories =
+    preservation'.user.directories =
       lib.mkIf (config.services.gnome.gnome-keyring.enable && config.hardware'.persistence.enable)
         [
           {

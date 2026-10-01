@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  username,
   ...
 }:
 let
@@ -67,17 +66,15 @@ in
       color-scheme = "prefer-dark";
     };
 
-    preservation.preserveAt."/persistent".users.${username}.directories =
-      lib.mkIf (config.hardware'.persistence.enable)
-        [
-          {
-            directory = ".config/gtk-3.0";
-            mode = "0700";
-          }
-          {
-            directory = ".config/dconf";
-            mode = "0700";
-          }
-        ];
+    preservation'.user.directories = lib.mkIf (config.hardware'.persistence.enable) [
+      {
+        directory = ".config/gtk-3.0";
+        mode = "0700";
+      }
+      {
+        directory = ".config/dconf";
+        mode = "0700";
+      }
+    ];
   };
 }

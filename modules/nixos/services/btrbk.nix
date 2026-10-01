@@ -41,7 +41,7 @@ in
       "/snapshots"
     ];
 
-    preservation.preserveAt."/persistent".directories = lib.mkIf config.hardware'.persistence.enable [
+    preservation'.os.directories = lib.mkIf config.hardware'.persistence.enable [
       {
         directory = "/var/lib/btrbk";
         user = "btrbk";

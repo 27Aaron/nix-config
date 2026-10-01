@@ -10,10 +10,8 @@ in
   config = {
     services.power-profiles-daemon.enable = lib.mkIf cfg.enable true;
 
-    preservation.preserveAt."/persistent".directories =
-      lib.mkIf (cfg.enable && config.hardware'.persistence.enable)
-        [
-          "/var/lib/power-profiles-daemon"
-        ];
+    preservation'.os.directories = lib.mkIf (cfg.enable && config.hardware'.persistence.enable) [
+      "/var/lib/power-profiles-daemon"
+    ];
   };
 }

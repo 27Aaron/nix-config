@@ -35,7 +35,7 @@ in
       StateDirectoryMode = "0750";
     };
 
-    preservation.preserveAt."/persistent".directories = lib.mkIf config.hardware'.persistence.enable [
+    preservation'.os.directories = lib.mkIf config.hardware'.persistence.enable [
       {
         directory = "/var/lib/smartmontools";
         mode = "0750";

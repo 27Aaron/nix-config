@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  username,
   ...
 }:
 let
@@ -14,11 +13,9 @@ in
 
   config = lib.mkIf cfg.enable {
     hm'.programs.firefox.enable = true;
-    preservation.preserveAt."/persistent".users.${username}.directories =
-      lib.mkIf (config.hardware'.persistence.enable)
-        [
-          ".config/mozilla"
-          ".mozilla"
-        ];
+    preservation'.user.directories = lib.mkIf (config.hardware'.persistence.enable) [
+      ".config/mozilla"
+      ".mozilla"
+    ];
   };
 }

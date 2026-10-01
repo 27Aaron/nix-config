@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  username,
   ...
 }:
 let
@@ -31,9 +30,9 @@ in
       };
     };
 
-    preservation.preserveAt."/persistent" = lib.mkIf persistenceEnabled {
-      directories = [ "/etc/ssh" ];
-      users.${username}.directories = [
+    preservation'.os.directories = lib.mkIf persistenceEnabled [ "/etc/ssh" ];
+    preservation'.user = lib.mkIf persistenceEnabled {
+      directories = [
         {
           directory = ".ssh";
           mode = "0700";

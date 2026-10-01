@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  username,
   ...
 }:
 let
@@ -22,17 +21,15 @@ in
 
     security.rtkit.enable = lib.mkIf cfg.enable true;
 
-    preservation.preserveAt."/persistent".users.${username}.directories =
-      lib.mkIf (cfg.enable && config.hardware'.persistence.enable)
-        [
-          {
-            directory = ".config/pulse";
-            mode = "0700";
-          }
-          {
-            directory = ".local/state/wireplumber";
-            mode = "0700";
-          }
-        ];
+    preservation'.user.directories = lib.mkIf (cfg.enable && config.hardware'.persistence.enable) [
+      {
+        directory = ".config/pulse";
+        mode = "0700";
+      }
+      {
+        directory = ".local/state/wireplumber";
+        mode = "0700";
+      }
+    ];
   };
 }

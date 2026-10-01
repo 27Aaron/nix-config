@@ -34,7 +34,7 @@ in
 
     boot.initrd.systemd.users.root.shell = "/bin/systemd-tty-ask-password-agent";
 
-    preservation.preserveAt."/persistent".directories = lib.mkIf config.hardware'.persistence.enable [
+    preservation'.os.directories = lib.mkIf config.hardware'.persistence.enable [
       "/etc/secrets/initrd"
     ];
   };

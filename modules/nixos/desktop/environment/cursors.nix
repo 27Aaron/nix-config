@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  username,
   ...
 }:
 let
@@ -29,8 +28,6 @@ in
       gtk.enable = true;
     };
 
-    preservation.preserveAt."/persistent".users.${username}.directories =
-      lib.mkIf (config.hardware'.persistence.enable)
-        [ ".icons" ];
+    preservation'.user.directories = lib.mkIf (config.hardware'.persistence.enable) [ ".icons" ];
   };
 }

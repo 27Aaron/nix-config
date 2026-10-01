@@ -10,13 +10,11 @@ in
   config = {
     hardware.bluetooth.enable = lib.mkIf cfg.enable true;
 
-    preservation.preserveAt."/persistent".directories =
-      lib.mkIf (cfg.enable && config.hardware'.persistence.enable)
-        [
-          {
-            directory = "/var/lib/bluetooth";
-            mode = "0700";
-          }
-        ];
+    preservation'.os.directories = lib.mkIf (cfg.enable && config.hardware'.persistence.enable) [
+      {
+        directory = "/var/lib/bluetooth";
+        mode = "0700";
+      }
+    ];
   };
 }
