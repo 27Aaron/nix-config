@@ -4,5 +4,6 @@
   modules = [
     ../../../../profiles/nixos/default.nix
     ./configuration.nix
+    ./hardware.nix
   ];
 }
