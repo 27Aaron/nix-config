@@ -2,6 +2,8 @@
 {
   homebrew = {
     enable = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
 
     # Keep activation non-destructive.
     onActivation = {

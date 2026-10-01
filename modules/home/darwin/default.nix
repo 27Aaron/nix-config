@@ -4,6 +4,5 @@
   home-manager.users.${username}.imports = [
     ./karabiner.nix
     ./nh.nix
-    ./shell.nix
   ];
 }
