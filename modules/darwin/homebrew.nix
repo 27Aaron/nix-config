@@ -66,6 +66,7 @@
       "plex"
 
       # Networking.
+      "feishu"
       "surge"
       "telegram"
       "termius"
