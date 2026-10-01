@@ -3,7 +3,7 @@
   homebrew = {
     enable = true;
 
-    # Keep upgrades and package removal manual.
+    # Keep activation non-destructive.
     onActivation = {
       autoUpdate = false;
       cleanup = "none";
@@ -24,43 +24,20 @@
     };
 
     casks = [
-      # Development and AI tools.
+      # AI tools.
       "cc-switch"
       "chatgpt"
+      "claude-code"
+      "codex"
       "codexbar"
       "grok-build"
-      "orbstack"
-      "visual-studio-code"
       "zcode"
-      "zed"
 
-      # Browsers and terminals.
+      # Browsers.
       "firefox"
-      "ghostty"
       "google-chrome"
 
-      # Fonts.
-      "font-hack-nerd-font"
-      "font-jetbrains-mono-nerd-font"
-      "font-lxgw-wenkai"
-      "font-maple-mono-nf-cn"
-      "font-material-icons"
-
-      # Media and notes.
-      "iina"
-      "neteasemusic"
-      "obs"
-      "obsidian"
-      "plex"
-
-      # Networking, messaging, and remote access.
-      "surge"
-      "telegram"
-      "termius"
-      "uuremote"
-      "wechat"
-
-      # Desktop and hardware utilities.
+      # Desktop utilities.
       "input-source-pro"
       "jordanbaird-ice@beta"
       "karabiner-elements"
@@ -69,6 +46,37 @@
       "qspace-pro"
       "raycast"
       "stats"
+
+      # Development.
+      "orbstack"
+      "visual-studio-code"
+      "zed"
+
+      # Fonts.
+      "font-hack-nerd-font"
+      "font-jetbrains-mono-nerd-font"
+      "font-lxgw-wenkai"
+      "font-maple-mono-nf-cn"
+      "font-material-icons"
+
+      # Media.
+      "iina"
+      "neteasemusic"
+      "obs"
+      "plex"
+
+      # Networking.
+      "surge"
+      "telegram"
+      "termius"
+      "uuremote"
+      "wechat"
+
+      # Notes.
+      "obsidian"
+
+      # Terminal.
+      "ghostty"
     ];
   };
 }
