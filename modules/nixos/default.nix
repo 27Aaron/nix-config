@@ -4,7 +4,7 @@
     ./core/fish.nix
     ./core/i18n.nix
     ./core/nix.nix
-    ./host.nix
+    ./core/host.nix
     ./hardware/amdgpu.nix
     ./hardware/bluetooth.nix
     ./hardware/disable-balloon.nix
