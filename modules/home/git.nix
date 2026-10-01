@@ -1,6 +1,12 @@
-{ email, fullName, pkgs, ... }:
+{
+  email,
+  fullName,
+  pkgs,
+  ...
+}:
 {
   programs = {
+    # Git identity and defaults.
     git = {
       enable = true;
       lfs.enable = true;
@@ -18,6 +24,7 @@
       };
     };
 
+    # Diff viewer and Git terminal UI.
     delta = {
       enable = true;
       enableGitIntegration = true;
@@ -31,6 +38,7 @@
     lazygit.enable = true;
   };
 
+  # GitHub CLI and branch cleanup.
   home.packages = [
     pkgs.gh
     pkgs.git-trim

@@ -1,5 +1,6 @@
 { lib }:
 let
+  # A host is a directory with a default.nix specification.
   findHostDirectories =
     root:
     let
@@ -25,6 +26,7 @@ let
       names = map (host: host.name) hosts;
       uniqueNames = lib.unique names;
     in
+    # Host names must be unique within each platform.
     if builtins.length names != builtins.length uniqueNames then
       throw "duplicate host name discovered under ${toString root}"
     else

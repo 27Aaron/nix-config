@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  # Manage language runtimes and npm-based developer tools.
   programs.mise = {
     enable = true;
     enableFishIntegration = true;
@@ -25,6 +26,7 @@
     };
   };
 
+  # Formatters and Python tooling.
   home.packages = with pkgs; [
     prettier
     uv

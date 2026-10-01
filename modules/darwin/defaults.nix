@@ -1,13 +1,16 @@
 { ... }:
 {
+  # Unlock sudo with Touch ID.
   security.pam.services.sudo_local.touchIdAuth = true;
 
   system.defaults = {
+    # Menu bar clock.
     menuExtraClock = {
       Show24Hour = true;
       ShowSeconds = true;
     };
 
+    # Dock and hot corners.
     dock = {
       autohide = true;
       show-recents = false;
@@ -17,6 +20,7 @@
       wvous-tr-corner = 4;
     };
 
+    # Finder behavior and desktop visibility.
     finder = {
       AppleShowAllExtensions = true;
       FXEnableExtensionChangeWarning = false;
@@ -33,6 +37,7 @@
       _FXSortFoldersFirst = true;
     };
 
+    # Window management and Stage Manager.
     WindowManager = {
       EnableStandardClickToShowDesktop = false;
       HideDesktop = false;
@@ -41,6 +46,7 @@
       StandardHideWidgets = false;
     };
 
+    # Lock screen and screenshot defaults.
     screensaver = {
       askForPassword = true;
       askForPasswordDelay = 0;
@@ -51,6 +57,7 @@
       type = "png";
     };
 
+    # Spaces and keyboard behavior.
     spaces.spans-displays = false;
 
     NSGlobalDomain = {
@@ -69,6 +76,7 @@
       "com.apple.swipescrolldirection" = true;
     };
 
+    # Preferences without dedicated nix-darwin options.
     CustomUserPreferences = {
       ".GlobalPreferences" = {
         AppleSpacesSwitchOnActivate = true;

@@ -6,6 +6,7 @@
   ...
 }:
 let
+  # Only manage the profile when the cask is enabled.
   enabled = lib.any (
     c:
     let
@@ -82,6 +83,7 @@ let
 in
 {
   config = lib.mkIf enabled {
+    # Write a GUI-editable copy; activation replaces it with the declared profile.
     home.activation.initializeKarabiner =
       lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
         ''

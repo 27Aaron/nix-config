@@ -1,26 +1,35 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    # System information and monitoring.
     btop
-    curl
+    fastfetch
+
+    # Disk usage.
     dust
     duf
+    ncdu
+
+    # Search, text processing, and navigation.
     fd
-    fastfetch
     fzf
     gawk
-    git
-    git-lfs
     gnugrep
     gnused
-    iperf3
     jq
+    ripgrep
+
+    # Development and version control.
+    git
+    git-lfs
     just
-    ncdu
     neovim
+
+    # Networking and diagnostics.
+    curl
+    iperf3
     nload
     nmap
-    ripgrep
     socat
     wget
   ];

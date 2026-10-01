@@ -1,5 +1,6 @@
 {
   programs = {
+    # Shell initialization and completion.
     fish = {
       enable = true;
       interactiveShellInit = ''
@@ -21,6 +22,7 @@
       '';
     };
 
+    # Zsh behavior and completion.
     zsh = {
       enable = true;
       enableCompletion = true;
@@ -43,6 +45,7 @@
       syntaxHighlighting.enable = true;
     };
 
+    # Prompt styling.
     starship = {
       enable = true;
       enableFishIntegration = true;
@@ -56,6 +59,7 @@
       };
     };
 
+    # Directory listing and navigation.
     eza = {
       enable = true;
       enableFishIntegration = true;
@@ -70,6 +74,7 @@
       enableZshIntegration = true;
     };
 
+    # Command history.
     atuin = {
       enable = true;
       enableFishIntegration = true;

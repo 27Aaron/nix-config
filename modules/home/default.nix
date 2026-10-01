@@ -5,6 +5,7 @@
   ...
 }:
 {
+  # Home Manager is embedded in the Darwin system.
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;

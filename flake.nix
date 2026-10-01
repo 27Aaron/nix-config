@@ -25,18 +25,22 @@
     }:
     let
       inherit (nixpkgs) lib;
+
+      # Discover host specifications from the directory tree.
       hostLib = import ./lib/hosts.nix { inherit lib; };
 
       nixosHosts = hostLib.discover ./hosts/nixos;
       darwinHosts = hostLib.discover ./hosts/darwin;
 
+      # Build each host from its declared system and module list.
       mkNixosConfiguration =
         hostName: host:
         nixpkgs.lib.nixosSystem {
           system = host.system;
           specialArgs = {
             inherit inputs self hostName;
-          } // (host.specialArgs or { });
+          }
+          // (host.specialArgs or { });
           modules = [ home-manager.nixosModules.home-manager ] ++ (host.modules or [ ]);
         };
 
@@ -46,11 +50,13 @@
           system = host.system;
           specialArgs = {
             inherit inputs self hostName;
-          } // (host.specialArgs or { });
+          }
+          // (host.specialArgs or { });
           modules = [
             home-manager.darwinModules.home-manager
             ./profiles/darwin
-          ] ++ (host.modules or [ ]);
+          ]
+          ++ (host.modules or [ ]);
         };
 
       forEachSystem = lib.genAttrs lib.systems.flakeExposed;
@@ -59,6 +65,7 @@
       nixosConfigurations = lib.mapAttrs mkNixosConfiguration nixosHosts;
       darwinConfigurations = lib.mapAttrs mkDarwinConfiguration darwinHosts;
 
+      # Format Nix source from standard input.
       formatter = forEachSystem (
         system:
         let
