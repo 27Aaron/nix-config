@@ -2,7 +2,6 @@
   fullName,
   hostName,
   lib,
-  pkgs,
   timeZone,
   ...
 }:
@@ -17,11 +16,9 @@
     nixos.enable = false;
   };
 
-  programs.fish.enable = true;
   user' = {
     isNormalUser = true;
     description = fullName;
     extraGroups = [ "wheel" ];
-    shell = pkgs.fish;
   };
 }

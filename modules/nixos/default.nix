@@ -1,7 +1,9 @@
 { ... }:
 {
   imports = [
+    ./core/fish.nix
     ./core/i18n.nix
+    ./core/nix.nix
     ./host.nix
     ./hardware/amdgpu.nix
     ./hardware/bluetooth.nix
@@ -25,12 +27,5 @@
     ./services/zram.nix
     ./security/firewall.nix
   ];
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  nix.channel.enable = false;
-  nixpkgs.config.allowUnfree = true;
 
 }
