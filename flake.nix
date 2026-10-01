@@ -4,6 +4,15 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    preservation = {
+      url = "github:nix-community/preservation";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -18,6 +27,8 @@
   outputs =
     {
       nixpkgs,
+      disko,
+      preservation,
       home-manager,
       nix-darwin,
       ...
@@ -38,7 +49,7 @@
         nixpkgs.lib.nixosSystem {
           system = host.system;
           specialArgs = {
-            inherit hostName;
+            inherit disko preservation hostName;
           }
           // vars
           // (host.specialArgs or { });
