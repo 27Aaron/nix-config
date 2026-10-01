@@ -4,12 +4,6 @@
     fish = {
       enable = true;
       interactiveShellInit = ''
-        if test -x /opt/homebrew/bin/brew
-          eval (/opt/homebrew/bin/brew shellenv fish)
-        else if test -x /usr/local/bin/brew
-          eval (/usr/local/bin/brew shellenv fish)
-        end
-
         set -g fish_greeting
 
         if command -q uv
@@ -28,18 +22,12 @@
       enableCompletion = true;
       autosuggestion.enable = true;
       initContent = ''
-        if [ -x /opt/homebrew/bin/brew ]; then
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-        elif [ -x /usr/local/bin/brew ]; then
-          eval "$(/usr/local/bin/brew shellenv)"
-        fi
-
         if command -v uv &>/dev/null; then
           eval "$(uv generate-shell-completion zsh)"
         fi
 
         if command -v uvx &>/dev/null; then
-          eval "$(uvx generate-shell-completion zsh)"
+          eval "$(uvx --generate-shell-completion zsh)"
         fi
       '';
       syntaxHighlighting.enable = true;

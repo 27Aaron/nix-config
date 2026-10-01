@@ -1,13 +1,10 @@
 {
+  config,
   email,
   fullName,
-  pkgs,
   username,
   ...
 }:
-let
-  homeDirectory = if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${username}" else "/home/${username}";
-in
 {
   # Home Manager is embedded in the platform system.
   home-manager = {
@@ -29,7 +26,7 @@ in
 
       home = {
         username = username;
-        inherit homeDirectory;
+        homeDirectory = config.users.users.${username}.home;
         language.collate = "C.UTF-8";
         stateVersion = "26.05";
       };
