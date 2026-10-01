@@ -1,4 +1,9 @@
-{ hostName, pkgs, username, ... }:
+{
+  hostName,
+  pkgs,
+  username,
+  ...
+}:
 {
   # Use Fish as the login shell.
   programs.fish.enable = true;

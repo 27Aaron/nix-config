@@ -16,8 +16,7 @@
   };
 
   outputs =
-    inputs@{
-      self,
+    {
       nixpkgs,
       home-manager,
       nix-darwin,
@@ -25,6 +24,7 @@
     }:
     let
       inherit (nixpkgs) lib;
+      vars = import ./vars;
 
       # Discover host specifications from the directory tree.
       hostLib = import ./lib/hosts.nix { inherit lib; };
@@ -38,10 +38,11 @@
         nixpkgs.lib.nixosSystem {
           system = host.system;
           specialArgs = {
-            inherit inputs self hostName;
+            inherit hostName;
           }
+          // vars
           // (host.specialArgs or { });
-          modules = [ home-manager.nixosModules.home-manager ] ++ (host.modules or [ ]);
+          modules = [ home-manager.nixosModules.home-manager ] ++ host.modules;
         };
 
       mkDarwinConfiguration =
@@ -49,36 +50,33 @@
         nix-darwin.lib.darwinSystem {
           system = host.system;
           specialArgs = {
-            inherit inputs self hostName;
+            inherit hostName;
           }
+          // vars
           // (host.specialArgs or { });
           modules = [
             home-manager.darwinModules.home-manager
             ./profiles/darwin
           ]
-          ++ (host.modules or [ ]);
+          ++ host.modules;
         };
 
-      forEachSystem = lib.genAttrs lib.systems.flakeExposed;
+      forEachSystem = lib.genAttrs [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
     in
     {
       nixosConfigurations = lib.mapAttrs mkNixosConfiguration nixosHosts;
       darwinConfigurations = lib.mapAttrs mkDarwinConfiguration darwinHosts;
 
-      # Format Nix source from standard input.
       formatter = forEachSystem (
         system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        pkgs.writeShellScriptBin "nixfmt" ''
-          input="$(cat)"
-          if [ -z "$input" ]; then
-            exit 0
-          fi
-
-          printf '%s\n' "$input" | ${pkgs.nixfmt-rs}/bin/nixfmt -
-        ''
+        nixpkgs.legacyPackages.${system}.nixfmt-tree.override {
+          nixfmtPackage = nixpkgs.legacyPackages.${system}.nixfmt-rs;
+        }
       );
+
     };
 }

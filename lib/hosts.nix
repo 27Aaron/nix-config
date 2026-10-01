@@ -1,42 +1,44 @@
 { lib }:
 let
-  # A host is a directory with a default.nix specification.
-  findHostDirectories =
+  findHosts =
     root:
-    let
-      directories = lib.filterAttrs (_: type: type == "directory") (builtins.readDir root);
-    in
     lib.concatLists (
       lib.mapAttrsToList (
-        name: _:
+        name: type:
         let
           path = root + "/${name}";
         in
-        if builtins.pathExists (path + "/default.nix") then
-          [ { inherit name path; } ]
+        if
+          type != "directory"
+          || lib.hasPrefix "." name
+          || builtins.elem name [
+            "common"
+            "profiles"
+            "lib"
+          ]
+        then
+          [ ]
+        else if builtins.pathExists (path + "/default.nix") then
+          [
+            {
+              inherit name;
+              value = import (path + "/default.nix");
+            }
+          ]
         else
-          findHostDirectories path
-      ) directories
+          findHosts path
+      ) (builtins.readDir root)
     );
-
+in
+{
   discover =
     root:
     let
-      hosts = findHostDirectories root;
+      hosts = findHosts root;
       names = map (host: host.name) hosts;
-      uniqueNames = lib.unique names;
     in
-    # Host names must be unique within each platform.
-    if builtins.length names != builtins.length uniqueNames then
+    if builtins.length names != builtins.length (lib.unique names) then
       throw "duplicate host name discovered under ${toString root}"
     else
-      lib.listToAttrs (
-        map (
-          { name, path }:
-          lib.nameValuePair name (import (path + "/default.nix"))
-        ) hosts
-      );
-in
-{
-  inherit discover;
+      builtins.listToAttrs hosts;
 }
