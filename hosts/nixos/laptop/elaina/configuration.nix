@@ -3,6 +3,10 @@
   networking.networkmanager.enable = true;
 
   services = {
+    btrfs.autoScrub = {
+      enable = true;
+      interval = "monthly";
+    };
     openssh.enable = true;
     pipewire = {
       enable = true;
