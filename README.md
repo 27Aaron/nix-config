@@ -12,11 +12,8 @@
   </a>
 </p>
 
-## Getting Started
-
-- [NixOS Setup Guide](docs/NixOS%20安装指南.md)
-
 ## References
 
+- [Misterio77/Foundry] (https://github.com/Misterio77/Foundry)
 - [ryan4yin/nix-config](https://github.com/ryan4yin/nix-config)
 - [xddxdd/nixos-config](https://github.com/xddxdd/nixos-config)
