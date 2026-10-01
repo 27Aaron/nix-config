@@ -1,7 +1,8 @@
 { lib, username, ... }:
 {
-  # Short alias for the primary user's Home Manager module.
+  # Short aliases for the primary user's system and Home Manager modules.
   imports = [
+    (lib.mkAliasOptionModule [ "user'" ] [ "users" "users" username ])
     (lib.mkAliasOptionModule [ "hm'" ] [ "home-manager" "users" username ])
   ];
 }

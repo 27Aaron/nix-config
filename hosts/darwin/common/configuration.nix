@@ -9,7 +9,7 @@
   networking.computerName = hostName;
 
   system.primaryUser = username;
-  users.users.${username}.home = "/Users/${username}";
+  user'.home = "/Users/${username}";
 
   time.timeZone = timeZone;
   system.stateVersion = 6;

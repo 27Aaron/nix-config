@@ -1,7 +1,6 @@
 {
   hostName,
   timeZone,
-  username,
   fullName,
   lib,
   pkgs,
@@ -33,7 +32,7 @@
   nixpkgs.config.allowUnfree = true;
 
   programs.fish.enable = true;
-  users.users.${username} = {
+  user' = {
     isNormalUser = true;
     description = fullName;
     extraGroups = [ "wheel" ];
