@@ -5,8 +5,13 @@
     ./apps/zed.nix
     ./environment/fcitx5.nix
     ./environment/fonts.nix
+    ./environment/cursors.nix
+    ./environment/mime-apps.nix
     ./environment/portal.nix
+    ./environment/themes.nix
+    ./environment/xdg-user-dirs.nix
     ./session/greetd.nix
     ./session/niri.nix
+    ./session/noctalia.nix
   ];
 }

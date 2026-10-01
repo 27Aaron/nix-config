@@ -14,7 +14,12 @@
     fcitx5.enable = true;
     fonts.enable = true;
     greetd.enable = true;
+    cursors.enable = true;
+    mime-apps.enable = true;
     niri.enable = true;
+    noctalia.enable = true;
     portal.enable = true;
+    themes.enable = true;
+    xdg-user-dirs.enable = true;
   };
 }
