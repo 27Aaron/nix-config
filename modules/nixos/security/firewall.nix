@@ -1,9 +1,9 @@
 { config, lib, ... }:
 let
-  cfg = config.core'.firewall;
+  cfg = config.security'.firewall;
 in
 {
-  options.core'.firewall = {
+  options.security'.firewall = {
     enable = lib.mkEnableOption "firewall with nftables";
   };
 

@@ -2,7 +2,7 @@
 {
   imports = [ ./default.nix ];
 
-  core'.firewall.enable = true;
+  security'.firewall.enable = true;
 
   # Hosts supply their own SSH keys and network configuration.
   services.openssh = {

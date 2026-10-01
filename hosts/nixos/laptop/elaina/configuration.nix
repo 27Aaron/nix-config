@@ -1,6 +1,6 @@
 { ... }:
 {
-  core'.firewall.enable = true;
+  security'.firewall.enable = true;
 
   services' = {
     avahi.enable = true;

@@ -1,7 +1,6 @@
 { ... }:
 {
   imports = [
-    ./core/firewall.nix
     ./core/i18n.nix
     ./host.nix
     ./hardware/bluetooth.nix
@@ -21,6 +20,7 @@
     ./services/upower.nix
     ./services/vnstat.nix
     ./services/zram.nix
+    ./security/firewall.nix
   ];
 
   nix.settings.experimental-features = [
