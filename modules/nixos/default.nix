@@ -3,6 +3,7 @@
   imports = [
     ./core/i18n.nix
     ./host.nix
+    ./hardware/amdgpu.nix
     ./hardware/bluetooth.nix
     ./hardware/boot/grub.nix
     ./hardware/boot/initrd-ssh.nix

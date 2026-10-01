@@ -1,6 +1,8 @@
 {
   imports = [
     ./apps/firefox.nix
+    ./apps/google-chrome.nix
+    ./apps/telegram.nix
     ./apps/vscode.nix
     ./apps/zed.nix
     ./environment/fcitx5.nix

@@ -8,6 +8,8 @@
   desktop' = {
     apps = {
       firefox.enable = true;
+      google-chrome.enable = true;
+      telegram.enable = true;
       vscode.enable = true;
       zed.enable = true;
     };
@@ -22,4 +24,6 @@
     themes.enable = true;
     xdg-user-dirs.enable = true;
   };
+
+  hardware'.amdgpu.enable = true;
 }
