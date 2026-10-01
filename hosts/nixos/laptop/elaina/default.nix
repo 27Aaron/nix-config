@@ -2,7 +2,7 @@
   system = "x86_64-linux";
 
   modules = [
-    ../../../../profiles/nixos/default.nix
+    ../../../../profiles/nixos/laptop.nix
     ./configuration.nix
     ./hardware.nix
   ];
