@@ -14,6 +14,6 @@
 
 ## References
 
-- [Misterio77/Foundry] (https://github.com/Misterio77/Foundry)
+- [Misterio77/Foundry](https://github.com/Misterio77/Foundry)
 - [ryan4yin/nix-config](https://github.com/ryan4yin/nix-config)
 - [xddxdd/nixos-config](https://github.com/xddxdd/nixos-config)
