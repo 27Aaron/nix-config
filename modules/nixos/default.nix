@@ -1,7 +1,6 @@
 { lib, ... }:
 {
   imports = [
-    ./core/kernel-hardening.nix
     ./host.nix
     ./hardware/bluetooth.nix
     ./hardware/boot/grub.nix
