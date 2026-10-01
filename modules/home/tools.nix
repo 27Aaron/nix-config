@@ -8,13 +8,20 @@
     fd
     fastfetch
     fzf
+    gawk
     git
     git-lfs
+    gnugrep
+    gnused
+    iperf3
     jq
     just
+    ncdu
     neovim
+    nload
+    nmap
     ripgrep
-    uv
+    socat
     wget
   ];
 
