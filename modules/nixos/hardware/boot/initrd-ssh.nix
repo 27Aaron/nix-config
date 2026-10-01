@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.nixos.boot.initrdSsh;
+  cfg = config.hardware'.initrd-ssh;
 in
 {
-  options.nixos.boot.initrdSsh = {
+  options.hardware'.initrd-ssh = {
     enable = lib.mkEnableOption "SSH in initrd for remote LUKS unlock";
 
     port = lib.mkOption {
@@ -34,7 +34,7 @@ in
 
     boot.initrd.systemd.users.root.shell = "/bin/systemd-tty-ask-password-agent";
 
-    preservation.preserveAt."/persistent".directories = lib.mkIf config.nixos.persistence.enable [
+    preservation.preserveAt."/persistent".directories = lib.mkIf config.hardware'.persistence.enable [
       "/etc/secrets/initrd"
     ];
   };

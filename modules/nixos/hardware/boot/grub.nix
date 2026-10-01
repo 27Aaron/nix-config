@@ -4,17 +4,17 @@
   ...
 }:
 let
-  cfg = config.nixos.boot.grub;
-  diskoCfg = config.nixos.disko;
+  cfg = config.hardware'.grub;
+  diskoCfg = config.hardware'.disko;
 in
 {
-  options.nixos.boot.grub.enable = lib.mkEnableOption "the GRUB bootloader";
+  options.hardware'.grub.enable = lib.mkEnableOption "the GRUB bootloader";
 
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = !config.nixos.boot.systemd-boot.enable;
-        message = "nixos.boot.grub and nixos.boot.systemd-boot are mutually exclusive";
+        assertion = !config.hardware'.systemd-boot.enable;
+        message = "hardware'.grub and hardware'.systemd-boot are mutually exclusive";
       }
     ];
 

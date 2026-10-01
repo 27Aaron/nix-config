@@ -4,17 +4,16 @@
   ...
 }:
 let
-  cfg = config.nixos.boot.systemd-boot;
+  cfg = config.hardware'.systemd-boot;
 in
 {
-  options.nixos.boot.systemd-boot.enable =
-    lib.mkEnableOption "systemd-boot with EFI variable management";
+  options.hardware'.systemd-boot.enable = lib.mkEnableOption "systemd-boot with EFI variable management";
 
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = !config.nixos.boot.grub.enable;
-        message = "nixos.boot.systemd-boot and nixos.boot.grub are mutually exclusive";
+        assertion = !config.hardware'.grub.enable;
+        message = "hardware'.systemd-boot and hardware'.grub are mutually exclusive";
       }
     ];
 

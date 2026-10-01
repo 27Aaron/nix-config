@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.nixos.disko;
+  cfg = config.hardware'.disko;
 
   btrfsOptions = [
     "compress=zstd:1"
@@ -57,7 +57,7 @@ in
 {
   imports = [ disko.nixosModules.disko ];
 
-  options.nixos.disko = {
+  options.hardware'.disko = {
     enable = lib.mkEnableOption "the disko-managed NixOS layout";
 
     device = lib.mkOption {
