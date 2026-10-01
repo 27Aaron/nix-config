@@ -6,6 +6,7 @@
   ];
 
   desktop' = {
+    applications.enable = true;
     apps = {
       firefox.enable = true;
       google-chrome.enable = true;

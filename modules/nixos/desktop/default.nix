@@ -1,5 +1,6 @@
 {
   imports = [
+    ./apps/applications.nix
     ./apps/firefox.nix
     ./apps/google-chrome.nix
     ./apps/telegram.nix

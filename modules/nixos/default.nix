@@ -5,6 +5,7 @@
     ./host.nix
     ./hardware/amdgpu.nix
     ./hardware/bluetooth.nix
+    ./hardware/disable-balloon.nix
     ./hardware/boot/grub.nix
     ./hardware/boot/initrd-ssh.nix
     ./hardware/boot/systemd-boot.nix
@@ -13,6 +14,7 @@
     ./services/avahi.nix
     ./services/fail2ban.nix
     ./services/gnome-keyring.nix
+    ./services/gvfs.nix
     ./services/networkmanager.nix
     ./services/openssh.nix
     ./services/pipewire.nix
