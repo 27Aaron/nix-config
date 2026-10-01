@@ -1,7 +1,7 @@
-{ username, ... }:
+{ ... }:
 {
   # Load Home Manager modules that require nix-darwin.
-  home-manager.users.${username}.imports = [
+  hm'.imports = [
     ./karabiner.nix
     ./nh.nix
   ];

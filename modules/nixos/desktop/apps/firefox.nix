@@ -13,7 +13,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home-manager.users.${username}.programs.firefox.enable = true;
+    hm'.programs.firefox.enable = true;
     preservation.preserveAt."/persistent".users.${username}.directories =
       lib.mkIf (config.hardware'.persistence.enable)
         [

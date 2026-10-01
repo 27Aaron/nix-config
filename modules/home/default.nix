@@ -6,6 +6,8 @@
   ...
 }:
 {
+  imports = [ ./aliases.nix ];
+
   # Home Manager is embedded in the platform system.
   home-manager = {
     useGlobalPkgs = true;
