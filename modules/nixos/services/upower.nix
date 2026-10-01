@@ -3,7 +3,9 @@ let
   cfg = config.services'.upower;
 in
 {
-  options.services'.upower.enable = lib.mkEnableOption "UPower power management daemon";
+  options.services'.upower = {
+    enable = lib.mkEnableOption "UPower power management daemon";
+  };
 
   config = {
     services.upower.enable = lib.mkIf cfg.enable true;

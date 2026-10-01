@@ -11,7 +11,9 @@ in
 {
   imports = [ preservation.nixosModules.default ];
 
-  options.hardware'.persistence.enable = lib.mkEnableOption "the preservation-backed ephemeral root";
+  options.hardware'.persistence = {
+    enable = lib.mkEnableOption "the preservation-backed ephemeral root";
+  };
 
   config = lib.mkIf cfg.enable {
     boot.initrd.systemd.enable = true;

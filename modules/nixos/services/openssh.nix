@@ -9,7 +9,9 @@ let
   persistenceEnabled = config.hardware'.persistence.enable;
 in
 {
-  options.services'.openssh.enable = lib.mkEnableOption "OpenSSH daemon";
+  options.services'.openssh = {
+    enable = lib.mkEnableOption "OpenSSH daemon";
+  };
 
   config = lib.mkIf cfg.enable {
     services.openssh = {

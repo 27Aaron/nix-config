@@ -8,7 +8,9 @@ let
   diskoCfg = config.hardware'.disko;
 in
 {
-  options.hardware'.grub.enable = lib.mkEnableOption "the GRUB bootloader";
+  options.hardware'.grub = {
+    enable = lib.mkEnableOption "the GRUB bootloader";
+  };
 
   config = lib.mkIf cfg.enable {
     assertions = [

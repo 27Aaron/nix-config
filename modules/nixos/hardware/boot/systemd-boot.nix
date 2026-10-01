@@ -7,7 +7,9 @@ let
   cfg = config.hardware'.systemd-boot;
 in
 {
-  options.hardware'.systemd-boot.enable = lib.mkEnableOption "systemd-boot with EFI variable management";
+  options.hardware'.systemd-boot = {
+    enable = lib.mkEnableOption "systemd-boot with EFI variable management";
+  };
 
   config = lib.mkIf cfg.enable {
     assertions = [

@@ -3,7 +3,9 @@ let
   cfg = config.services'.power-profiles-daemon;
 in
 {
-  options.services'.power-profiles-daemon.enable = lib.mkEnableOption "power profiles management daemon";
+  options.services'.power-profiles-daemon = {
+    enable = lib.mkEnableOption "power profiles management daemon";
+  };
 
   config = {
     services.power-profiles-daemon.enable = lib.mkIf cfg.enable true;

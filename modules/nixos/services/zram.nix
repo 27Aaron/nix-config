@@ -3,7 +3,9 @@ let
   cfg = config.services'.zram;
 in
 {
-  options.services'.zram.enable = lib.mkEnableOption "compressed RAM swap with zram";
+  options.services'.zram = {
+    enable = lib.mkEnableOption "compressed RAM swap with zram";
+  };
 
   config = lib.mkIf cfg.enable {
     boot = {

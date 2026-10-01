@@ -8,7 +8,9 @@ let
   cfg = config.services'.pipewire;
 in
 {
-  options.services'.pipewire.enable = lib.mkEnableOption "PipeWire audio stack";
+  options.services'.pipewire = {
+    enable = lib.mkEnableOption "PipeWire audio stack";
+  };
 
   config = {
     services.pipewire = lib.mkIf cfg.enable {
