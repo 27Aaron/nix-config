@@ -3,5 +3,6 @@
   imports = [
     ../../modules/darwin
     ../../modules/home
+    ../../modules/home/darwin
   ];
 }

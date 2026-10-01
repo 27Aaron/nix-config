@@ -1,11 +1,15 @@
 {
   email,
   fullName,
+  pkgs,
   username,
   ...
 }:
+let
+  homeDirectory = if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${username}" else "/home/${username}";
+in
 {
-  # Home Manager is embedded in the Darwin system.
+  # Home Manager is embedded in the platform system.
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -16,18 +20,16 @@
 
     users.${username} = {
       imports = [
-        ./development.nix
-        ./git.nix
-        ./karabiner.nix
-        ./kitty.nix
-        ./nh.nix
-        ./shell.nix
-        ./tools.nix
+        ./common/development.nix
+        ./common/git.nix
+        ./common/kitty.nix
+        ./common/shell.nix
+        ./common/tools.nix
       ];
 
       home = {
         username = username;
-        homeDirectory = "/Users/${username}";
+        inherit homeDirectory;
         language.collate = "C.UTF-8";
         stateVersion = "26.05";
       };

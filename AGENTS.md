@@ -33,13 +33,17 @@ modules/
 ├── nixos/
 ├── darwin/
 └── home/
+    ├── common/
+    ├── darwin/
+    └── nixos/
 ```
 
 - `hosts/` contains host entry points and host-specific configuration.
 - `hosts/nixos/server/` contains all NixOS servers, including VPS hosts.
 - `hosts/nixos/common/` and `hosts/darwin/common/` contain platform-wide configuration. They are not hosts themselves.
 - `profiles/` composes reusable roles such as desktop, laptop, and server.
-- `modules/` contains reusable feature modules. Home Manager is embedded in the NixOS and nix-darwin configurations, so Home Manager modules belong under `modules/home/`.
+- `modules/` contains reusable feature modules. Home Manager is embedded in the NixOS and nix-darwin configurations, so shared Home Manager modules belong under `modules/home/common/` and platform-specific modules belong under `modules/home/<platform>/`.
+- `modules/home/darwin/` contains Home Manager modules that depend on nix-darwin options or macOS applications, such as Karabiner and nh.
 - `lib/` contains pure helpers used by the Flake, including host discovery.
 - Do not add `production`, `staging`, or `lab` directory layers until those environments require different behavior. Host metadata can be added later without changing the layout.
 - Darwin currently targets `aarch64-darwin`; do not create architecture-specific directories or files for unsupported Darwin systems.
