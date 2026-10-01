@@ -84,6 +84,8 @@ in
     };
 
     luks.enable = lib.mkEnableOption "LUKS encryption for the data partition";
+
+    bios.enable = lib.mkEnableOption "a BIOS boot partition for GRUB";
   };
 
   config = lib.mkIf cfg.enable {
@@ -104,55 +106,63 @@ in
         device = cfg.device;
         content = {
           type = "gpt";
-          partitions = {
-            ESP = {
-              priority = 1;
-              size = cfg.espSize;
-              type = "EF00";
-              content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/boot";
-                extraArgs = [
-                  "-n"
-                  "BOOT"
-                ];
-                mountOptions = [ "umask=0077" ];
+          partitions =
+            lib.optionalAttrs cfg.bios.enable {
+              BIOS = {
+                priority = 0;
+                size = "1M";
+                type = "EF02";
+              };
+            }
+            // {
+              ESP = {
+                priority = 1;
+                size = cfg.espSize;
+                type = "EF00";
+                content = {
+                  type = "filesystem";
+                  format = "vfat";
+                  mountpoint = "/boot";
+                  extraArgs = [
+                    "-n"
+                    "BOOT"
+                  ];
+                  mountOptions = [ "umask=0077" ];
+                };
+              };
+
+              data = {
+                priority = 2;
+                size = "100%";
+                type = "8309";
+                content =
+                  if cfg.luks.enable then
+                    {
+                      type = "luks";
+                      name = "crypted";
+                      askPassword = true;
+                      initrdUnlock = true;
+                      settings = {
+                        allowDiscards = true;
+                        bypassWorkqueues = true;
+                        crypttabExtraOpts = [
+                          "same-cpu-crypt"
+                          "submit-from-crypt-cpus"
+                          "token-timeout=10"
+                        ];
+                      };
+                      extraFormatArgs = [
+                        "--type"
+                        "luks2"
+                        "--pbkdf"
+                        "argon2id"
+                      ];
+                      content = btrfs;
+                    }
+                  else
+                    btrfs;
               };
             };
-
-            data = {
-              priority = 2;
-              size = "100%";
-              type = "8309";
-              content =
-                if cfg.luks.enable then
-                  {
-                    type = "luks";
-                    name = "crypted";
-                    askPassword = true;
-                    initrdUnlock = true;
-                    settings = {
-                      allowDiscards = true;
-                      bypassWorkqueues = true;
-                      crypttabExtraOpts = [
-                        "same-cpu-crypt"
-                        "submit-from-crypt-cpus"
-                        "token-timeout=10"
-                      ];
-                    };
-                    extraFormatArgs = [
-                      "--type"
-                      "luks2"
-                      "--pbkdf"
-                      "argon2id"
-                    ];
-                    content = btrfs;
-                  }
-                else
-                  btrfs;
-            };
-          };
         };
       };
     };

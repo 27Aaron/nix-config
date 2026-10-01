@@ -8,6 +8,12 @@
   ...
 }:
 {
+  imports = [
+    ./hardware/boot/grub.nix
+    ./hardware/boot/initrd-ssh.nix
+    ./hardware/boot/systemd-boot.nix
+  ];
+
   networking.hostName = hostName;
   networking.firewall.enable = lib.mkDefault true;
   time.timeZone = lib.mkDefault timeZone;
