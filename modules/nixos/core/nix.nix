@@ -18,6 +18,7 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+
   preservation'.user.directories = [
     {
       directory = "nix-config";
