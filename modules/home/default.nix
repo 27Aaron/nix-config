@@ -2,11 +2,15 @@
   config,
   email,
   fullName,
+  lib,
   username,
   ...
 }:
 {
-  imports = [ ./aliases.nix ];
+  imports = [
+    (lib.mkAliasOptionModule [ "user'" ] [ "users" "users" username ])
+    (lib.mkAliasOptionModule [ "hm'" ] [ "home-manager" "users" username ])
+  ];
 
   # Home Manager is embedded in the platform system.
   home-manager = {
