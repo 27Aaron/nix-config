@@ -9,9 +9,10 @@
   networking.computerName = hostName;
 
   system.primaryUser = username;
+  system.stateVersion = 6;
+
   user'.home = "/Users/${username}";
 
   time.timeZone = timeZone;
-  system.stateVersion = 6;
   nixpkgs.hostPlatform = "aarch64-darwin";
 }
