@@ -9,8 +9,6 @@
 
   # Nix daemon, flakes, and automatic store optimisation.
   nix = {
-    enable = true;
-    package = pkgs.nix;
     channel.enable = false;
     optimise.automatic = true;
 
