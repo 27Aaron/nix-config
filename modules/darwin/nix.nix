@@ -7,7 +7,7 @@
     nixd
   ];
 
-  # Nix daemon, flakes, and automatic store optimisation.
+  # Nix daemon, flakes, store optimisation, and automatic garbage collection.
   nix = {
     channel.enable = false;
     optimise.automatic = true;
