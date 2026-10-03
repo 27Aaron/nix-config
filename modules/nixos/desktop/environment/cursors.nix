@@ -13,13 +13,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = config.hm'.gtk.enable;
-        message = "desktop'.cursors requires desktop'.themes";
-      }
-    ];
-
     hm'.home.pointerCursor = {
       enable = true;
       package = pkgs.bibata-cursors;
