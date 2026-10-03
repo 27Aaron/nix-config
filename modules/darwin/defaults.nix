@@ -1,9 +1,11 @@
-{ ... }:
+{ config, ... }:
 {
   # Unlock sudo with Touch ID.
   security.pam.services.sudo_local.touchIdAuth = true;
 
   system.defaults = {
+    smb.NetBIOSName = config.networking.hostName;
+
     # Menu bar clock.
     menuExtraClock = {
       Show24Hour = true;
