@@ -8,7 +8,7 @@ let
   cfg = config.hardware'.disko;
 
   btrfsOptions = [
-    "compress=zstd:1"
+    "compress=zstd"
     "discard=async"
     "noatime"
   ];
